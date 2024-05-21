@@ -1,0 +1,129 @@
+﻿@page "/"
+
+@using WeeklyPlaner.Models
+
+
+
+
+
+
+@code{
+	public Week FirstWeek {get; set;}
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		FirstWeek = new Week()
+		{
+			Thursday = new Day()
+			{
+				Lunch = new Meal()
+				{
+					FoodName = "Abgousht",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "SibZamini",
+							Amount = "1K"
+						}
+					}
+				},
+				Dinner = new Meal()
+				{
+					FoodName = "Ghorme",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "piaz",
+							Amount = "1K"
+						}
+					}
+				}
+			},
+			Friday = new Day()
+			{
+				Lunch = new Meal()
+				{
+					FoodName = "Tahchin",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "Morgh",
+							Amount = "0.5K"
+						}
+					}
+				},
+				Dinner = new Meal()
+				{
+					FoodName = "Soup Vermichel",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "Gharch",
+							Amount = "0.5K"
+						}
+					}
+				}
+			},
+			Saturday = new Day()
+			{
+				Dinner = new Meal()
+				{
+					FoodName = "kabab shami",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "SibZamini",
+							Amount = "0.5K"
+						}
+					}
+				}
+			},
+			Sunday = new Day()
+			{
+			},
+			Monday = new Day()
+			{
+				Dinner = new Meal()
+				{
+					FoodName = "Makaroni",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "Rob Goje",
+							Amount = "1 Shishe"
+						}
+					}
+				}
+			},
+			Tuesday = new Day()
+			{
+			},
+			Wednesday = new Day()
+			{
+				Dinner = new Meal()
+				{
+					FoodName = "Olvie",
+					Groceries = new List<Grocery>()
+					{
+						new Grocery()
+						{
+							Name = "Mayoneese",
+							Amount = "1 Shishe"
+						}
+					}
+				}
+			},
+		};
+	}
+
+}
