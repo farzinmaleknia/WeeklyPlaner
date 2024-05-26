@@ -1,0 +1,81 @@
+﻿@font-face {
+    font-family: "iransans";
+    src: url("fonts/IRANSans.ttf") format("truetype");
+}
+
+* {
+    font-size: 24px;
+    scroll-behavior: smooth;
+}
+
+.padding-x-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.f-size18{
+    font-size: 18px;
+}
+
+.f-size28{
+    font-size: 28px;
+}
+
+.f-size36{
+    font-size: 36px;
+}
+
+.my-bg-blue{
+    background-color: #7cb5ec;
+}
+
+.my-bg-red {
+    background-color: #f45b5b;
+}
+
+.my-bg-green {
+    background-color: #90ed7d;
+}
+
+.my-bg-orange {
+    background-color: #f7a35c ;
+}
+
+.my-bg-purple {
+    background-color: #8085e9;
+}
+
+.my-bg-mustard {
+    background-color: #e4d354;
+}
+
+.my-bg-skyblue {
+    background-color: #91e8e1;
+}
+
+.days {
+    border : 2px solid lightgray ;
+}
+
+.days-title {
+     color: white;
+     font-weight: 600;
+     padding-top: 15px;
+     padding-bottom: 25px;
+}
+
+.width-100{
+    width: 100%;
+}
+
+.meal-buttons {
+    padding-bottom: 15px;
+}
+
+
+
+
+
+
+
+

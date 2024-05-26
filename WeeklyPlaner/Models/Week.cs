@@ -1,4 +1,6 @@
-﻿namespace WeeklyPlaner.Models
+﻿using System;
+
+namespace WeeklyPlaner.Models
 {
     public class Week
     {
@@ -10,5 +12,9 @@
         public Day Monday { get; set; }
         public Day Tuesday { get; set; }
         public Day Wednesday { get; set; }
-    }
+
+        public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "orange", "purple", "mustard", "skyblue" };
+
+
+	}
 }
