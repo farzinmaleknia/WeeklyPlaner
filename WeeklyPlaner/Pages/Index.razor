@@ -4,7 +4,66 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-12  padding-x-0">
+		@foreach (var week in WeeksListIterable)
+		{
+			foreach (var day in week.GetDays())
+			 {
+				<div class="col-12  padding-x-0">
+					<div class="card days">
+						<span class="card-img-top my-bg-green text-center f-size36 days-title">@(day.Title)</span>
+						<div class="card-body padding-x-0">
+							<div class="list-group list-group-flush" >
+								<div class="list-group-item padding-x-0">
+									@foreach (var meal in day.GetMeals())
+									{
+										<div class="card">
+											<button class="card-img-top bg-light text-center f-size28 rounded border-0" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(meal.Title)</button>
+											<div id="dinnerBody" class="collapse show">
+												<div class="card-body bg-light">
+													<div class="row mx-auto">
+														<div class="col-6 padding-x-0">
+															<button class="btn btn-sm my-bg-red m-auto width-98 meal-buttons food-name">@(meal.FoodName)</button>
+														</div> 
+														<div class="col-6 padding-x-0">
+															<button class="btn btn-sm my-bg-skyblue text-white m-auto width-98 meal-buttons">اقلام خرید</button>
+														</div> 
+														<div class="col-12 f-size18 pt-3">
+															<div class="d-flex justify-content-between">
+																<div>
+																	- لپ
+																</div>
+																<div>
+																	یک بسته
+																</div>
+															</div>
+															<div class="d-flex justify-content-between">
+																<div>
+																	- رب گوجه
+																</div>
+																<div>
+																	یک شیشه
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>										
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+			
+		}
+
+
+
+
+
+@* 		<div class="col-12  padding-x-0">
 			<div class="card days">
 				<span class="card-img-top my-bg-green text-center f-size36 days-title">شنبه</span>
 				<div class="card-body padding-x-0">
@@ -14,17 +73,17 @@
 								<button class="card-img-top bg-light text-center f-size28 rounded border-0" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">شام</button>
 								<div id="dinnerBody" class="collapse show">
 									<div class="card-body bg-light">
-										<div class="row">
+										<div class="row mx-auto">
 											<div class="col-6 padding-x-0">
-												<button class="btn btn-outline-secondary btn-sm m-auto width-100 meal-buttons">قیمه</button>
+                                                <button class="btn btn-sm my-bg-red m-auto width-98 meal-buttons food-name">قیمه</button>
 											</div> 
 											<div class="col-6 padding-x-0">
-												<button class="btn btn-outline-secondary btn-sm m-auto width-100 meal-buttons">اقلام خرید</button>
+                                                <button class="btn btn-sm my-bg-skyblue text-white m-auto width-98 meal-buttons">اقلام خرید</button>
 											</div> 
 											<div class="col-12 f-size18 pt-3">
 												<div class="d-flex justify-content-between">
 													<div>
-														- لپه
+														- لپ
 													</div>
 													<div>
 														یک بسته
@@ -47,7 +106,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> *@
 	</div>
 </div>
 
@@ -55,8 +114,10 @@
 
 
 @code{
-	public Week FirstWeek {get; set;}
+	public Week FirstWeek { get; set; } = new Week();
 
+	public List<Week> WeeksList { get; set; } = new List<Week>();
+	public IEnumerable<Week> WeeksListIterable { get; set; } = new List<Week>();
 
 
 	protected override async Task OnInitializedAsync()
@@ -67,8 +128,10 @@
 		{
 			Thursday = new Day()
 			{
+				Title = "Thursday",
 				Lunch = new Meal()
 				{
+					Title = "Lunch",
 					FoodName = "Abgousht",
 					Groceries = new List<Grocery>()
 					{
@@ -81,6 +144,7 @@
 				},
 				Dinner = new Meal()
 				{
+					Title = "Dinner",
 					FoodName = "Ghorme",
 					Groceries = new List<Grocery>()
 					{
@@ -94,8 +158,10 @@
 			},
 			Friday = new Day()
 			{
+				Title = "Friday",
 				Lunch = new Meal()
 				{
+					Title = "Lunch",
 					FoodName = "Tahchin",
 					Groceries = new List<Grocery>()
 					{
@@ -108,6 +174,7 @@
 				},
 				Dinner = new Meal()
 				{
+					Title = "Dinner",
 					FoodName = "Soup Vermichel",
 					Groceries = new List<Grocery>()
 					{
@@ -121,8 +188,10 @@
 			},
 			Saturday = new Day()
 			{
+				Title = "Saturday",
 				Dinner = new Meal()
 				{
+					Title = "Dinner",
 					FoodName = "kabab shami",
 					Groceries = new List<Grocery>()
 					{
@@ -136,11 +205,14 @@
 			},
 			Sunday = new Day()
 			{
+				Title = "Sunday",
 			},
 			Monday = new Day()
 			{
+				Title = "Monday",
 				Dinner = new Meal()
 				{
+					Title = "Dinner",
 					FoodName = "Makaroni",
 					Groceries = new List<Grocery>()
 					{
@@ -154,11 +226,14 @@
 			},
 			Tuesday = new Day()
 			{
+				Title = "Tuesday",
 			},
 			Wednesday = new Day()
 			{
+				Title = "Wednesday",
 				Dinner = new Meal()
 				{
+					Title = "Dinner",
 					FoodName = "Olvie",
 					Groceries = new List<Grocery>()
 					{
@@ -171,6 +246,9 @@
 				}
 			},
 		};
+
+		WeeksList.Add(FirstWeek);
+		WeeksListIterable = WeeksList;
 	}
 
 }

@@ -64,12 +64,17 @@
      padding-bottom: 25px;
 }
 
-.width-100{
-    width: 100%;
+.width-98{
+    width: 98%;
 }
 
 .meal-buttons {
     padding-bottom: 15px;
+}
+
+.food-name{
+    font-weight: 500;
+    color: white;
 }
 
 
