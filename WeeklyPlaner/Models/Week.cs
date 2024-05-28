@@ -13,7 +13,7 @@ namespace WeeklyPlaner.Models
         public Day Tuesday { get; set; }
         public Day Wednesday { get; set; }
 
-        public IEnumerable<string> Colors { get; } = new List<string>() { "blue", "red", "green", "orange", "purple", "mustard", "skyblue" };
+        public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "orange", "purple", "mustard", "skyblue" };
         public IEnumerable<Day> Weekdays { get; set; } 
 
         public IEnumerable<Day> GetDays()

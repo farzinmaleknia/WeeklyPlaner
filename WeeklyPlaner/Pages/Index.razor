@@ -6,107 +6,83 @@
 	<div class="row">
 		@foreach (var week in WeeksListIterable)
 		{
+			int colorCounter = 0;
 			foreach (var day in week.GetDays())
-			 {
+			{
+				if (colorCounter < week.Colors.Count() - 1)
+				{
+					Console.WriteLine(colorCounter + 2);
+				}
+				else
+				{
+					Console.WriteLine("here");
+					Console.WriteLine((colorCounter + 2) - week.Colors.Count());
+				}
+
 				<div class="col-12  padding-x-0">
 					<div class="card days">
-						<span class="card-img-top my-bg-green text-center f-size36 days-title">@(day.Title)</span>
+						<span class="card-img-top my-bg-@(week.Colors[colorCounter]) text-center f-size36 days-title">@(day.Title)</span>
 						<div class="card-body padding-x-0">
 							<div class="list-group list-group-flush" >
 								<div class="list-group-item padding-x-0">
 									@foreach (var meal in day.GetMeals())
 									{
-										<div class="card">
-											<button class="card-img-top bg-light text-center f-size28 rounded border-0" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(meal.Title)</button>
-											<div id="dinnerBody" class="collapse show">
-												<div class="card-body bg-light">
-													<div class="row mx-auto">
-														<div class="col-6 padding-x-0">
-															<button class="btn btn-sm my-bg-red m-auto width-98 meal-buttons food-name">@(meal.FoodName)</button>
-														</div> 
-														<div class="col-6 padding-x-0">
-															<button class="btn btn-sm my-bg-skyblue text-white m-auto width-98 meal-buttons">اقلام خرید</button>
-														</div> 
-														<div class="col-12 f-size18 pt-3">
-															<div class="d-flex justify-content-between">
-																<div>
-																	- لپ
-																</div>
-																<div>
-																	یک بسته
-																</div>
-															</div>
-															<div class="d-flex justify-content-between">
-																<div>
-																	- رب گوجه
-																</div>
-																<div>
-																	یک شیشه
-																</div>
+										if (meal != null)
+										{
+											<div class="card">
+												<button class="card-img-top bg-light text-center f-size28 rounded border-0" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(meal.Title != null? meal.Title : "ثبت نشده")</button>
+												<div id="dinnerBody" class="collapse show">
+													<div class="card-body bg-light">
+														<div class="row mx-auto">
+															<div class="col-6 padding-x-0">
+																<button class="btn btn-sm my-bg-@(colorCounter < week.Colors.Count() - 1 ? week.Colors[colorCounter + 1] : week.Colors[(colorCounter + 1) - week.Colors.Count()]) m-auto width-98 meal-buttons food-name">@(meal.FoodName)</button>
+															</div> 
+															<div class="col-6 padding-x-0">
+																<button class="btn btn-sm my-bg-@(colorCounter < week.Colors.Count() - 2 ? week.Colors[colorCounter + 2] : week.Colors[(colorCounter + 2) - week.Colors.Count()]) text-white m-auto width-98 meal-buttons">اقلام خرید</button>
+															</div> 
+															<div class="col-12 f-size18 pt-3">
+																@if (meal.Groceries != null)
+																{
+																	foreach (var groc in meal.Groceries)
+																	{
+																		<div class="d-flex justify-content-between">
+																			<div>
+																				@(groc.Name)
+																			</div>
+																			<div>
+																				@(groc.Amount)
+																			</div>
+																		</div>
+																	
+																	}
+																}
 															</div>
 														</div>
 													</div>
 												</div>
-											</div>
-										</div>										
+											</div>																					
+										}
 									}
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+
+
+				colorCounter = colorCounter + 2;
+
+				if (colorCounter < week.Colors.Count() - 2)
+				{
+					colorCounter = colorCounter + 2;
+				}
+				else
+				{
+					colorCounter = (colorCounter + 2) - week.Colors.Count();
+				}
 			}
 			
 		}
-
-
-
-
-
-@* 		<div class="col-12  padding-x-0">
-			<div class="card days">
-				<span class="card-img-top my-bg-green text-center f-size36 days-title">شنبه</span>
-				<div class="card-body padding-x-0">
-					<div class="list-group list-group-flush" >
-						<div class="list-group-item padding-x-0">
-							<div class="card">
-								<button class="card-img-top bg-light text-center f-size28 rounded border-0" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">شام</button>
-								<div id="dinnerBody" class="collapse show">
-									<div class="card-body bg-light">
-										<div class="row mx-auto">
-											<div class="col-6 padding-x-0">
-                                                <button class="btn btn-sm my-bg-red m-auto width-98 meal-buttons food-name">قیمه</button>
-											</div> 
-											<div class="col-6 padding-x-0">
-                                                <button class="btn btn-sm my-bg-skyblue text-white m-auto width-98 meal-buttons">اقلام خرید</button>
-											</div> 
-											<div class="col-12 f-size18 pt-3">
-												<div class="d-flex justify-content-between">
-													<div>
-														- لپ
-													</div>
-													<div>
-														یک بسته
-													</div>
-												</div>
-												<div class="d-flex justify-content-between">
-													<div>
-														- رب گوجه
-													</div>
-													<div>
-														یک شیشه
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div> *@
 	</div>
 </div>
 
@@ -128,119 +104,121 @@
 		{
 			Thursday = new Day()
 			{
-				Title = "Thursday",
+				Title = "پنج شنبه",
 				Lunch = new Meal()
 				{
-					Title = "Lunch",
-					FoodName = "Abgousht",
-					Groceries = new List<Grocery>()
-					{
-						new Grocery()
-						{
-							Name = "SibZamini",
-							Amount = "1K"
-						}
-					}
+					Title = "نهار",
+					FoodName = "آبگوشت",
 				},
 				Dinner = new Meal()
 				{
-					Title = "Dinner",
-					FoodName = "Ghorme",
+					Title = "شام",
+					FoodName = "قورمه",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "piaz",
-							Amount = "1K"
+							Name = "پیاز",
+							Amount = "یک کیلو"
+						},
+						new Grocery()
+						{
+							Name = "سیب زمینی",
+							Amount = "یک کیلو"
+						},
+						new Grocery()
+						{
+							Name = "قارچ",
+							Amount = "نیم کیلو"
 						}
 					}
 				}
 			},
 			Friday = new Day()
 			{
-				Title = "Friday",
+				Title = "جمعه",
 				Lunch = new Meal()
 				{
-					Title = "Lunch",
-					FoodName = "Tahchin",
+					Title = "نهار",
+					FoodName = "ته چین",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "Morgh",
-							Amount = "0.5K"
+							Name = "مرغ",
+							Amount = "نیم کیلو"
 						}
 					}
 				},
 				Dinner = new Meal()
 				{
-					Title = "Dinner",
-					FoodName = "Soup Vermichel",
+					Title = "شام",
+					FoodName = "سوپ ورمیشل",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "Gharch",
-							Amount = "0.5K"
+							Name = "قارچ",
+							Amount = "نیم کیلو"
 						}
 					}
 				}
 			},
 			Saturday = new Day()
 			{
-				Title = "Saturday",
+				Title = "شنبه",
 				Dinner = new Meal()
 				{
-					Title = "Dinner",
-					FoodName = "kabab shami",
+					Title = "شام",
+					FoodName = "کباب شامی",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "SibZamini",
-							Amount = "0.5K"
+							Name = "سیب زمینی",
+							Amount = "ربع کیلو"
 						}
 					}
 				}
 			},
 			Sunday = new Day()
 			{
-				Title = "Sunday",
+				Title = "یکشنبه",
 			},
 			Monday = new Day()
 			{
-				Title = "Monday",
+				Title = "دوشنبه",
 				Dinner = new Meal()
 				{
-					Title = "Dinner",
-					FoodName = "Makaroni",
+					Title = "شام",
+					FoodName = "ماکارانی",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "Rob Goje",
-							Amount = "1 Shishe"
+							Name = "رب گوجه",
+							Amount = "یک شیشه"
 						}
 					}
 				}
 			},
 			Tuesday = new Day()
 			{
-				Title = "Tuesday",
+				Title = "سه شنبه",
 			},
 			Wednesday = new Day()
 			{
-				Title = "Wednesday",
+				Title = "چهار شنبه",
 				Dinner = new Meal()
 				{
-					Title = "Dinner",
-					FoodName = "Olvie",
+					Title = "شام",
+					FoodName = "الویه",
 					Groceries = new List<Grocery>()
 					{
 						new Grocery()
 						{
-							Name = "Mayoneese",
-							Amount = "1 Shishe"
+							Name = "مایونز",
+							Amount = "یک شیشه"
 						}
 					}
 				}
