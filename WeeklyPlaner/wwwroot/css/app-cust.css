@@ -72,9 +72,24 @@
     padding-bottom: 15px;
 }
 
+
+.new-meal-buttons {
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
 .food-name{
     font-weight: 500;
     color: white;
+}
+
+.m-right-auto{
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+.grocery-add-btn{
+    margin-top: 49px !important;
 }
 
 
