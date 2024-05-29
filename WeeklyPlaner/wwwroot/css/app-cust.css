@@ -68,7 +68,7 @@
     width: 98%;
 }
 
-.meal-buttons {
+.bootstrap-buttons {
     padding-bottom: 15px;
 }
 
@@ -90,6 +90,15 @@
 
 .grocery-add-btn{
     margin-top: 49px !important;
+}
+
+.grocery-del-btn{
+    padding-top: 0;
+}
+
+.meal-dropdown-btn {
+    height: 52px;
+    padding-bottom: 10px;
 }
 
 

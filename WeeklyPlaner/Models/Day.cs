@@ -3,9 +3,18 @@
     public class Day
     {
         public string Title { get; set; }
-        public Meal Braekfast { get; set; }
-        public Meal Lunch { get; set; }
-        public Meal Dinner { get; set; }
+        public Meal Braekfast { get; set; } = new Meal()
+		{
+			Title = "صبحانه",
+		};
+        public Meal Lunch { get; set; } = new Meal()
+		{
+			Title = "ناهار",
+		};
+		public Meal Dinner { get; set; } = new Meal()
+		{
+			Title = "شام",
+		};
 
 		public IEnumerable<Meal> Meals { get; set;  } 
 
