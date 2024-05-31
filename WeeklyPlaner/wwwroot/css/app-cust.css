@@ -33,6 +33,17 @@
     background-color: #f45b5b;
 }
 
+.my-bg-red-outline {
+    border-color: #f45b5b;
+    background-color: none;
+    color: #f45b5b;
+}
+
+.my-bg-red-outline:hover {
+    background-color: #f45b5b;
+    color: white;
+}
+
 .my-bg-green {
     background-color: #90ed7d;
 }
@@ -99,6 +110,12 @@
 .meal-dropdown-btn {
     height: 52px;
     padding-bottom: 10px;
+}
+
+.meal-del-btn {
+    padding-top: 0;
+    height: 100%;
+    width: 95%;
 }
 
 

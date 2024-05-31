@@ -4,14 +4,14 @@ namespace WeeklyPlaner.Models
 {
     public class Week
     {
-        public int Id { get; set; }
-        public Day Thursday { get; set; }
-        public Day Friday { get; set; }
-        public Day Saturday { get; set; }
-        public Day Sunday { get; set; }
-        public Day Monday { get; set; }
-        public Day Tuesday { get; set; }
-        public Day Wednesday { get; set; }
+        public int Id { get; set; } = 0;
+        public Day Thursday { get; set; } = new Day(){ Title = "پنج شنبه",};
+		public Day Friday { get; set; } = new Day() { Title = "جمعه",};
+		public Day Saturday { get; set; } = new Day() { Title = "شنبه" };
+        public Day Sunday { get; set; } = new Day() { Title = "یکشنبه" };
+        public Day Monday { get; set; } = new Day() { Title = "دوشنبه" };
+        public Day Tuesday { get; set; } = new Day() { Title = "سه شنبه" };
+        public Day Wednesday { get; set; } = new Day() { Title = "چهارشنبه" };
 
         public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "orange", "purple", "mustard", "skyblue" };
         public IEnumerable<Day> Weekdays { get; set; } 

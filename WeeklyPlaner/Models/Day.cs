@@ -16,11 +16,9 @@
 			Title = "شام",
 		};
 
-		public IEnumerable<Meal> Meals { get; set;  } 
-
 		public IEnumerable<Meal> GetMeals()
 		{
-			return Meals = new List<Meal>() { Braekfast, Lunch, Dinner};
+			return new List<Meal>() { Braekfast, Lunch, Dinner};
 
 		}
 	}
