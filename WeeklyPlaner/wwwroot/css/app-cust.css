@@ -21,6 +21,10 @@
     font-size: 28px;
 }
 
+.f-size32{
+    font-size: 32px;
+}
+
 .f-size36{
     font-size: 36px;
 }
@@ -99,12 +103,17 @@
     margin-left: 0 !important;
 }
 
+.grocery-btn{
+    padding: 11px ;
+}
+
 .grocery-add-btn{
     margin-top: 49px !important;
 }
 
-.grocery-del-btn{
-    padding-top: 0;
+.grocery-del-btn {
+    width: 42px;
+    height: 42px;
 }
 
 .meal-dropdown-btn {
@@ -113,10 +122,18 @@
 }
 
 .meal-del-btn {
-    padding-top: 0;
-    height: 100%;
-    width: 95%;
+    padding-top: 5px;
+    margin-top: 20px;
+    margin-left: 26px;
+    width: 42px;
+    height: 42px;
 }
+
+.meal-title {
+    margin-top: 10px;
+    margin-right: 24px;
+}
+
 
 
 
