@@ -29,43 +29,43 @@
     font-size: 36px;
 }
 
-.my-bg-blue{
-    background-color: #7cb5ec;
+.my-bg-blue {
+    background-color: #2e7396;
 }
 
 .my-bg-red {
-    background-color: #f45b5b;
+    background-color: #962e33;
 }
 
 .my-bg-red-outline {
-    border-color: #f45b5b;
+    border-color: #962e33;
     background-color: none;
-    color: #f45b5b;
+    color: #962e33;
 }
 
 .my-bg-red-outline:hover {
-    background-color: #f45b5b;
+    background-color: #962e33;
     color: white;
 }
 
 .my-bg-green {
-    background-color: #90ed7d;
+    background-color: #2e9669;
 }
 
 .my-bg-orange {
-    background-color: #f7a35c ;
+    background-color: #96352e;
 }
 
 .my-bg-purple {
-    background-color: #8085e9;
+    background-color: #5d2e96;
 }
 
 .my-bg-mustard {
-    background-color: #e4d354;
+    background-color: #96912e;
 }
 
 .my-bg-skyblue {
-    background-color: #91e8e1;
+    background-color: #2e9691;
 }
 
 .days {

@@ -1,0 +1,43 @@
+﻿@using WeeklyPlaner.Models
+
+<EditForm Model="GroceryModel" OnSubmit="OnValueChanged">
+		<div class="mb-3">
+			<label for="groceryName" class="form-label">نام اقلام</label>
+			<InputText id="groceryName" class="form-control" @bind-Value="GroceryModel.Name" />
+		</div>
+		<div class="mb-3 d-flex justify-content-between">
+			<div>
+				<label for="groceryAmount" class="form-label">مقدار</label>
+				<InputText id="groceryAmount" class="form-control" @bind-Value="GroceryModel.Amount" />
+			</div>
+			<div>
+				<button type="submit" class="btn btn-outline-primary  grocery-add-btn" >+</button>
+			</div>
+		</div>
+</EditForm>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public Grocery GroceryModel { get; set; }
+
+	[Parameter]
+	public bool IsSubmitNeeded { get; set; } = false;
+
+	[Parameter]
+	public EventCallback<bool> ValueChangedEventHandler { get; set; }
+
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+	}
+
+	private async Task OnValueChanged()
+	{
+		await ValueChangedEventHandler.InvokeAsync(IsSubmitNeeded);
+	}
+}

@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using WeeklyPlaner.Models
+@using WeeklyPlaner.Shared.Components
 
 <div class="container-fluid">
 	<div class="row">
@@ -34,7 +35,7 @@
 													<div class="card-body bg-light">
 														<div class="row mx-auto">
 															<div class="col-10 padding-x-0">
-																<button class="btn btn-sm my-bg-@(colorCounter < week.Colors.Count() - 1 ? week.Colors[colorCounter + 1] : week.Colors[(colorCounter + 1) - week.Colors.Count()]) m-auto width-98 bootstrap-buttons food-name" 
+																<button class="btn btn-sm my-bg-@(week.Colors[colorCounter]) m-auto width-98 bootstrap-buttons food-name"
 																		@onclick="() => passingData(week.Id, day, false, meal)" 
 																		data-bs-toggle="modal" data-bs-target="#addEditMealModal"
 																>
@@ -42,30 +43,32 @@
 																</button>
 															</div> 
 															<div class="col-2 padding-x-0">
-																<button class="btn btn-sm my-bg-@(colorCounter < week.Colors.Count() - 2 ? week.Colors[colorCounter + 2] : week.Colors[(colorCounter + 2) - week.Colors.Count()]) text-white m-auto width-98 grocery-btn">
+																<button class="btn btn-sm my-bg-@(week.Colors[colorCounter]) text-white m-auto width-98 grocery-btn"
+																		@onclick="() => OnEditGeroceries(meal)"
+																>
 																	<i class="fa fa-cart-plus" aria-hidden="true"></i>
 																</button>
-															</div> 
+															</div>
+
+
+															@if(meal.GroceryEditable)
+															{
+																if (!IsDataPassed)
+																{
+																	passingData(week.Id, day, false, meal);
+																	IsDataPassed = true;
+																}
+
+																<div class="col-12 mt-3">
+																	<AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="true" ValueChangedEventHandler="OnNewGroceryAdded" />
+																</div>		
+															}
+
+
 															<div class="col-12 f-size18 pt-3">
 																@if (meal.Groceries != null)
 																{
-																	foreach (var groc in meal.Groceries)
-																	{
-																		<div class="d-flex justify-content-between mb-1">
-																			<div>
-																				<button type="button" class="btn btn-sm text-secondary grocery-del-btn" @onclick="() => OnGroceryDeleted(meal, groc)">
-																					<i class="fa fa-times" aria-hidden="true"></i>
-																				</button>
-																			</div>
-																			<div>
-																				@(groc.Name)
-																			</div>
-																			<div>
-																				@(groc.Amount)
-																			</div>
-																		</div>
-																	
-																	}
+																	<GroceriesList MealModel="meal" />
 																}
 															</div>
 														</div>
@@ -96,13 +99,13 @@
 				</div>
 
 
-				if (colorCounter < week.Colors.Count() - 3)
+				if (colorCounter < week.Colors.Count() - 1)
 				{
-					colorCounter = colorCounter + 3;
+					colorCounter = colorCounter + 1;
 				}
 				else
 				{
-					colorCounter = (colorCounter + 3) - week.Colors.Count();
+					colorCounter = (colorCounter + 1) - week.Colors.Count();
 				}
 			}
 			
@@ -145,29 +148,23 @@
 						</div>
 					</div>
 					<hr />
-					<div class="mb-3">
-						<label for="foodName" class="form-label">نام غذا</label>
-						<InputText id="foodName" class="form-control" @bind-Value="MealModel.FoodName" />
-					</div>
-					<hr />
-					<div class="mb-3">
-						<label for="groceryName" class="form-label">نام اقلام</label>
-						<InputText id="groceryName" class="form-control" @bind-Value="GroceryModel.Name" />
-					</div>
-					<div class="mb-3 d-flex justify-content-between">
-						<div>
-							<label for="groceryAmount" class="form-label">مقدار</label>
-							<InputText id="groceryAmount" class="form-control" @bind-Value="GroceryModel.Amount" />
-						</div>
-						<div>
-							<button type="button" class="btn btn-outline-primary  grocery-add-btn" @onclick="OnNewGrocerySubmitet">+</button>
-						</div>
-					</div>
+
+					<AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="false" ValueChangedEventHandler="OnNewGroceryAdded" />
+
 					@if (MealModel.Groceries != null)
 					{
-						foreach (var groc in MealModel.Groceries)
+
+						<GroceriesList MealModel="MealModel" />
+
+
+@* 						foreach (var groc in MealModel.Groceries)
 						{
 							<div class="d-flex justify-content-between">
+								<div>
+									<button type="button" class="btn btn-sm text-secondary grocery-del-btn" @onclick="() => OnGroceryDeleted(MealModel, groc)">
+										<i class="fa fa-times" aria-hidden="true"></i>
+									</button>
+								</div>
 								<div>
 									@(groc.Name)
 								</div>
@@ -176,7 +173,7 @@
 								</div>
 							</div>
 
-						}
+						} *@
 					}
 				</div>
 				<div class="modal-footer">
@@ -223,6 +220,8 @@
 
 	public Grocery GroceryModel { get; set; }
 
+	public bool IsDataPassed { get; set; }
+
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -235,6 +234,8 @@
 		MealModel = new Meal();
 
 		GroceryModel = new Grocery();
+
+		IsDataPassed = false;
 
 
 		FirstWeek = new Week()
@@ -382,7 +383,7 @@
 		if (isAddMeal)
 		{
 			MealModel = new Meal();
-		GroceryModel = new Grocery();			
+			GroceryModel = new Grocery();			
 		}
 		else
 		{
@@ -403,10 +404,16 @@
 		};
 	}
 
-	public async Task OnGroceryDeleted(Meal meal, Grocery groc)
+	private void OnEditGeroceries(Meal meal)
 	{
-		meal.Groceries.Remove(groc);
+		meal.GroceryEditable = !meal.GroceryEditable;
+		IsDataPassed = !meal.GroceryEditable;
 	}
+
+	// public async Task OnGroceryDeleted(Meal meal, Grocery groc)
+	// {
+	// 	meal.Groceries.Remove(groc);
+	// }
 
 
 	public IEnumerable<Meal> GetBlankMeals()
@@ -419,13 +426,18 @@
 
 	}
 
-	public async Task OnNewGrocerySubmitet() 
+	public async Task OnNewGroceryAdded(bool isSubmitNeeded = false) 
 	{
 		if (MealModel.Groceries == null)
 			MealModel.Groceries = new List<Grocery>();
 
 		MealModel.Groceries.Add(GroceryModel);
 		GroceryModel = new Grocery();
+
+		if(isSubmitNeeded)
+		{
+			OnNewGrocerySubmitet();
+		}
 	}
 
 	public async Task OnNewMealSubmitet()
@@ -433,6 +445,16 @@
 		var meal = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
 
 		meal.FoodName = MealModel.FoodName;
+		if (MealModel.Groceries != null)
+		{
+			meal.Groceries = MealModel.Groceries;
+		}
+	}
+
+	public async Task OnNewGrocerySubmitet()
+	{
+		var meal = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
+
 		if (MealModel.Groceries != null)
 		{
 			meal.Groceries = MealModel.Groceries;

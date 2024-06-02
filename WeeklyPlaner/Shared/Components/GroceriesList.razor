@@ -1,0 +1,36 @@
+﻿@using WeeklyPlaner.Models
+
+
+@foreach (var groc in MealModel.Groceries)
+{
+    <div class="d-flex justify-content-between">
+        <div>
+            <button type="button" class="btn btn-sm text-secondary grocery-del-btn" @onclick="() => OnGroceryDeleted(groc)">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>
+            @(groc.Name)
+        </div>
+        <div>
+            @(groc.Amount)
+        </div>
+    </div>
+
+}
+
+@code {
+
+    [Parameter, EditorRequired]
+    public Meal MealModel { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    private async Task OnGroceryDeleted(Grocery groc)
+    {
+        MealModel.Groceries.Remove(groc);
+    }
+}
