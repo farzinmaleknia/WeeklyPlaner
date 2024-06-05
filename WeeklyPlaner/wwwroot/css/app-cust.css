@@ -11,10 +11,6 @@
     font-family: 'iransansweb(fanum)_light';
 }
 
-.disable-hover {
-    pointer-events: none;
-} 
-
 .padding-x-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -40,10 +36,14 @@
     font-size: 36px;
 }
 
-hover-disable
 
 .my-txt-blue {
     color: #2e7396;
+}
+
+.just-bg-blue {
+    background-color: #2e7396;
+    color: white;
 }
 
 .my-bg-blue {
@@ -51,7 +51,7 @@ hover-disable
     color: white;
 }
 
-    .my-bg-blue:hover {
+    .my-bg-blue:not(.nohover):hover {
         border-color: #2e7396;
         background-color: none;
         color: #2e7396;
@@ -70,6 +70,11 @@ hover-disable
 
 .my-txt-red {
     color: #c2413d;
+}
+
+.just-bg-red {
+    background-color: #c2413d;
+    color: white;
 }
 
 .my-bg-red {
@@ -98,6 +103,11 @@ hover-disable
     color: #2e9669;
 }
 
+.just-bg-green {
+    background-color: #2e9669;
+    color: white;
+}
+
 .my-bg-green {
     background-color: #2e9669;
     color: white;
@@ -122,6 +132,11 @@ hover-disable
 
 .my-txt-orange {
     color: #d95226;
+}
+
+.just-bg-orange {
+    background-color: #d95226;
+    color: white;
 }
 
 .my-bg-orange {
@@ -150,6 +165,11 @@ hover-disable
     color: #9c44bb;
 }
 
+.just-bg-purple {
+    background-color: #9c44bb;
+    color: white;
+}
+
 .my-bg-purple {
     background-color: #9c44bb;
     color: white;
@@ -176,6 +196,11 @@ hover-disable
     color: #96912e;
 }
 
+.just-bg-mustard {
+    background-color: #96912e;
+    color: white;
+}
+
 .my-bg-mustard {
     background-color: #96912e;
     color: white;
@@ -200,6 +225,11 @@ hover-disable
 
 .my-txt-skyblue {
     color: #2e9691;
+}
+
+.just-bg-skyblue {
+    background-color: #2e9691;
+    color: white;
 }
 
 .my-bg-skyblue {
