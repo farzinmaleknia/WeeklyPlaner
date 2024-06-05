@@ -1,85 +1,241 @@
-﻿@font-face {
-    font-family: "iransans";
-    src: url("fonts/IRANSans.ttf") format("truetype");
+﻿
+@font-face {
+    font-family: 'iransansweb(fanum)_light';
+    src: url('../fonts/iransans/ttf/iransansweb(fanum)_light.ttf') format('truetype');
 }
+
 
 * {
     font-size: 24px;
     scroll-behavior: smooth;
+    font-family: 'iransansweb(fanum)_light';
 }
+
+.disable-hover {
+    pointer-events: none;
+} 
 
 .padding-x-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
 
-.f-size18{
+.f-size16 {
+    font-size: 16px;
+}
+
+.f-size18 {
     font-size: 18px;
 }
 
-.f-size28{
+.f-size28 {
     font-size: 28px;
 }
 
-.f-size32{
+.f-size32 {
     font-size: 32px;
 }
 
-.f-size36{
+.f-size36 {
     font-size: 36px;
+}
+
+hover-disable
+
+.my-txt-blue {
+    color: #2e7396;
 }
 
 .my-bg-blue {
     background-color: #2e7396;
+    color: white;
+}
+
+    .my-bg-blue:hover {
+        border-color: #2e7396;
+        background-color: none;
+        color: #2e7396;
+    }
+
+.my-bg-blue-outline {
+    border-color: #2e7396;
+    background-color: none;
+    color: #2e7396 !important;
+}
+
+    .my-bg-blue-outline:hover {
+        background-color: #2e7396;
+        color: white !important;
+    }
+
+.my-txt-red {
+    color: #c2413d;
 }
 
 .my-bg-red {
-    background-color: #962e33;
+    background-color: #c2413d;
+    color: white;
 }
+
+    .my-bg-red:hover {
+        border-color: #c2413d;
+        background-color: none;
+        color: #c2413d;
+    }
 
 .my-bg-red-outline {
-    border-color: #962e33;
+    border-color: #c2413d;
     background-color: none;
-    color: #962e33;
+    color: #c2413d !important;
 }
 
-.my-bg-red-outline:hover {
-    background-color: #962e33;
-    color: white;
+    .my-bg-red-outline:hover {
+        background-color: #c2413d;
+        color: white !important;
+    }
+
+.my-txt-green {
+    color: #2e9669;
 }
 
 .my-bg-green {
     background-color: #2e9669;
+    color: white;
+}
+
+    .my-bg-green:hover {
+        border-color: #2e9669;
+        background-color: none;
+        color: #2e9669;
+    }
+
+.my-bg-green-outline {
+    border-color: #2e9669;
+    background-color: none;
+    color: #2e9669 !important;
+}
+
+    .my-bg-green-outline:hover {
+        background-color: #2e9669;
+        color: white !important;
+    }
+
+.my-txt-orange {
+    color: #d95226;
 }
 
 .my-bg-orange {
-    background-color: #96352e;
+    background-color: #d95226;
+    color: white;
+}
+
+    .my-bg-orange:hover {
+        border-color: #d95226;
+        background-color: none;
+        color: #d95226;
+    }
+
+.my-bg-orange-outline {
+    border-color: #d95226;
+    background-color: none;
+    color: #d95226 !important;
+}
+
+    .my-bg-orange-outline:hover {
+        background-color: #d95226;
+        color: white !important;
+    }
+
+.my-txt-purple {
+    color: #9c44bb;
 }
 
 .my-bg-purple {
-    background-color: #5d2e96;
+    background-color: #9c44bb;
+    color: white;
+}
+
+    .my-bg-purple:hover {
+        border-color: #9c44bb;
+        background-color: none;
+        color: #9c44bb;
+    }
+
+.my-bg-purple-outline {
+    border-color: #9c44bb;
+    background-color: none;
+    color: #9c44bb !important;
+}
+
+    .my-bg-purple-outline:hover {
+        background-color: #9c44bb;
+        color: white !important;
+    }
+
+.my-txt-mustard {
+    color: #96912e;
 }
 
 .my-bg-mustard {
     background-color: #96912e;
+    color: white;
+}
+
+    .my-bg-mustard:hover {
+        border-color: #96912e;
+        background-color: none;
+        color: #96912e;
+    }
+
+.my-bg-mustard-outline {
+    border-color: #96912e;
+    background-color: none;
+    color: #96912e !important;
+}
+
+    .my-bg-mustard-outline:hover {
+        background-color: #96912e;
+        color: white !important;
+    }
+
+.my-txt-skyblue {
+    color: #2e9691;
 }
 
 .my-bg-skyblue {
     background-color: #2e9691;
+    color: white;
 }
 
+    .my-bg-skyblue:hover {
+        border-color: #2e9691;
+        background-color: none;
+        color: #2e9691;
+    }
+
+.my-bg-skyblue-outline {
+    border-color: #2e9691;
+    background-color: none;
+    color: #2e9691 !important;
+}
+
+    .my-bg-skyblue-outline:hover {
+        background-color: #2e9691;
+        color: white !important;
+    }
+
 .days {
-    border : 2px solid lightgray ;
+    border: 2px solid lightgray;
 }
 
 .days-title {
-     color: white;
-     font-weight: 600;
-     padding-top: 15px;
-     padding-bottom: 25px;
+    color: white;
+    font-weight: 600;
+    padding-top: 15px;
+    padding-bottom: 25px;
 }
 
-.width-98{
+.width-98 {
     width: 98%;
 }
 
@@ -91,23 +247,24 @@
 .new-meal-buttons {
     margin-top: 20px;
     padding-bottom: 20px;
-}
-
-.food-name{
-    font-weight: 500;
     color: white;
 }
 
-.m-right-auto{
+.food-name {
+    font-weight: 500;
+}
+
+.m-right-auto {
     margin-right: auto !important;
     margin-left: 0 !important;
 }
 
-.grocery-btn{
-    padding: 11px ;
+.grocery-btn {
+    padding: 11px;
+    height: 100%;
 }
 
-.grocery-add-btn{
+.grocery-add-btn {
     margin-top: 49px !important;
 }
 
@@ -122,7 +279,7 @@
 }
 
 .meal-del-btn {
-    padding-top: 5px;
+    padding-top: 7px;
     margin-top: 20px;
     margin-left: 26px;
     width: 42px;
@@ -133,12 +290,3 @@
     margin-top: 10px;
     margin-right: 24px;
 }
-
-
-
-
-
-
-
-
-
