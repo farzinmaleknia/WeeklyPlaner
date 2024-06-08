@@ -15,6 +15,7 @@
 		{
 			Title = "شام",
 		};
+		public string color { get; set; } 
 
 		public IEnumerable<Meal> GetMeals()
 		{
