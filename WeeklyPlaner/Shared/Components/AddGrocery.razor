@@ -1,19 +1,19 @@
 ﻿@using WeeklyPlaner.Models
 
 <EditForm Model="GroceryModel" OnSubmit="OnValueChanged">
-		<div class="mb-3">
-			<label for="groceryName" class="form-label">قلم مورد نیاز</label>
-			<InputText id="groceryName" class="form-control" @bind-Value="GroceryModel.Name" />
+	<div class="mb-1">
+		<label for="groceryName" class="form-label">قلم مورد نیاز</label>
+		<InputText id="groceryName" class="form-control" @bind-Value="GroceryModel.Name" />
+	</div>
+	<div class="mb-3 d-flex justify-content-between">
+		<div>
+			<label for="groceryAmount" class="form-label">مقدار</label>
+			<InputText id="groceryAmount" class="form-control" @bind-Value="GroceryModel.Amount" />
 		</div>
-		<div class="mb-3 d-flex justify-content-between">
-			<div>
-				<label for="groceryAmount" class="form-label">مقدار</label>
-				<InputText id="groceryAmount" class="form-control" @bind-Value="GroceryModel.Amount" />
-			</div>
-			<div>
-				<button type="submit" class="btn my-bg-@(CurrentColor)-outline  grocery-add-btn" >+</button>
-			</div>
+		<div>
+			<button type="submit" class="btn my-bg-@(CurrentColor)-outline  grocery-add-btn" >+</button>
 		</div>
+	</div>
 </EditForm>
 
 @code {

@@ -16,11 +16,10 @@ namespace WeeklyPlaner.Models
         public string color { get; set; }
 
         public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink" };
-        public IEnumerable<Day> Weekdays { get; set; } 
 
         public IEnumerable<Day> GetDays()
         {
-			return Weekdays = new List<Day>() { Thursday, Friday, Saturday, Sunday, Monday, Tuesday, Wednesday};
+			return new List<Day>() { Thursday, Friday, Saturday, Sunday, Monday, Tuesday, Wednesday};
 
 		}
 
