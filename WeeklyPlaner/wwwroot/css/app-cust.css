@@ -28,6 +28,10 @@
     padding-top: 5px !important;
 }
 
+.dir-ltr{
+    direction: ltr;
+}
+
 .my-sticky{
     position: sticky;
     top: 0;
@@ -104,7 +108,7 @@
 
 .modal-food-scrollable {
     overflow-y: scroll;
-    height: 200px;
+    height: 500px;
 }
 
 .meal-del-btn {
@@ -120,7 +124,17 @@
     margin-right: 24px;
 }
 
-/*-------------------------------Font Sizes--------------------------------------*/
+.food-category-title {
+    margin-top: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+}
+
+.food-name-icon {
+    margin-right: 6px;
+}
+
+/*------------------------------- Font Sizes --------------------------------------*/
 
 
 .f-size16 {
@@ -128,7 +142,11 @@
 }
 
 .f-size18 {
-    font-size: 18px;
+    font-size: 18px !important;
+}
+
+.f-size24 {
+    font-size: 24px;
 }
 
 .f-size28 {
@@ -143,7 +161,7 @@
     font-size: 36px;
 }
 
-/*-------------------------------BG & Colors--------------------------------------*/
+/*------------------------------- BG & Colors --------------------------------------*/
 
 .top-bg {
     background-color: #5096af;

@@ -17,7 +17,7 @@
                         FirstRender = false;
                     }
 
-                    <div class="carousel-item @(week.Title == "هفته کنونی"? "active" : "") col-12 padding-x-0">
+                    <div class="carousel-item @(week.Title == "هفته کنونی"? "active": "") col-12 padding-x-0">
                         <div class="mb-3">
                             <div class="my-2 d-flex justify-content-between">
                                 <button class="border-0  " type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
@@ -59,7 +59,7 @@
                                                                     <div class="card-body bg-light padding-t-5">
                                                                         <div class="row mx-auto">
                                                                             <div class="col-10 padding-x-0">
-                                                                                <button class="btn btn-sm my-bg-@(day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size28 "
+                                                                                <button class="btn btn-sm my-bg-@(day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
                                                                                         @onclick="() => passingData(week.Id, day, false, meal)"
                                                                                         data-bs-toggle="modal" data-bs-target="#addEditMealModal">
                                                                                     @(meal.Food.Name)
@@ -87,7 +87,7 @@
                                                                             }
 
 
-                                                                            <div class="col-12 f-size18 pt-3">
+                                                                            <div class="col-12 f-size18 padding-x-0 pt-3">
                                                                                 @if (meal.Groceries != null)
                                                                                 {
                                                                                     <GroceriesList MealModel="meal" />
@@ -134,9 +134,48 @@
                     </div>
 
                 }
-
-
             </div>
+        </div>
+
+        <div class="mb-3">
+            <EditForm Model="FoodModel" OnSubmit="OnNewFoodSubmited" >
+                <div class="mb-1">
+                    <label for="FoodName" class="form-label">قلم مورد نیاز</label>
+                    <InputText id="FoodName" class="form-control" @bind-Value="FoodModel.Name" />
+                </div>
+                <div class="mb-3 d-flex justify-content-between">
+                    <button type="button" class="btn my-bg-blue btn-sm dropdown-toggle meal-dropdown-btn mb-2" data-bs-toggle="dropdown" aria-expanded="false">
+                        @("dsjs")
+                    </button>
+                    <ul class="dropdown-menu">
+                        @foreach (var category in FoodList)
+                        {
+                            //<li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
+                        }
+                    </ul>
+                    <div>
+                        <button type="submit" class="btn my-bg-@(CurrentColor)-outline  grocery-add-btn">+</button>
+                    </div>
+                </div>
+            </EditForm>
+
+            @foreach (var categorty in FoodList)
+            {
+                <div class="mb-3">
+                    <div class="food-category-title">
+                        <span class="f-size28">@(categorty.Title)</span>
+                    </div>
+                    <div>
+                        @foreach (var food in categorty.foods)
+                        {
+                            <button class="btn my-bg-blue-outline m-1 f-size18" @onclick="() => OnFoodSelected(food)">
+                                @(food.Name)
+                                <i class="fa fa-times f-size16 food-name-icon" aria-hidden="true"></i>
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -172,40 +211,55 @@
                             }
                         </div>
                     </div>
-
+                     
                     <hr style="margin-top: 0;" />
 
-                    <div class="modal-food-scrollable">
-                        @foreach (var categorty in FoodList.GetFoodList())
-                        {
-                            <div>
-                                <div class="mx-2 mt-3">
-                                    <span >@(categorty.Title)</span>
-                                </div>
-                                <div>
-                                    @foreach (var food in categorty.foods)
-                                    {
-                                        <button class="btn my-bg-@(CurrentColor)-outline m-1 f-size18">@(food.Name)</button>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </div>
-
-                    <hr />
-
-                    <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="false" CurrentColor="@(CurrentColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
-
-                    @if (MealModel.Groceries != null)
+                    @if (MealModel.Food.Name == null)
                     {
-                        <GroceriesList MealModel="MealModel" />
+                        <div class="modal-food-scrollable">
+                            @foreach (var categorty in FoodList)
+                            {
+                                <div>
+                                    <div class="mx-2 mt-3">
+                                        <span >@(categorty.Title)</span>
+                                    </div>
+                                    <div>
+                                        @foreach (var food in categorty.foods)
+                                        {
+                                            <button class="btn my-bg-@(CurrentColor)-outline m-1 f-size18" @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        
+                    }
+                    else
+                    {
+                            <div class="btn-group dir-ltr" role="group" aria-label="foodModelName">
+                                <button type="button" class="btn my-bg-@(CurrentColor)" @onclick="() => OnFoodDiselected()">
+                                    <i class="fa fa-times  f-size16" aria-hidden="true"></i>
+                                </button>
+                                <span class="btn just-bg-@(CurrentColor)">@(MealModel.Food.Name)</span>
+                            </div>
+
+                            <hr />
+
+                            <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="false" CurrentColor="@(CurrentColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
+
+                            @if (MealModel.Groceries != null)
+                            {
+                                <GroceriesList MealModel="MealModel" />
+                            }
                     }
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn my-bg-@(CurrentColor)-outline bootstrap-buttons" data-bs-dismiss="modal">انصراف</button>
-                    <button type="submit" class="btn my-bg-@(CurrentColor) bootstrap-buttons" data-bs-dismiss="modal">ثبت</button>
-                </div>
-
+                @if (MealModel.Food.Name != null)
+                {
+                    <div class="modal-footer">
+                        <button type="button" class="btn my-bg-@(CurrentColor)-outline bootstrap-buttons" data-bs-dismiss="modal">انصراف</button>
+                        <button type="submit" class="btn my-bg-@(CurrentColor) bootstrap-buttons" data-bs-dismiss="modal">ثبت</button>
+                    </div>
+                }
             </EditForm>
         </div>
     </div>
@@ -238,13 +292,15 @@
     public List<Week> WeeksList { get; set; }
     public IEnumerable<Week> WeeksListIterable { get; set; }
 
-    public ListOfFoods FoodList { get; set; }
+    public List<FoodCategory> FoodList { get; set; }
 
     public int WeekId { get; set; }
 
     public string DayModelTitle { get; set; }
 
     public Meal MealModel { get; set; }
+
+    public Food FoodModel { get; set; }
 
     public Grocery GroceryModel { get; set; }
 
@@ -269,9 +325,11 @@
         WeeksList = new List<Week>();
         WeeksListIterable = new List<Week>();
 
-        FoodList = new ListOfFoods();
+        FoodList = new List<FoodCategory>();
 
         MealModel = new Meal();
+
+        FoodModel = new Food();
 
         FirstRender = true;
 
@@ -564,77 +622,20 @@
         };
 
 
-        FoodList.BreakfastFoods.foods.AddRange(new List<Food>()
-        {
-            new Food("حلیم"),
-            new Food("نان و پنیر"),
-            new Food("صبحانه انگلیسی"),
-            new Food("سوسیس تخم مرغ"),
 
-        });
+        FoodList.AddRange(new List<FoodCategory>()
+            {
+                new FoodCategory(){ Title = "صبحانه", foods = new List<Food>() { new Food("حلیم"), new Food("نان و پنیر"), new Food("صبحانه انگلیسی"), new Food("سوسیس تخم مرغ"), }, }, 
+                new FoodCategory(){ Title = "غذاهای نونی", foods = new List<Food>() { new Food("آبگوشت"), new Food("کباب شامی"), new Food("الویه"), new Food("دیزی"), new Food("دو پیازه"), new Food("املت")} },
+                new FoodCategory(){ Title= "غذاهای برنجی", foods = new List<Food>() { new Food("قرمه سبزی"), new Food("ته چین مرغ"), new Food("خوراک مرغ"), new Food("خورشت بامیه"), new Food("خورشت قیمه"), new Food("خورشت کرفس"), new Food("سبزی پلو با تن ماهی"), } },
+                new FoodCategory(){ Title = "غذاهای حبوبات", foods = new List<Food>() { new Food("لوبیا چیتی"), new Food("عدسی"), } },
+                new FoodCategory(){ Title = "غذاهای نشاسته ای", foods = new List<Food>() { new Food("ماکارانی"), } },
+                new FoodCategory(){ Title = "غذاهای سبزیجاتی", foods = new List<Food>() { new Food("سبزیجات با فیله"), new Food("سبزیجات با استیک"), } }, 
+                new FoodCategory(){ Title = "غذاهای فوری", foods = new List<Food>() { new Food("ساندویچ مرغ"), new Food("ساندویچ تن ماهی و سیبزمینی"), new Food("بندری"), } },
+                new FoodCategory(){ Title = "غذاهای کناری", foods = new List<Food>() { new Food("سوپ ورمیشل"), new Food("سوپ مدیترانه"), new Food("سالاد شیرازی"), new Food("سالاد فصل"), new Food("سالاد سزار"), new Food("سالاد تن ماهی"), new Food("سالاد تن پیاز"), } },
+            }
+        );
 
-        FoodList.FoodsWithBread.foods.AddRange(new List<Food>()
-        {
-            new Food("آبگوشت"),
-            new Food("کباب شامی"),
-            new Food("الویه"),
-            new Food("دیزی"),
-            new Food("دو پیازه"),
-            new Food("املت"),
-
-        });
-
-        FoodList.FoodsWithRice.foods.AddRange(new List<Food>()
-        {
-            new Food("قرمه سبزی"),
-            new Food("ته چین مرغ"),
-            new Food("خوراک مرغ"),
-            new Food("خورشت بامیه"),
-            new Food("خورشت قیمه"),
-            new Food("خورشت کرفس"),
-            new Food("سبزی پلو با تن ماهی"),
-
-        });
-
-        FoodList.FoodsWithBeans.foods.AddRange(new List<Food>()
-        {
-            new Food("لوبیا چیتی"),
-            new Food("عدسی"),
-
-        });
-
-        FoodList.FoodWithNothings.foods.AddRange(new List<Food>() 
-        {
-            new Food("ماکارانی"),
-
-        });
-
-        FoodList.FoodsWithVegetables.foods.AddRange(new List<Food>()
-        {
-            new Food("سبزیجات با فیله"),
-            new Food("سبزیجات با استیک"),
-
-        });
-
-        FoodList.FastPreptrationFoods.foods.AddRange(new List<Food>()
-        {
-            new Food("ساندویچ مرغ"),
-            new Food("ساندویچ تن ماهی و سیبزمینی"),
-            new Food("بندری"),
-
-        });
-
-        FoodList.SideFoods.foods.AddRange(new List<Food>()
-        {
-            new Food("سوپ ورمیشل"),
-            new Food("سوپ مدیترانه"),
-            new Food("سالاد شیرازی"),
-            new Food("سالاد فصل"),
-            new Food("سالاد سزار"),
-            new Food("سالاد تن ماهی"),
-            new Food("سالاد تن پیاز"),
-
-        });
 
         WeeksList.Add(FirstWeek);
         WeeksList.Add(SecondWeek);
@@ -703,6 +704,20 @@
 
         return list;
 
+    }
+
+    public async Task OnNewFoodSubmited()
+    {
+    }
+
+    public async Task OnFoodSelected(Food food)
+    {
+        MealModel.Food = new Food(food.Name);
+    }
+
+    public async Task OnFoodDiselected()
+    {
+        MealModel.Food = new Food();
     }
 
     public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
