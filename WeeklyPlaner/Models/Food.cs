@@ -3,6 +3,7 @@
     public class Food
     {
         public string Name { get; set; }
+        public string Category { get; set; }
         public bool IsEatenRecently { get; set; } = false;
 
         public Food(string name) 

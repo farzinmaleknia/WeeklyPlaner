@@ -6,6 +6,10 @@
 <div class="container-fluid">
     <div class="row bg-light-subtle">
 
+        @if (false)
+        {
+
+
         <div id="WeekCarousel" class="carousel slide">
             <div class="carousel-inner">
 
@@ -137,33 +141,38 @@
             </div>
         </div>
 
+        }
+
         <div class="mb-3">
-            <EditForm Model="FoodModel" OnSubmit="OnNewFoodSubmited" >
-                <div class="mb-1">
-                    <label for="FoodName" class="form-label">قلم مورد نیاز</label>
-                    <InputText id="FoodName" class="form-control" @bind-Value="FoodModel.Name" />
+            <div>
+                <span class=" f-size36 food-title just-bg-blue text-center">غذاها</span>
+            </div>
+            <div class="card mb-5">
+                <div class="card-body">
+                    <EditForm Model="CategoryModel" OnSubmit="OnNewCategorySubmited" >
+                        <h5>افزودن دسته</h5>
+                        <div class="d-flex justify-content-between">
+                            <div class="mb-2">
+                                <InputText id="categoryName" class="form-control" @bind-Value="CategoryModel.Title" placeholder="نام"/>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn my-bg-blue-outline padding-t-10">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </EditForm>
                 </div>
-                <div class="mb-3 d-flex justify-content-between">
-                    <button type="button" class="btn my-bg-blue btn-sm dropdown-toggle meal-dropdown-btn mb-2" data-bs-toggle="dropdown" aria-expanded="false">
-                        @("dsjs")
-                    </button>
-                    <ul class="dropdown-menu">
-                        @foreach (var category in FoodList)
-                        {
-                            //<li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
-                        }
-                    </ul>
-                    <div>
-                        <button type="submit" class="btn my-bg-@(CurrentColor)-outline  grocery-add-btn">+</button>
-                    </div>
-                </div>
-            </EditForm>
+            </div>
 
             @foreach (var categorty in FoodList)
             {
                 <div class="mb-3">
-                    <div class="food-category-title">
-                        <span class="f-size28">@(categorty.Title)</span>
+                    <div class="food-category-group d-flex justify-content-start">
+                        <span class="category-title f-size28">@(categorty.Title)</span>
+                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, categorty)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
+                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, categorty)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                        <button class="btn my-bg-blue-outline border-0"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
                     </div>
                     <div>
                         @foreach (var food in categorty.foods)
@@ -176,17 +185,21 @@
                     </div>
                 </div>
             }
+
+            <button class="btn my-bg-blue new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
+                دسته‌ی جدید<i class="fa fa-plus f-size16" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
 </div>
 
 
-<!-- ADD/Edit Modal -->
+<!-- ADD/Edit meal Modal -->
 <div class="modal fade" id="addEditMealModal" tabindex="-1" aria-labelledby="addEditMealModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header just-bg-@(CurrentColor)">
-                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(IsForAdd ? "وعده جدید رو وارد کن" : "وعده رو تغییر بده")</h1>
+                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(IsForAddMeal ? "وعده جدید رو وارد کن" : "وعده رو تغییر بده")</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <EditForm Model="MealModel" OnSubmit="OnNewMealSubmitet">
@@ -194,7 +207,7 @@
                 <div class="modal-body">
                     <div class="d-flex justify-content-between">
                         <div class="btn-group">
-                            <button class="btn my-bg-@(CurrentColor) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!IsForAdd ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn my-bg-@(CurrentColor) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!IsForAddMeal ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 انتخاب وعده
                             </button>
                             <ul class="dropdown-menu">
@@ -284,6 +297,64 @@
     </div>
 </div>
 
+<!-- ADD/Edit Food -->
+<div class="modal fade" id="addEditFoodModal" tabindex="-1" aria-labelledby="addEditFoodModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header just-bg-blue">
+                <h1 class="modal-title fs-5" id="addEditFoodModalLabel">@(true ? "غذای جدید رو وارد کن" : "غذا رو تغییر بده")</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <EditForm Model="FoodModel" OnSubmit="OnNewFoodSubmited">
+                <div class="modal-body">
+                    <label for="foodname" class="form-label">نام</label>
+                    <InputText id="foodname" class="form-control" @bind-Value=(FoodModel.Name) />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">انصراف</button>
+                    @if (true)
+                    {
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons">ثبت</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">ثبت</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+<!-- ADD/Edit Category -->
+<div class="modal fade" id="addEditCategoryModal" tabindex="-1" aria-labelledby="addEditCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header just-bg-blue">
+                <h1 class="modal-title fs-5" id="addEditCategoryModalLabel">@(IsForAddCat ? "دسته‌ی جدید رو وارد کن" : "دسته رو تغییر بده")</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <EditForm Model="CategoryModel" OnSubmit="OnNewCategorySubmited">
+                <div class="modal-body">
+                    <label for="categoryname" class="form-label">نام</label>
+                    <InputText id="categoryname" class="form-control" @bind-Value=(CategoryModel.Title) />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">انصراف</button>
+                    @if (IsForAddCat)
+                    {
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons">ثبت</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">ثبت</button>
+                    }
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
 
 
 @code {
@@ -302,6 +373,8 @@
 
     public Food FoodModel { get; set; }
 
+    public FoodCategory CategoryModel { get; set; }
+
     public Grocery GroceryModel { get; set; }
 
     public bool IsDataPassed { get; set; }
@@ -314,7 +387,9 @@
 
     public Random Random { get; set; }
 
-    public bool IsForAdd { get; set; }
+    public bool IsForAddMeal { get; set; }
+
+    public bool IsForAddCat { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -330,6 +405,8 @@
         MealModel = new Meal();
 
         FoodModel = new Food();
+
+        CategoryModel = new FoodCategory();
 
         FirstRender = true;
 
@@ -628,13 +705,21 @@
                 new FoodCategory(){ Title = "صبحانه", foods = new List<Food>() { new Food("حلیم"), new Food("نان و پنیر"), new Food("صبحانه انگلیسی"), new Food("سوسیس تخم مرغ"), }, }, 
                 new FoodCategory(){ Title = "غذاهای نونی", foods = new List<Food>() { new Food("آبگوشت"), new Food("کباب شامی"), new Food("الویه"), new Food("دیزی"), new Food("دو پیازه"), new Food("املت")} },
                 new FoodCategory(){ Title= "غذاهای برنجی", foods = new List<Food>() { new Food("قرمه سبزی"), new Food("ته چین مرغ"), new Food("خوراک مرغ"), new Food("خورشت بامیه"), new Food("خورشت قیمه"), new Food("خورشت کرفس"), new Food("سبزی پلو با تن ماهی"), } },
-                new FoodCategory(){ Title = "غذاهای حبوبات", foods = new List<Food>() { new Food("لوبیا چیتی"), new Food("عدسی"), } },
+                new FoodCategory(){ Title = "غذاهای حبوباتی", foods = new List<Food>() { new Food("لوبیا چیتی"), new Food("عدسی"), } },
                 new FoodCategory(){ Title = "غذاهای نشاسته ای", foods = new List<Food>() { new Food("ماکارانی"), } },
                 new FoodCategory(){ Title = "غذاهای سبزیجاتی", foods = new List<Food>() { new Food("سبزیجات با فیله"), new Food("سبزیجات با استیک"), } }, 
                 new FoodCategory(){ Title = "غذاهای فوری", foods = new List<Food>() { new Food("ساندویچ مرغ"), new Food("ساندویچ تن ماهی و سیبزمینی"), new Food("بندری"), } },
                 new FoodCategory(){ Title = "غذاهای کناری", foods = new List<Food>() { new Food("سوپ ورمیشل"), new Food("سوپ مدیترانه"), new Food("سالاد شیرازی"), new Food("سالاد فصل"), new Food("سالاد سزار"), new Food("سالاد تن ماهی"), new Food("سالاد تن پیاز"), } },
             }
         );
+
+        foreach (var category in FoodList)
+        {
+            foreach (var food in category.GetFoods())
+            {
+                food.Category = category.Title;
+            }
+        }
 
 
         WeeksList.Add(FirstWeek);
@@ -651,10 +736,10 @@
     {
         WeekId = weekId;
         DayModelTitle = day.Title;
-        IsForAdd = isAddMeal;
+        IsForAddMeal = isAddMeal;
         CurrentColor = day.color;
 
-        if (IsForAdd)
+        if (IsForAddMeal)
         {
             MealModel = new Meal();
             GroceryModel = new Grocery();
@@ -662,11 +747,11 @@
         else
         {
             MealModel = new Meal()
-                {
-                    Title = meal.Title,
-                    Food = new Food(meal.Food.Name),
-                    Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
-                };
+            {
+                Title = meal.Title,
+                Food = new Food(meal.Food.Name),
+                Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
+            };
         }
     }
 
@@ -706,8 +791,57 @@
 
     }
 
+    public async Task passingCategory(bool isForAddCat, FoodCategory category = null )
+    {
+        if(isForAddCat)
+        {
+            CategoryModel = new FoodCategory();
+
+        }
+        else
+        {
+            var lst = new List<Food>();
+            lst.AddRange(category.foods);
+            CategoryModel = new FoodCategory()
+            {
+                Id = category.Id,
+                Title = category.Title,
+
+                foods = lst,
+            };
+        }
+        IsForAddCat = isForAddCat;
+    }
+
     public async Task OnNewFoodSubmited()
     {
+        var category = FoodList.FirstOrDefault(c => c.Title == CategoryModel.Title);
+        category.foods.Add(FoodModel);
+
+        FoodModel = new Food();
+    }
+
+    public async Task OnNewCategorySubmited()
+    {
+        if (IsForAddCat)
+        {
+            FoodList.Add(new FoodCategory()
+            {
+                Title = CategoryModel.Title,
+            });
+
+        }
+        else
+        {
+            var category = FoodList.FirstOrDefault(c => c.Id == CategoryModel.Id);
+            category.Title = CategoryModel.Title;
+        }
+        CategoryModel = new FoodCategory();
+    }
+
+    public async Task OnCategorySelected(string category)
+    {
+        FoodModel.Category = category;
     }
 
     public async Task OnFoodSelected(Food food)
