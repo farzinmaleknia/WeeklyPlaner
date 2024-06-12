@@ -2,18 +2,19 @@
 {
     public class Day
     {
+		static PersianPhrases PersianPhrases = new PersianPhrases();
         public string Title { get; set; }
         public Meal Braekfast { get; set; } = new Meal()
 		{
-			Title = "صبحانه",
+			Title = PersianPhrases.Breakfast,
 		};
         public Meal Lunch { get; set; } = new Meal()
 		{
-			Title = "ناهار",
+			Title = PersianPhrases.Lunch,
 		};
 		public Meal Dinner { get; set; } = new Meal()
 		{
-			Title = "شام",
+			Title = PersianPhrases.Dinner,
 		};
 		public string color { get; set; } 
 
