@@ -1,0 +1,81 @@
+﻿
+<div id="WeekCarousel" class="carousel slide mb-5">
+    <div class="carousel-inner">
+
+        @foreach (var week in WeeksListIterable)
+        {
+            if (FirstRender)
+            {
+                ColorCounter = Random.Next(0, week.Colors.Count());
+                FirstRender = false;
+            }
+
+            <div class="carousel-item @(week.Title == PersianPhrases.CurrentWeek ? "active": "") col-12 padding-x-0">
+                <div class="mb-3">
+                    <div class="my-2 d-flex justify-content-between">
+                        <button class="border-0  " type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+
+                        <span class=" f-size36 weeks-title just-bg-@(week.Colors[Random.Next(0, week.Colors.Count())]) text-center">@(week.Title)</span>
+
+                        <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon text-dark " aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                    </div>
+                </div>
+
+                @foreach (var day in week.GetDays())
+                {
+                    day.color = week.Colors[ColorCounter];
+    
+                    <Days Week="week" Day="day" FoodList="@(FoodList)" ColorCounter="ColorCounter" />
+
+                    @if (ColorCounter < week.Colors.Count() - 1)
+                    {
+                        ColorCounter = ColorCounter + 1;
+                    }
+                    else
+                    {
+                        ColorCounter = (ColorCounter + 1) - week.Colors.Count();
+                    }
+                }
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+@code {
+
+    [Parameter]
+    public List<FoodCategory> FoodList { get; set; }
+
+    [Parameter]
+    public IEnumerable<Week> WeeksListIterable { get; set; }
+    
+    public Random Random { get; set; }
+    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+
+    public bool FirstRender { get; set; }
+
+    public int ColorCounter { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        FirstRender = true;
+
+        Random = new Random();
+
+
+    }
+
+}

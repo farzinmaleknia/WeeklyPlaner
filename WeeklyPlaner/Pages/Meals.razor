@@ -1,0 +1,203 @@
+﻿
+<div class="card">
+    <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
+        <span class="f-size36 meal-title" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(Meal.Title)</span>
+        <button class="btn my-bg-@(DayColor) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div id="dinnerBody" class="collapse show">
+        <div class="card-body bg-light padding-t-5">
+            <div class="row mx-auto">
+                <div class="col-10 padding-x-0">
+                    <button class="btn btn-sm my-bg-@(DayColor)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
+                            @onclick="() => passingData(false, Meal)"
+                            data-bs-toggle="modal" data-bs-target="#addEditMealModal">
+                        @(Meal.Food.Name)
+                    </button>
+                </div>
+                <div class="col-2 padding-x-0">
+                    <button class="btn btn-sm my-bg-@(DayColor)-outline text-white m-auto width-98 grocery-btn"
+                            @onclick="() => OnEditGeroceries(Meal)">
+                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+
+                @if (Meal.GroceryEditable)
+                {
+                    if (!IsDataPassed)
+                    {
+                        passingData(false, Meal);
+                        IsDataPassed = true;
+                    }
+
+                    <div class="col-12 mt-3 padding-x-0">
+                        <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="true" CurrentColor="@(DayColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
+                    </div>
+                }
+
+
+                <div class="col-12 f-size18 padding-x-0 pt-3">
+                    @if (Meal.Groceries != null)
+                    {
+                        <GroceriesList MealModel="Meal" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD/Edit meal Modal -->
+<div class="modal fade" id="addEditMealModal" tabindex="-1" aria-labelledby="addEditMealModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header just-bg-@(DayColor)">
+                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(IsForAddMeal ? PersianPhrases.EnterNew(PersianPhrases.Meal) : PersianPhrases.ChangeThe(PersianPhrases.Meal))</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <EditForm Model="MealModel" OnSubmit="OnNewMealSubmitet">
+
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="btn-group">
+                            <button class="btn my-bg-@(DayColor) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!IsForAddMeal ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @(PersianPhrases.ChooseMeal)
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var meal in GetBlankMeals())
+                                {
+                                    <li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <div>
+                            @if (MealModel.Title != null)
+                            {
+                                <p class="f-size28">@(MealModel.Title)</p>
+                            }
+                        </div>
+                    </div>
+
+                    <hr style="margin-top: 0;" />
+
+                    @if (MealModel.Food.Name == null)
+                    {
+                        <div class="modal-food-scrollable">
+                            @foreach (var categorty in FoodList)
+                            {
+                                <div>
+                                    <div class="mx-2 mt-3">
+                                        <span>@(categorty.Title)</span>
+                                    </div>
+                                    <div>
+                                        @foreach (var food in categorty.foods)
+                                        {
+                                            <button class="btn my-bg-@(DayColor)-outline m-1 f-size18" @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="btn-group dir-ltr" role="group" aria-label="foodModelName">
+                            <button type="button" class="btn my-bg-@(DayColor)" @onclick="() => OnFoodDiselected()">
+                                <i class="fa fa-times  f-size16" aria-hidden="true"></i>
+                            </button>
+                            <span class="btn just-bg-@(DayColor)">@(MealModel.Food.Name)</span>
+                        </div>
+
+                        <hr />
+
+                        <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="false" CurrentColor="@(DayColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
+
+                        @if (MealModel.Groceries != null)
+                        {
+                            <GroceriesList MealModel="MealModel" />
+                        }
+                    }
+                </div>
+                @if (MealModel.Food.Name != null)
+                {
+                    <div class="modal-footer">
+                        <button type="button" class="btn my-bg-@(DayColor)-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
+                        <button type="submit" class="btn my-bg-@(DayColor) bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Save)</button>
+                    </div>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+
+
+@code {
+
+    [Parameter]
+    public Meal Meal { get; set; }
+
+    [Parameter]
+    public string DayColor { get; set; }
+
+    public bool IsDataPassed { get; set; }
+
+    public Grocery GroceryModel { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        GroceryModel = new Grocery();
+    }
+
+
+
+    public void passingData(bool isAddMeal, Meal? meal = null)
+    {
+        IsForAddMeal = isAddMeal;
+
+        if (IsForAddMeal)
+        {
+            MealModel = new Meal();
+            GroceryModel = new Grocery();
+        }
+        else
+        {
+            MealModel = new Meal()
+                {
+                    Title = meal.Title,
+                    Food = new Food(meal.Food.Name),
+                    Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
+                };
+        }
+    }
+
+    private void OnEditGeroceries(Meal meal)
+    {
+        meal.GroceryEditable = !meal.GroceryEditable;
+        IsDataPassed = !meal.GroceryEditable;
+    }
+
+
+    public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
+    {
+        if (MealModel.Groceries == null)
+            MealModel.Groceries = new List<Grocery>
+                ();
+
+        MealModel.Groceries.Add(GroceryModel);
+        GroceryModel = new Grocery();
+
+        if (isSubmitNeeded)
+        {
+            OnNewGrocerySubmitet();
+        }
+    }
+}

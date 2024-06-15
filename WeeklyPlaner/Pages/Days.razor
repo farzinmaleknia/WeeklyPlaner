@@ -1,0 +1,233 @@
+﻿@* @foreach (var day in Week.GetDays())
+{
+    day.color = Week.Colors[ColorCounter]; *@
+
+    <div class="col-12  padding-x-0">
+        <div class="card days">
+            <span class="card-img-top just-bg-@(Day.color) text-center f-size36 days-title  my-sticky">@(Day.Title)</span>
+            <div class="card-body padding-x-0">
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item padding-x-0">
+                        @foreach (var meal in Day.GetMeals())
+                        {
+                            if (meal.Food.Name != null)
+                            {
+@*                                 <div class="card">
+                                    <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
+                                        <span class="f-size36 meal-title" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(meal.Title)</span>
+                                        <button class="btn my-bg-@(Day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
+                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                        </button>
+                                    </div>
+                                    <div id="dinnerBody" class="collapse show">
+                                        <div class="card-body bg-light padding-t-5">
+                                            <div class="row mx-auto">
+                                                <div class="col-10 padding-x-0">
+                                                    <button class="btn btn-sm my-bg-@(Day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
+                                                            @onclick="() => passingData(false, meal)"
+                                                            data-bs-toggle="modal" data-bs-target="#addEditMealModal">
+                                                        @(meal.Food.Name)
+                                                    </button>
+                                                </div>
+                                                <div class="col-2 padding-x-0">
+                                                    <button class="btn btn-sm my-bg-@(Day.color)-outline text-white m-auto width-98 grocery-btn"
+                                                            @onclick="() => OnEditGeroceries(meal)">
+                                                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+
+
+                                                @if (meal.GroceryEditable)
+                                                {
+                                                    if (!IsDataPassed)
+                                                    {
+                                                        passingData(false, meal);
+                                                        IsDataPassed = true;
+                                                    }
+
+                                                    <div class="col-12 mt-3 padding-x-0">
+                                                        <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Day.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
+                                                    </div>
+                                                }
+
+
+                                                <div class="col-12 f-size18 padding-x-0 pt-3">
+                                                    @if (meal.Groceries != null)
+                                                    {
+                                                        <GroceriesList MealModel="meal" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> *@
+                            }
+                            else
+                            {
+                                IsCreateBtnNeeded = true;
+                            }
+                        }
+                    </div>
+                </div>
+
+                @if (IsCreateBtnNeeded)
+                {
+                    <div class="d-flex justify-content-center">
+                        <button class="btn my-bg-@(Day.color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(true)">
+                            @(PersianPhrases.NewMeal)
+                        </button>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+@* } *@
+
+
+
+
+<!-- MealDeleteConfirmation Modal -->
+<ConfirmationModal Id="DelConfirmMealModal" Title="@(PersianPhrases.WarningByMark)" Color="@(Day.color)" ValueChangedEventHandler="OnDeleteMeal">
+    <Body>
+        <span>
+            @(PersianPhrases.SureDeleteMeal(MealModel.Food.Name, MealModel.Title))
+        </span>
+    </Body>
+</ConfirmationModal>
+
+
+
+
+@code {
+
+    [Parameter]
+    public List<FoodCategory> FoodList { get; set; }
+
+    [Parameter]
+    public Week Week { get; set; }
+
+    [Parameter]
+    public Day Day { get; set; }
+
+    [Parameter]
+    public int ColorCounter { get; set; }
+
+    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    public string DayModelTitle { get; set; }
+
+    public Meal MealModel { get; set; }
+
+    public Grocery GroceryModel { get; set; }
+
+    public bool IsForAddMeal { get; set; }
+
+    public bool IsCreateBtnNeeded { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        MealModel = new Meal();
+
+        GroceryModel = new Grocery();
+
+        IsCreateBtnNeeded = false;
+    }
+
+
+
+    public void passingData(bool isAddMeal, Meal? meal = null)
+    {
+        IsForAddMeal = isAddMeal;
+
+        if (IsForAddMeal)
+        {
+            MealModel = new Meal();
+            GroceryModel = new Grocery();
+        }
+        else
+        {
+            MealModel = new Meal()
+                {
+                    Title = meal.Title,
+                    Food = new Food(meal.Food.Name),
+                    Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
+                };
+        }
+    }
+
+    public void passingMeal(Meal meal)
+    {
+        MealModel = new Meal()
+        {
+            Title = meal.Title,
+        };
+    }
+
+
+
+    public async Task OnNewGrocerySubmitet()
+    {
+        var meal = Week.GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
+
+        if (MealModel.Groceries != null)
+        {
+            meal.Groceries = MealModel.Groceries;
+        }
+    }
+
+
+    public async Task OnNewMealSubmitet()
+    {
+        var meal = Week.GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
+
+        meal.Food = MealModel.Food;
+        if (MealModel.Groceries != null)
+        {
+            meal.Groceries = MealModel.Groceries;
+        }
+    }
+
+    public IEnumerable<Meal> GetBlankMeals()
+    {
+        IEnumerable<Meal> list = new List<Meal>();
+
+        if (DayModelTitle != null)
+        {
+            list = Week.GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals();
+
+        }
+
+        list = list.Where(m => m.Food.Name == null).ToList();
+
+        return list;
+
+    }
+
+    public async Task OnFoodSelected(Food food)
+    {
+        MealModel.Food = new Food(food.Name);
+    }
+
+    public async Task OnFoodDiselected()
+    {
+        MealModel.Food = new Food();
+    }
+
+    public async Task OnDeleteMeal(bool value)
+    {
+        if (value)
+        {
+            var meal = Week.GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
+
+            meal.Food = new Food();
+            meal.Groceries = new List<Grocery>();
+        }
+    }
+}

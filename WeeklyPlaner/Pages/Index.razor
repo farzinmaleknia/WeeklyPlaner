@@ -1,274 +1,49 @@
 ﻿@page "/"
 
-@using WeeklyPlaner.Models
-@using WeeklyPlaner.Shared.Components
 
 <div class="container-fluid">
     <div class="row bg-light-subtle">
 
-        @if (false)
-        {
-
-
-        <div id="WeekCarousel" class="carousel slide">
-            <div class="carousel-inner">
-
-                @foreach (var week in WeeksListIterable)
-                {
-                    if (FirstRender)
-                    {
-                        ColorCounter = Random.Next(0, week.Colors.Count());
-                        FirstRender = false;
-                    }
-
-                    <div class="carousel-item @(week.Title == PersianPhrases.CurrentWeek ? "active": "") col-12 padding-x-0">
-                        <div class="mb-3">
-                            <div class="my-2 d-flex justify-content-between">
-                                <button class="border-0  " type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-
-                                <span class=" f-size36 weeks-title just-bg-@(week.Colors[Random.Next(0, week.Colors.Count())]) text-center">@(week.Title)</span>
-
-                                <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon text-dark " aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                            </div>
-
-                            @foreach (var day in week.GetDays())
-                            {
-                                day.color = week.Colors[ColorCounter];
-                                bool isCreateBtnNeeded = false;
-
-                                <div class="col-12  padding-x-0">
-                                    <div class="card days">
-                                        <span class="card-img-top just-bg-@(day.color) text-center f-size36 days-title  my-sticky">@(day.Title)</span>
-                                        <div class="card-body padding-x-0">
-                                            <div class="list-group list-group-flush">
-                                                <div class="list-group-item padding-x-0">
-                                                    @foreach (var meal in day.GetMeals())
-                                                    {
-                                                        if (meal.Food.Name != null)
-                                                        {
-                                                            <div class="card">
-                                                                <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
-                                                                    <span class="f-size36 meal-title" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(meal.Title)</span>
-                                                                    <button class="btn my-bg-@(day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(week.Id, day, false, meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
-                                                                        <i class="fa fa-times" aria-hidden="true"></i>
-                                                                    </button>
-                                                                </div>
-                                                                <div id="dinnerBody" class="collapse show">
-                                                                    <div class="card-body bg-light padding-t-5">
-                                                                        <div class="row mx-auto">
-                                                                            <div class="col-10 padding-x-0">
-                                                                                <button class="btn btn-sm my-bg-@(day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
-                                                                                        @onclick="() => passingData(week.Id, day, false, meal)"
-                                                                                        data-bs-toggle="modal" data-bs-target="#addEditMealModal">
-                                                                                    @(meal.Food.Name)
-                                                                                </button>
-                                                                            </div>
-                                                                            <div class="col-2 padding-x-0">
-                                                                                <button class="btn btn-sm my-bg-@(day.color)-outline text-white m-auto width-98 grocery-btn"
-                                                                                        @onclick="() => OnEditGeroceries(meal)">
-                                                                                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                                                                                </button>
-                                                                            </div>
-
-
-                                                                            @if (meal.GroceryEditable)
-                                                                            {
-                                                                                if (!IsDataPassed)
-                                                                                {
-                                                                                    passingData(week.Id, day, false, meal);
-                                                                                    IsDataPassed = true;
-                                                                                }
-
-                                                                                <div class="col-12 mt-3 padding-x-0">
-                                                                                    <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="true" CurrentColor="@(CurrentColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
-                                                                                </div>
-                                                                            }
-
-
-                                                                            <div class="col-12 f-size18 padding-x-0 pt-3">
-                                                                                @if (meal.Groceries != null)
-                                                                                {
-                                                                                    <GroceriesList MealModel="meal" />
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            isCreateBtnNeeded = true;
-                                                        }
-                                                    }
-                                                </div>
-                                            </div>
-
-                                            @if (isCreateBtnNeeded)
-                                            {
-                                                <div class="d-flex justify-content-center">
-                                                    <button class="btn my-bg-@(day.color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(week.Id, day, true)">
-                                                        @(PersianPhrases.NewMeal)
-                                                    </button>
-                                                </div>
-                                            }
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                if (ColorCounter < week.Colors.Count() - 1)
-                                {
-                                    ColorCounter = ColorCounter + 1;
-                                }
-                                else
-                                {
-                                    ColorCounter = (ColorCounter + 1) - week.Colors.Count();
-                                }
-                            }
-                        </div>
-                    </div>
-
-                }
-            </div>
-        </div>
-
-        }
+        <Weeks FoodList="FoodList" WeeksListIterable="WeeksListIterable"/>
 
         <div class="mb-3">
-            <div class="mb-5">
+            <div class="mb-3">
                 <span class=" f-size36 food-title just-bg-blue text-center">@(PersianPhrases.Foods)</span>
             </div>
 
-            @foreach (var categorty in FoodList)
+
+            <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
+                @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
+            </button>
+
+            @foreach (var category in FoodList)
             {
-                <div class="mb-3">
+                <div class="mb-5">
                     <div class="food-category-group d-flex justify-content-start">
-                        <span class="category-title f-size24">@(categorty.Title)</span>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, categorty)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, categorty)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, categorty)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
+                        <span class="category-title f-size24">@(category.Title)</span>
+                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
+                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
                     </div>
                     <div>
-                        @foreach (var food in categorty.foods)
+                        @foreach (var food in category.foods)
                         {
-                            <button class="btn my-bg-blue-outline m-1 f-size18" @onclick="() => OnFoodDelete(food)">
+                            <button class="btn @(!food.IsSelectedForDel? "my-bg-blue-outline" : "my-bg-blue") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
                                 @(food.Name)
-                                <i class="fa fa-times f-size16 food-name-icon" aria-hidden="true"></i>
+                                <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
                             </button>
                         }
                     </div>
                 </div>
             }
 
-            <button class="btn my-bg-blue new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
-                @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
-            </button>
         </div>
     </div>
 </div>
 
 
-<!-- ADD/Edit meal Modal -->
-<div class="modal fade" id="addEditMealModal" tabindex="-1" aria-labelledby="addEditMealModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header just-bg-@(CurrentColor)">
-                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(IsForAddMeal ? PersianPhrases.EnterNew(PersianPhrases.Meal) : PersianPhrases.ChangeThe(PersianPhrases.Meal))</h1>
-                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
-            </div>
-            <EditForm Model="MealModel" OnSubmit="OnNewMealSubmitet">
 
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between">
-                        <div class="btn-group">
-                            <button class="btn my-bg-@(CurrentColor) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!IsForAddMeal ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @(PersianPhrases.ChooseMeal)
-                            </button>
-                            <ul class="dropdown-menu">
-                                @foreach (var meal in GetBlankMeals())
-                                {
-                                    <li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
-                                }
-                            </ul>
-                        </div>
-                        <div>
-                            @if (MealModel.Title != null)
-                            {
-                                <p class="f-size28">@(MealModel.Title)</p>
-                            }
-                        </div>
-                    </div>
-                     
-                    <hr style="margin-top: 0;" />
 
-                    @if (MealModel.Food.Name == null)
-                    {
-                        <div class="modal-food-scrollable">
-                            @foreach (var categorty in FoodList)
-                            {
-                                <div>
-                                    <div class="mx-2 mt-3">
-                                        <span >@(categorty.Title)</span>
-                                    </div>
-                                    <div>
-                                        @foreach (var food in categorty.foods)
-                                        {
-                                            <button class="btn my-bg-@(CurrentColor)-outline m-1 f-size18" @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                        
-                    }
-                    else
-                    {
-                            <div class="btn-group dir-ltr" role="group" aria-label="foodModelName">
-                                <button type="button" class="btn my-bg-@(CurrentColor)" @onclick="() => OnFoodDiselected()">
-                                    <i class="fa fa-times  f-size16" aria-hidden="true"></i>
-                                </button>
-                                <span class="btn just-bg-@(CurrentColor)">@(MealModel.Food.Name)</span>
-                            </div>
-
-                            <hr />
-
-                            <AddGrocery GroceryModel="GroceryModel" IsSubmitNeeded="false" CurrentColor="@(CurrentColor)" ValueChangedEventHandler="OnNewGroceryAdded" />
-
-                            @if (MealModel.Groceries != null)
-                            {
-                                <GroceriesList MealModel="MealModel" />
-                            }
-                    }
-                </div>
-                @if (MealModel.Food.Name != null)
-                {
-                    <div class="modal-footer">
-                        <button type="button" class="btn my-bg-@(CurrentColor)-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
-                        <button type="submit" class="btn my-bg-@(CurrentColor) bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Save)</button>
-                    </div>
-                }
-            </EditForm>
-        </div>
-    </div>
-</div>
-
-<!-- MealDeleteConfirmation Modal -->
-<ConfirmationModal Id="DelConfirmMealModal" Title="@(PersianPhrases.WarningByMark)" Color="@(CurrentColor)" ValueChangedEventHandler="OnDeleteMeal">
-    <Body>
-        <span>
-            @(PersianPhrases.SureDeleteMeal(MealModel.Food.Name, MealModel.Title))
-        </span>
-    </Body>
-</ConfirmationModal>
 
 <!-- CategoryDeleteConfirmation Modal -->
 <ConfirmationModal Id="DelConfirmCategoryModal" Title="@(PersianPhrases.WarningByMark)" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
@@ -299,36 +74,16 @@
 @code {
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
+    public List<FoodCategory> FoodList { get; set; }
+
     public Week FirstWeek { get; set; }
     public Week SecondWeek { get; set; }
     public List<Week> WeeksList { get; set; }
     public IEnumerable<Week> WeeksListIterable { get; set; }
 
-    public List<FoodCategory> FoodList { get; set; }
-
-    public int WeekId { get; set; }
-
-    public string DayModelTitle { get; set; }
-
-    public Meal MealModel { get; set; }
-
     public Food FoodModel { get; set; }
 
     public FoodCategory CategoryModel { get; set; }
-
-    public Grocery GroceryModel { get; set; }
-
-    public bool IsDataPassed { get; set; }
-
-    public int ColorCounter { get; set; }
-
-    public string CurrentColor { get; set; }
-
-    public bool FirstRender { get; set; }
-
-    public Random Random { get; set; }
-
-    public bool IsForAddMeal { get; set; }
 
     public bool IsForAddCat { get; set; }
 
@@ -341,42 +96,32 @@
 
         FirstWeek = new Week();
         WeeksList = new List<Week>();
-        WeeksListIterable = new List<Week>();
 
         FoodList = new List<FoodCategory>();
-
-        MealModel = new Meal();
 
         FoodModel = new Food();
 
         CategoryModel = new FoodCategory();
 
-        FirstRender = true;
-
-        Random = new Random();
-
-        GroceryModel = new Grocery();
-
-        IsDataPassed = false;
 
 
         FirstWeek = new Week()
-        {
-            Id = 1,
-            Title = PersianPhrases.CurrentWeek,
-            Thursday = new Day()
             {
+                Id = 1,
+                Title = PersianPhrases.CurrentWeek,
+                Thursday = new Day()
+                {
                     Title = PersianPhrases.Thursday,
-                Lunch = new Meal()
-                {
+                    Lunch = new Meal()
+                    {
                         Title = PersianPhrases.Lunch,
-                    Food = new Food("آبگوشت"),
-                },
-                Dinner = new Meal()
-                {
+                        Food = new Food("آبگوشت"),
+                    },
+                    Dinner = new Meal()
+                    {
                         Title = PersianPhrases.Dinner,
-                    Food = new Food("قرمه"),
-                    Groceries = new List<Grocery>()
+                        Food = new Food("قرمه"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -394,22 +139,22 @@
                     Amount = "نیم کیلو"
                 }
             }
-                }
-            },
-            Friday = new Day()
-            {
-                    Title = PersianPhrases.Friday,
-                Braekfast = new Meal()
-                {
-                    Title = PersianPhrases.Breakfast,
-                    Food = new Food("حلیم"),
-
+                    }
                 },
-                Lunch = new Meal()
+                Friday = new Day()
                 {
-                    Title = PersianPhrases.Lunch,
-                    Food = new Food("ته چین"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Friday,
+                    Braekfast = new Meal()
+                    {
+                        Title = PersianPhrases.Breakfast,
+                        Food = new Food("حلیم"),
+
+                    },
+                    Lunch = new Meal()
+                    {
+                        Title = PersianPhrases.Lunch,
+                        Food = new Food("ته چین"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -417,12 +162,12 @@
                     Amount = "نیم کیلو"
                 }
             }
-                },
-                Dinner = new Meal()
-                {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("سوپ ورمیشل"),
-                    Groceries = new List<Grocery>()
+                    },
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("سوپ ورمیشل"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -430,16 +175,16 @@
                     Amount = "نیم کیلو"
                 }
             }
-                }
-            },
-            Saturday = new Day()
-            {
-                Title = PersianPhrases.Saturday,
-                Dinner = new Meal()
+                    }
+                },
+                Saturday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("کباب شامی"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Saturday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("کباب شامی"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -447,21 +192,21 @@
                     Amount = "ربع کیلو"
                 }
             }
-                }
-            },
-            Sunday = new Day()
-            {
-                Title = PersianPhrases.Sunday,
-
-            },
-            Monday = new Day()
-            {
-                Title = PersianPhrases.Monday,
-                Dinner = new Meal()
+                    }
+                },
+                Sunday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("ماکارانی"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Sunday,
+
+                },
+                Monday = new Day()
+                {
+                    Title = PersianPhrases.Monday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("ماکارانی"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -469,21 +214,21 @@
                     Amount = "یک شیشه"
                 }
             }
-                }
-            },
-            Tuesday = new Day()
-            {
-                Title = PersianPhrases.Tuesday,
-
-            },
-            Wednesday = new Day()
-            {
-                Title = PersianPhrases.Wednesday,
-                Dinner = new Meal()
+                    }
+                },
+                Tuesday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("الویه"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Tuesday,
+
+                },
+                Wednesday = new Day()
+                {
+                    Title = PersianPhrases.Wednesday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("الویه"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -491,27 +236,27 @@
                     Amount = "یک شیشه"
                 }
             }
-                }
-            },
-        };
+                    }
+                },
+            };
 
         SecondWeek = new Week()
-        {
-            Id = 2,
-            Title = PersianPhrases.LastWeek,
-            Thursday = new Day()
             {
-                Title = PersianPhrases.Thursday,
-                Lunch = new Meal()
+                Id = 2,
+                Title = PersianPhrases.LastWeek,
+                Thursday = new Day()
                 {
-                    Title = PersianPhrases.Lunch,
-                    Food = new Food("دیزی")
-                },
-                Dinner = new Meal()
-                {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("دو پیازه"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Thursday,
+                    Lunch = new Meal()
+                    {
+                        Title = PersianPhrases.Lunch,
+                        Food = new Food("دیزی")
+                    },
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("دو پیازه"),
+                        Groceries = new List<Grocery>()
                     {
                         new Grocery()
                         {
@@ -524,16 +269,16 @@
                             Amount = "دو کیلو"
                         },
                     }
-                }
-            },
-            Friday = new Day()
-            {
-                Title = PersianPhrases.Friday,
-                Braekfast = new Meal()
+                    }
+                },
+                Friday = new Day()
                 {
-                    Title = PersianPhrases.Breakfast,
-                    Food = new Food("نان و پنیر"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Friday,
+                    Braekfast = new Meal()
+                    {
+                        Title = PersianPhrases.Breakfast,
+                        Food = new Food("نان و پنیر"),
+                        Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
@@ -541,12 +286,12 @@
                         Amount = "دو عدد"
                     }
                 }
-                },
-                Lunch = new Meal()
-                {
-                    Title = PersianPhrases.Lunch,
-                    Food = new Food("خوراک مرغ"),
-                    Groceries = new List<Grocery>()
+                    },
+                    Lunch = new Meal()
+                    {
+                        Title = PersianPhrases.Lunch,
+                        Food = new Food("خوراک مرغ"),
+                        Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
@@ -554,12 +299,12 @@
                         Amount = "دو کیلو"
                     }
                 }
-                },
-                Dinner = new Meal()
-                {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("سوپ مدیترانه"),
-                    Groceries = new List<Grocery>()
+                    },
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("سوپ مدیترانه"),
+                        Groceries = new List<Grocery>()
             {
                 new Grocery()
                 {
@@ -572,21 +317,21 @@
                     Amount = "یک بسته"
                 },
             }
-                }
-            },
-            Saturday = new Day()
-            {
-                Title = PersianPhrases.Saturday,
-
-            },
-            Sunday = new Day()
-            {
-                Title = PersianPhrases.Sunday,
-                Dinner = new Meal()
+                    }
+                },
+                Saturday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("خوراک لوبیا"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Saturday,
+
+                },
+                Sunday = new Day()
+                {
+                    Title = PersianPhrases.Sunday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("خوراک لوبیا"),
+                        Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
@@ -594,16 +339,16 @@
                         Amount = "یک بسته"
                     }
                 }
-                }
-            },
-            Monday = new Day()
-            {
-                Title = PersianPhrases.Monday,
-                Dinner = new Meal()
+                    }
+                },
+                Monday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("سبزیجات با فیله"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Monday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("سبزیجات با فیله"),
+                        Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
@@ -611,16 +356,16 @@
                         Amount = "ربع کیلو"
                     }
                 }
-                }
-            },
-            Tuesday = new Day()
-            {
-                Title = PersianPhrases.Tuesday,
-                Dinner = new Meal()
+                    }
+                },
+                Tuesday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("سبزیجات با فیله"),
-                    Groceries = new List<Grocery>()
+                    Title = PersianPhrases.Tuesday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("سبزیجات با فیله"),
+                        Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
@@ -628,19 +373,18 @@
                         Amount = "ربع کیلو"
                     }
                 }
-                }
-            },
-            Wednesday = new Day()
-            {
-                Title = PersianPhrases.Wednesday,
-                Dinner = new Meal()
+                    }
+                },
+                Wednesday = new Day()
                 {
-                    Title = PersianPhrases.Dinner,
-                    Food = new Food("املت"),
-                }
-            },
-        };
-
+                    Title = PersianPhrases.Wednesday,
+                    Dinner = new Meal()
+                    {
+                        Title = PersianPhrases.Dinner,
+                        Food = new Food("املت"),
+                    }
+                },
+            };
 
 
         FoodList.AddRange(new List<FoodCategory>()
@@ -668,6 +412,7 @@
         WeeksList.Add(FirstWeek);
         WeeksList.Add(SecondWeek);
         WeeksListIterable = WeeksList;
+
     }
 
     // protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -675,60 +420,11 @@
     // 	await base.OnAfterRenderAsync();
     // }
 
-    public void passingData(int weekId, Day day, bool isAddMeal, Meal? meal = null)
-    {
-        WeekId = weekId;
-        DayModelTitle = day.Title;
-        IsForAddMeal = isAddMeal;
-        CurrentColor = day.color;
-
-        if (IsForAddMeal)
-        {
-            MealModel = new Meal();
-            GroceryModel = new Grocery();
-        }
-        else
-        {
-            MealModel = new Meal()
-            {
-                Title = meal.Title,
-                Food = new Food(meal.Food.Name),
-                Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
-            };
-        }
-    }
-
-    public void passingMeal(Meal meal)
-    {
-        MealModel = new Meal()
-            {
-                Title = meal.Title,
-            };
-    }
-
-    private void OnEditGeroceries(Meal meal)
-    {
-        meal.GroceryEditable = !meal.GroceryEditable;
-        IsDataPassed = !meal.GroceryEditable;
-    }
 
 
 
-    public IEnumerable<Meal> GetBlankMeals()
-    {
-        IEnumerable<Meal> list = new List<Meal>();
 
-        if (WeekId != null && DayModelTitle != null)
-        {
-            list = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals();
 
-        }
-
-        list = list.Where(m => m.Food.Name == null).ToList();
-
-        return list;
-
-    }
 
     public async Task passingCategory(bool isForAddCat, FoodCategory category = null )
     {
@@ -783,69 +479,38 @@
         FoodModel.Category = category;
     }
 
-    public async Task OnFoodSelected(Food food)
+
+
+    public async Task OnFoodDelete(FoodCategory category, Food food)
     {
-        MealModel.Food = new Food(food.Name);
-    }
-
-    public async Task OnFoodDiselected()
-    {
-        MealModel.Food = new Food();
-    }
-
-    public async Task OnFoodDelete(Food food)
-    {
-        var category = FoodList.FirstOrDefault(c => c.Title == food.Category);
-
-        category.foods.Remove(food);
-    }
-
-    public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
-    {
-        if (MealModel.Groceries == null)
-            MealModel.Groceries = new List<Grocery>
-                ();
-
-        MealModel.Groceries.Add(GroceryModel);
-        GroceryModel = new Grocery();
-
-        if (isSubmitNeeded)
+        if(food.IsSelectedForDel)
         {
-            OnNewGrocerySubmitet();
+            category.foods.Remove(food);
+            FoodModel = new Food();
+        }
+        else
+        {
+            var lastCategory = FoodList.FirstOrDefault(c => c.Id == CategoryModel.Id);
+            if(lastCategory != null)
+            {
+                var lastFood = lastCategory.foods.FirstOrDefault(f => f.Name == FoodModel.Name);
+                if(lastFood != null)
+                {
+                    lastFood.IsSelectedForDel = false;
+                }                
+            }
+
+            food.IsSelectedForDel = true;
+            FoodModel = new Food(food.Name);
+            CategoryModel = new FoodCategory()
+            {
+                Id = category.Id,
+            };
         }
     }
 
-    public async Task OnNewMealSubmitet()
-    {
-        var meal = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
 
-        meal.Food = MealModel.Food;
-        if (MealModel.Groceries != null)
-        {
-            meal.Groceries = MealModel.Groceries;
-        }
-    }
 
-    public async Task OnNewGrocerySubmitet()
-    {
-        var meal = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
-
-        if (MealModel.Groceries != null)
-        {
-            meal.Groceries = MealModel.Groceries;
-        }
-    }
-
-    public async Task OnDeleteMeal(bool value)
-    {
-        if(value)
-        {
-            var meal = WeeksListIterable.FirstOrDefault(w => w.Id == WeekId).GetDays().FirstOrDefault(d => d.Title == DayModelTitle).GetMeals().FirstOrDefault(m => m.Title == MealModel.Title);
-
-            meal.Food = new Food();
-            meal.Groceries = new List<Grocery>();            
-        }
-    }
 
     public async Task OnDeleteCategory(bool value)
     {
