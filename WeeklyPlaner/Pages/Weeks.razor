@@ -30,8 +30,8 @@
                 @foreach (var day in week.GetDays())
                 {
                     day.color = week.Colors[ColorCounter];
-    
-                    <Days Week="week" Day="day" FoodList="@(FoodList)" ColorCounter="ColorCounter" />
+
+                    <Days Models="Models" Week="week" Day="day" FoodList="@(FoodList)" ColorCounter="ColorCounter" OnModelsChangeWeeks="OnModelsChangeWeeks"/>
 
                     @if (ColorCounter < week.Colors.Count() - 1)
                     {
@@ -56,8 +56,14 @@
     public List<FoodCategory> FoodList { get; set; }
 
     [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
     public IEnumerable<Week> WeeksListIterable { get; set; }
-    
+
+    [Parameter]
+    public EventCallback<Models> OnModelsChange { get; set; }
+
     public Random Random { get; set; }
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
@@ -75,7 +81,13 @@
 
         Random = new Random();
 
+    }
 
+
+    public async Task OnModelsChangeWeeks(Models models)
+    {
+        Models = models;
+        await OnModelsChange.InvokeAsync(Models);
     }
 
 }

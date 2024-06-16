@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row bg-light-subtle">
 
-        <Weeks FoodList="FoodList" WeeksListIterable="WeeksListIterable"/>
+        <Weeks Models="Models" FoodList="FoodList" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange"/>
 
         <div class="mb-3">
             <div class="mb-3">
@@ -28,7 +28,7 @@
                     <div>
                         @foreach (var food in category.foods)
                         {
-                            <button class="btn @(!food.IsSelectedForDel? "my-bg-blue-outline" : "my-bg-blue") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
+                            <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
                                 @(food.Name)
                                 <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
                             </button>
@@ -41,38 +41,15 @@
     </div>
 </div>
 
+<Modals FoodList="FoodList" Models="Models" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" />
 
-
-
-
-<!-- CategoryDeleteConfirmation Modal -->
-<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(PersianPhrases.WarningByMark)" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
-    <Body>
-        <span>@(PersianPhrases.SureDelete(PersianPhrases.Category, CategoryModel.Title))</span>
-        
-    </Body>
-</ConfirmationModal>
-
-<!-- ADD/Edit Food -->
-<AddEditModal Id="addEditFoodModal" Entity="@(PersianPhrases.Food)" IsForAdd="true" Model="FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
-    <Body>
-        <label for="foodname" class="form-label">@(PersianPhrases.Name)</label>
-        <InputText id="foodname" class="form-control" @bind-Value=(FoodModel.Name) />
-    </Body>
-</AddEditModal>
-
-<!-- ADD/Edit Category -->
-<AddEditModal Id="addEditCategoryModal" Entity="@(PersianPhrases.Category)" IsForAdd="IsForAddCat" Model="CategoryModel" ValueChangedEventHandler="OnNewCategorySubmited">
-    <Body>
-        <label for="categoryname" class="form-label">@(PersianPhrases.Name)</label>
-        <InputText id="categoryname" class="form-control" @bind-Value=(CategoryModel.Title) />
-    </Body>
-</AddEditModal>
 
 
 
 @code {
     private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    public Models Models { get; set; }
 
     public List<FoodCategory> FoodList { get; set; }
 
@@ -81,29 +58,17 @@
     public List<Week> WeeksList { get; set; }
     public IEnumerable<Week> WeeksListIterable { get; set; }
 
-    public Food FoodModel { get; set; }
-
-    public FoodCategory CategoryModel { get; set; }
-
-    public bool IsForAddCat { get; set; }
-
-    public bool IsForAddFood { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
+        Models = new Models();
+
         FirstWeek = new Week();
         WeeksList = new List<Week>();
 
         FoodList = new List<FoodCategory>();
-
-        FoodModel = new Food();
-
-        CategoryModel = new FoodCategory();
-
-
 
         FirstWeek = new Week()
             {
@@ -420,24 +385,18 @@
     // 	await base.OnAfterRenderAsync();
     // }
 
-
-
-
-
-
-
     public async Task passingCategory(bool isForAddCat, FoodCategory category = null )
     {
         if(isForAddCat)
         {
-            CategoryModel = new FoodCategory();
+            Models.CategoryModel = new FoodCategory();
 
         }
         else
         {
             var lst = new List<Food>();
             lst.AddRange(category.foods);
-            CategoryModel = new FoodCategory()
+            Models.CategoryModel = new FoodCategory()
             {
                 Id = category.Id,
                 Title = category.Title,
@@ -445,38 +404,12 @@
                 foods = lst,
             };
         }
-        IsForAddCat = isForAddCat;
-    }
-
-    public async Task OnNewFoodSubmited()
-    {
-        var category = FoodList.FirstOrDefault(c => c.Title == CategoryModel.Title);
-        category.foods.Add(FoodModel);
-
-        FoodModel = new Food();
-    }
-
-    public async Task OnNewCategorySubmited()
-    {
-        if (IsForAddCat)
-        {
-            FoodList.Add(new FoodCategory()
-            {
-                Title = CategoryModel.Title,
-            });
-
-        }
-        else
-        {
-            var category = FoodList.FirstOrDefault(c => c.Id == CategoryModel.Id);
-            category.Title = CategoryModel.Title;
-        }
-        CategoryModel = new FoodCategory();
+        Models.IsForAddCat = isForAddCat;
     }
 
     public async Task OnCategorySelected(string category)
     {
-        FoodModel.Category = category;
+        Models.FoodModel.Category = category;
     }
 
 
@@ -486,14 +419,14 @@
         if(food.IsSelectedForDel)
         {
             category.foods.Remove(food);
-            FoodModel = new Food();
+            Models.FoodModel = new Food();
         }
         else
         {
-            var lastCategory = FoodList.FirstOrDefault(c => c.Id == CategoryModel.Id);
+            var lastCategory = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
             if(lastCategory != null)
             {
-                var lastFood = lastCategory.foods.FirstOrDefault(f => f.Name == FoodModel.Name);
+                var lastFood = lastCategory.foods.FirstOrDefault(f => f.Name == Models.FoodModel.Name);
                 if(lastFood != null)
                 {
                     lastFood.IsSelectedForDel = false;
@@ -501,26 +434,21 @@
             }
 
             food.IsSelectedForDel = true;
-            FoodModel = new Food(food.Name);
-            CategoryModel = new FoodCategory()
+            Models.FoodModel = new Food(food.Name);
+            Models.CategoryModel = new FoodCategory()
             {
                 Id = category.Id,
             };
         }
     }
 
-
-
-
-    public async Task OnDeleteCategory(bool value)
+    public void OnModelsChange(Models models)
     {
-        if(value)
-        {
-            var category = FoodList.FirstOrDefault(c => c.Title == CategoryModel.Title);
+        Models = models;
+    }
 
-            FoodList.Remove(category);
-
-            CategoryModel = new FoodCategory();
-        }
+    public void OnWeeksListChange(IEnumerable<Week> list)
+    {
+        WeeksListIterable = list;
     }
 }

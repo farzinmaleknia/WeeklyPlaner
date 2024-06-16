@@ -1,0 +1,285 @@
+﻿<!-- ADD/Edit meal Modal -->
+<div class="modal fade" id="addEditMealModal" tabindex="-1" aria-labelledby="addEditMealModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header just-bg-@(Models.DayModel.color)">
+                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(Models.IsForAddMeal ? PersianPhrases.EnterNew(PersianPhrases.Meal) : PersianPhrases.ChangeThe(PersianPhrases.Meal))</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <EditForm Model="Models.MealModel" OnSubmit="OnNewMealSubmitet">
+
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="btn-group">
+                            <button class="btn my-bg-@(Models.DayModel.color) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!Models.IsForAddMeal ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @(PersianPhrases.ChooseMeal)
+                            </button>
+                            <ul class="dropdown-menu">
+                                @foreach (var meal in GetBlankMeals())
+                                {
+                                    <li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
+                                }
+                            </ul>
+                        </div>
+                        <div>
+                            @if (Models.MealModel.Title != null)
+                            {
+                                <p class="f-size28">@(Models.MealModel.Title)</p>
+                            }
+                        </div>
+                    </div>
+
+                    <hr style="margin-top: 0;" />
+
+                    @if (Models.MealModel.Food.Name == null)
+                    {
+                        <div class="modal-food-scrollable">
+                            @foreach (var categorty in FoodList)
+                            {
+                                <div>
+                                    <div class="mx-2 mt-3">
+                                        <span>@(categorty.Title)</span>
+                                    </div>
+                                    <div>
+                                        @foreach (var food in categorty.foods)
+                                        {
+                                            <button class="btn my-bg-@(Models.DayModel.color)-outline m-1 f-size18" @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="btn-group dir-ltr" role="group" aria-label="foodModelName">
+                            <button type="button" class="btn my-bg-@(Models.DayModel.color)" @onclick="() => OnFoodDiselected()">
+                                <i class="fa fa-times  f-size16" aria-hidden="true"></i>
+                            </button>
+                            <span class="btn just-bg-@(Models.DayModel.color)">@(Models.MealModel.Food.Name)</span>
+                        </div>
+
+                        <hr />
+
+                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="false" CurrentColor="@(Models.DayModel.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
+
+                        @if (Models.MealModel.Groceries != null)
+                        {
+                            <GroceriesList MealModel="Models.MealModel" />
+                        }
+                    }
+                </div>
+                @if (Models.MealModel.Food.Name != null)
+                {
+                    <div class="modal-footer">
+                        <button type="button" class="btn my-bg-@(Models.DayModel.color)-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
+                        <button type="submit" class="btn my-bg-@(Models.DayModel.color) bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Save)</button>
+                    </div>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- MealDeleteConfirmation Modal -->
+<ConfirmationModal Id="DelConfirmMealModal" Title="@(PersianPhrases.WarningByMark)" Color="@(Models.DayModel.color)" ValueChangedEventHandler="OnDeleteMeal">
+    <Body>
+        <span>
+            @(PersianPhrases.SureDeleteMeal(Models.MealModel.Food.Name, Models.MealModel.Title))
+        </span>
+    </Body>
+</ConfirmationModal>
+
+<!-- CategoryDeleteConfirmation Modal -->
+<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(PersianPhrases.WarningByMark)" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
+    <Body>
+        <span>@(PersianPhrases.SureDelete(PersianPhrases.Category, Models.CategoryModel.Title))</span>
+
+    </Body>
+</ConfirmationModal>
+
+<!-- ADD/Edit Food -->
+<AddEditModal Id="addEditFoodModal" Entity="@(PersianPhrases.Food)" IsForAdd="true" Model="Models.FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
+    <Body>
+        <label for="foodname" class="form-label">@(PersianPhrases.Name)</label>
+        <InputText id="foodname" class="form-control" @bind-Value=(Models.FoodModel.Name) />
+    </Body>
+</AddEditModal>
+
+<!-- ADD/Edit Category -->
+<AddEditModal Id="addEditCategoryModal" Entity="@(PersianPhrases.Category)" IsForAdd="Models.IsForAddCat" Model="Models.CategoryModel" ValueChangedEventHandler="OnNewCategorySubmited">
+    <Body>
+        <label for="categoryname" class="form-label">@(PersianPhrases.Name)</label>
+        <InputText id="categoryname" class="form-control" @bind-Value=(Models.CategoryModel.Title) />
+    </Body>
+</AddEditModal>
+
+
+
+
+@code {
+
+    [Parameter]
+    public IEnumerable<Week> WeeksListIterable { get; set; }
+
+    [Parameter]
+    public List<FoodCategory> FoodList { get; set; }
+
+    [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
+    public EventCallback<Models> OnModelsChange { get; set; }
+
+    [Parameter]
+    public EventCallback<IEnumerable<Week>> OnWeeksListChange { get; set; }
+
+    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+
+    public IEnumerable<Meal> GetBlankMeals()
+    {
+        IEnumerable<Meal> list = new List<Meal>();
+
+        list = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null).ToList();
+
+        return list;
+    }
+
+    public async Task passingMeal(Meal meal)
+    {
+        Models.MealModel = new Meal()
+        {
+            Id = meal.Id,
+            Title = meal.Title,
+        };
+
+        await OnModelsChangeModals();
+    }
+
+    public async Task OnNewMealSubmitet()
+    {
+        var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+
+        meal.Food = Models.MealModel.Food;
+        if (Models.MealModel.Groceries != null)
+        {
+            meal.Groceries = Models.MealModel.Groceries;
+        }
+
+        await OnWeeksListChangeModals();
+    }
+
+    public async Task OnFoodSelected(Food food)
+    {
+        Models.MealModel.Food = new Food(food.Name);
+
+        await OnModelsChangeModals();
+    }
+
+    public async Task OnFoodDiselected()
+    {
+        Models.MealModel.Food = new Food();
+        Models.MealModel.Groceries = new List<Grocery>();
+        await OnModelsChangeModals();
+    }
+
+    public async Task OnDeleteMeal(bool value)
+    {
+        if (value)
+        {
+            var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            meal.Food = new Food();
+            meal.Groceries = new List<Grocery>();
+
+            await OnWeeksListChangeModals();
+        }
+    }
+
+
+    public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
+    {
+        if (Models.MealModel.Groceries == null)
+            Models.MealModel.Groceries = new List<Grocery>();
+
+        Models.MealModel.Groceries.Add(Models.GroceryModel);
+        Models.GroceryModel = new Grocery();
+
+        if (isSubmitNeeded)
+        {
+            OnNewGrocerySubmitet();
+        }
+
+        await OnModelsChangeModals();
+    }
+
+    public async Task OnNewGrocerySubmitet()
+    {
+        if (Models.MealModel.Groceries != null)
+        {
+            var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            meal.Groceries = Models.MealModel.Groceries;
+        }
+    }
+
+    public async Task OnDeleteCategory(bool value)
+    {
+        if (value)
+        {
+            var category = FoodList.FirstOrDefault(c => c.Title == Models.CategoryModel.Title);
+
+            FoodList.Remove(category);
+
+            Models.CategoryModel = new FoodCategory();
+        }
+    }
+
+    public async Task OnNewFoodSubmited()
+    {
+        var category = FoodList.FirstOrDefault(c => c.Title == Models.CategoryModel.Title);
+        category.foods.Add(Models.FoodModel);
+
+        Models.FoodModel = new Food();
+    }
+
+    public async Task OnNewCategorySubmited()
+    {
+        if (Models.IsForAddCat)
+        {
+            FoodList.Add(new FoodCategory()
+            {
+                Title = Models.CategoryModel.Title,
+            });
+
+        }
+        else
+        {
+            var category = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
+            category.Title = Models.CategoryModel.Title;
+        }
+        Models.CategoryModel = new FoodCategory();
+    }
+
+    public async Task OnModelsChangeModals(Models models = null)
+    {
+        if(models != null)
+            Models = models;
+        await OnModelsChange.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeModals(Models models = null)
+    {
+        if(models != null)
+            Models = models;
+        await OnWeeksListChange.InvokeAsync(WeeksListIterable);
+    }
+}
