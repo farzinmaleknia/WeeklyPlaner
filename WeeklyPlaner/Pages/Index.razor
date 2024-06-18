@@ -1,19 +1,22 @@
 ﻿@page "/"
 
-@inject JSRuntime JSRuntime 
+@inject IJSRuntime JSRuntime
+@inject HttpClient http
+
 
 
 <div class="container-fluid">
     <div class="row bg-light-subtle">
+        <button class="btn btn-warning" @onclick="onClearLocalStorage">clear</button>
 
-        <Weeks Models="Models" FoodList="FoodList" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange"/>
+        <Weeks Models="Models" FoodList="FoodList" WeeksList="WeeksList" OnModelsChange="OnModelsChange" />
 
         <Foods FoodList="FoodList" Models="Models" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
 
     </div>
 </div>
 
-<Modals FoodList="FoodList" Models="Models" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" OnFoodListChange="OnFoodListChange" />
+<Modals FoodList="FoodList" Models="Models" WeeksList="WeeksList" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" OnFoodListChange="OnFoodListChange" />
 
 
 
@@ -28,7 +31,6 @@
     public Week FirstWeek { get; set; }
     public Week SecondWeek { get; set; }
     public List<Week> WeeksList { get; set; }
-    public IEnumerable<Week> WeeksListIterable { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -42,313 +44,327 @@
 
         FoodList = new List<FoodCategory>();
 
-        FirstWeek = new Week()
-            {
-                Id = 1,
-                Title = PersianPhrases.CurrentWeek,
-                Thursday = new Day()
-                {
-                    Title = PersianPhrases.Thursday,
-                    Lunch = new Meal()
-                    {
-                        Title = PersianPhrases.Lunch,
-                        Food = new Food("آبگوشت"),
-                    },
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("قرمه"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "پیاز",
-                    Amount = "یک کیلو"
-                },
-                new Grocery()
-                {
-                    Name = "سیب زمینی",
-                    Amount = "یک کیلو"
-                },
-                new Grocery()
-                {
-                    Name = "قارچ",
-                    Amount = "نیم کیلو"
-                }
-            }
-                    }
-                },
-                Friday = new Day()
-                {
-                    Title = PersianPhrases.Friday,
-                    Braekfast = new Meal()
-                    {
-                        Title = PersianPhrases.Breakfast,
-                        Food = new Food("حلیم"),
+        await BindData();
 
-                    },
-                    Lunch = new Meal()
+        if(WeeksList.Count == 0)
+        {
+            FirstWeek = new Week()
+                {
+                    Id = 1,
+                    Title = PersianPhrases.CurrentWeek,
+                    Thursday = new Day()
                     {
-                        Title = PersianPhrases.Lunch,
-                        Food = new Food("ته چین"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "مرغ",
-                    Amount = "نیم کیلو"
-                }
-            }
-                    },
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("سوپ ورمیشل"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "قارچ",
-                    Amount = "نیم کیلو"
-                }
-            }
-                    }
-                },
-                Saturday = new Day()
-                {
-                    Title = PersianPhrases.Saturday,
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("کباب شامی"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "سیب زمینی",
-                    Amount = "ربع کیلو"
-                }
-            }
-                    }
-                },
-                Sunday = new Day()
-                {
-                    Title = PersianPhrases.Sunday,
-
-                },
-                Monday = new Day()
-                {
-                    Title = PersianPhrases.Monday,
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("ماکارانی"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "رب گوجه",
-                    Amount = "یک شیشه"
-                }
-            }
-                    }
-                },
-                Tuesday = new Day()
-                {
-                    Title = PersianPhrases.Tuesday,
-
-                },
-                Wednesday = new Day()
-                {
-                    Title = PersianPhrases.Wednesday,
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("الویه"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "مایونز",
-                    Amount = "یک شیشه"
-                }
-            }
-                    }
-                },
-            };
-
-        SecondWeek = new Week()
-            {
-                Id = 2,
-                Title = PersianPhrases.LastWeek,
-                Thursday = new Day()
-                {
-                    Title = PersianPhrases.Thursday,
-                    Lunch = new Meal()
-                    {
-                        Title = PersianPhrases.Lunch,
-                        Food = new Food("دیزی")
-                    },
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("دو پیازه"),
-                        Groceries = new List<Grocery>()
-                    {
-                        new Grocery()
+                        Title = PersianPhrases.Thursday,
+                        Lunch = new Meal()
                         {
-                            Name = "پیاز",
-                            Amount = "دو کیلو"
+                            Title = PersianPhrases.Lunch,
+                            Food = new Food("آبگوشت"),
                         },
-                        new Grocery()
+                        Dinner = new Meal()
                         {
-                            Name = "سیب زمینی",
-                            Amount = "دو کیلو"
-                        },
-                    }
-                    }
-                },
-                Friday = new Day()
-                {
-                    Title = PersianPhrases.Friday,
-                    Braekfast = new Meal()
-                    {
-                        Title = PersianPhrases.Breakfast,
-                        Food = new Food("نان و پنیر"),
-                        Groceries = new List<Grocery>()
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("قرمه"),
+                            Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
-                        Name = "نان بربری کنجدی",
-                        Amount = "دو عدد"
+                        Name = "پیاز",
+                        Amount = "یک کیلو"
+                    },
+                    new Grocery()
+                    {
+                        Name = "سیب زمینی",
+                        Amount = "یک کیلو"
+                    },
+                    new Grocery()
+                    {
+                        Name = "قارچ",
+                        Amount = "نیم کیلو"
                     }
                 }
+                        }
                     },
-                    Lunch = new Meal()
+                    Friday = new Day()
                     {
-                        Title = PersianPhrases.Lunch,
-                        Food = new Food("خوراک مرغ"),
-                        Groceries = new List<Grocery>()
+                        Title = PersianPhrases.Friday,
+                        Braekfast = new Meal()
+                        {
+                            Title = PersianPhrases.Breakfast,
+                            Food = new Food("حلیم"),
+
+                        },
+                        Lunch = new Meal()
+                        {
+                            Title = PersianPhrases.Lunch,
+                            Food = new Food("ته چین"),
+                            Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
                         Name = "مرغ",
-                        Amount = "دو کیلو"
+                        Amount = "نیم کیلو"
                     }
                 }
+                        },
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("سوپ ورمیشل"),
+                            Groceries = new List<Grocery>()
+                {
+                    new Grocery()
+                    {
+                        Name = "قارچ",
+                        Amount = "نیم کیلو"
+                    }
+                }
+                        }
                     },
-                    Dinner = new Meal()
+                    Saturday = new Day()
                     {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("سوپ مدیترانه"),
-                        Groceries = new List<Grocery>()
-            {
-                new Grocery()
-                {
-                    Name = "قارچ",
-                    Amount = "نیم کیلو"
-                },
-                new Grocery()
-                {
-                    Name = "زرشک",
-                    Amount = "یک بسته"
-                },
-            }
-                    }
-                },
-                Saturday = new Day()
-                {
-                    Title = PersianPhrases.Saturday,
-
-                },
-                Sunday = new Day()
-                {
-                    Title = PersianPhrases.Sunday,
-                    Dinner = new Meal()
-                    {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("خوراک لوبیا"),
-                        Groceries = new List<Grocery>()
+                        Title = PersianPhrases.Saturday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("کباب شامی"),
+                            Groceries = new List<Grocery>()
                 {
                     new Grocery()
                     {
-                        Name = "لوبیا چیتی",
+                        Name = "سیب زمینی",
+                        Amount = "ربع کیلو"
+                    }
+                }
+                        }
+                    },
+                    Sunday = new Day()
+                    {
+                        Title = PersianPhrases.Sunday,
+
+                    },
+                    Monday = new Day()
+                    {
+                        Title = PersianPhrases.Monday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("ماکارانی"),
+                            Groceries = new List<Grocery>()
+                {
+                    new Grocery()
+                    {
+                        Name = "رب گوجه",
+                        Amount = "یک شیشه"
+                    }
+                }
+                        }
+                    },
+                    Tuesday = new Day()
+                    {
+                        Title = PersianPhrases.Tuesday,
+
+                    },
+                    Wednesday = new Day()
+                    {
+                        Title = PersianPhrases.Wednesday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("الویه"),
+                            Groceries = new List<Grocery>()
+                {
+                    new Grocery()
+                    {
+                        Name = "مایونز",
+                        Amount = "یک شیشه"
+                    }
+                }
+                        }
+                    },
+                };
+
+            SecondWeek = new Week()
+                {
+                    Id = 2,
+                    Title = PersianPhrases.LastWeek,
+                    Thursday = new Day()
+                    {
+                        Title = PersianPhrases.Thursday,
+                        Lunch = new Meal()
+                        {
+                            Title = PersianPhrases.Lunch,
+                            Food = new Food("دیزی")
+                        },
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("دو پیازه"),
+                            Groceries = new List<Grocery>()
+                        {
+                            new Grocery()
+                            {
+                                Name = "پیاز",
+                                Amount = "دو کیلو"
+                            },
+                            new Grocery()
+                            {
+                                Name = "سیب زمینی",
+                                Amount = "دو کیلو"
+                            },
+                        }
+                        }
+                    },
+                    Friday = new Day()
+                    {
+                        Title = PersianPhrases.Friday,
+                        Braekfast = new Meal()
+                        {
+                            Title = PersianPhrases.Breakfast,
+                            Food = new Food("نان و پنیر"),
+                            Groceries = new List<Grocery>()
+                    {
+                        new Grocery()
+                        {
+                            Name = "نان بربری کنجدی",
+                            Amount = "دو عدد"
+                        }
+                    }
+                        },
+                        Lunch = new Meal()
+                        {
+                            Title = PersianPhrases.Lunch,
+                            Food = new Food("خوراک مرغ"),
+                            Groceries = new List<Grocery>()
+                    {
+                        new Grocery()
+                        {
+                            Name = "مرغ",
+                            Amount = "دو کیلو"
+                        }
+                    }
+                        },
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("سوپ مدیترانه"),
+                            Groceries = new List<Grocery>()
+                {
+                    new Grocery()
+                    {
+                        Name = "قارچ",
+                        Amount = "نیم کیلو"
+                    },
+                    new Grocery()
+                    {
+                        Name = "زرشک",
                         Amount = "یک بسته"
-                    }
+                    },
                 }
-                    }
-                },
-                Monday = new Day()
-                {
-                    Title = PersianPhrases.Monday,
-                    Dinner = new Meal()
+                        }
+                    },
+                    Saturday = new Day()
                     {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("سبزیجات با فیله"),
-                        Groceries = new List<Grocery>()
-                {
-                    new Grocery()
+                        Title = PersianPhrases.Saturday,
+
+                    },
+                    Sunday = new Day()
                     {
-                        Name = "فیله",
-                        Amount = "ربع کیلو"
-                    }
-                }
-                    }
-                },
-                Tuesday = new Day()
-                {
-                    Title = PersianPhrases.Tuesday,
-                    Dinner = new Meal()
+                        Title = PersianPhrases.Sunday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("خوراک لوبیا"),
+                            Groceries = new List<Grocery>()
                     {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("سبزیجات با فیله"),
-                        Groceries = new List<Grocery>()
-                {
-                    new Grocery()
+                        new Grocery()
+                        {
+                            Name = "لوبیا چیتی",
+                            Amount = "یک بسته"
+                        }
+                    }
+                        }
+                    },
+                    Monday = new Day()
                     {
-                        Name = "فیله",
-                        Amount = "ربع کیلو"
-                    }
-                }
-                    }
-                },
-                Wednesday = new Day()
-                {
-                    Title = PersianPhrases.Wednesday,
-                    Dinner = new Meal()
+                        Title = PersianPhrases.Monday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("سبزیجات با فیله"),
+                            Groceries = new List<Grocery>()
                     {
-                        Title = PersianPhrases.Dinner,
-                        Food = new Food("املت"),
+                        new Grocery()
+                        {
+                            Name = "فیله",
+                            Amount = "ربع کیلو"
+                        }
                     }
-                },
-            };
+                        }
+                    },
+                    Tuesday = new Day()
+                    {
+                        Title = PersianPhrases.Tuesday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("سبزیجات با فیله"),
+                            Groceries = new List<Grocery>()
+                    {
+                        new Grocery()
+                        {
+                            Name = "فیله",
+                            Amount = "ربع کیلو"
+                        }
+                    }
+                        }
+                    },
+                    Wednesday = new Day()
+                    {
+                        Title = PersianPhrases.Wednesday,
+                        Dinner = new Meal()
+                        {
+                            Title = PersianPhrases.Dinner,
+                            Food = new Food("املت"),
+                        }
+                    },
+                };
 
 
-        FoodList.AddRange(new List<FoodCategory>()
+            WeeksList.Add(FirstWeek);
+            WeeksList.Add(SecondWeek);
+        }
+
+
+        if (FoodList.Count == 0)
+        {
+
+            // var responce = await http.GetStringAsync("/sample-data/foods.json");
+
+            //FoodList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FoodCategory>>(responce);
+
+            FoodList.AddRange(new List<FoodCategory>()
             {
-                new FoodCategory(){ Title = PersianPhrases.Breakfast, foods = new List<Food>() { new Food("حلیم"), new Food("نان و پنیر"), new Food("صبحانه انگلیسی"), new Food("سوسیس تخم مرغ"), }, }, 
+                new FoodCategory(){ Title = PersianPhrases.Breakfast, foods = new List<Food>() { new Food("حلیم"), new Food("نان و پنیر"), new Food("صبحانه انگلیسی"), new Food("سوسیس تخم مرغ"), }, },
                 new FoodCategory(){ Title = "غذاهای نونی", foods = new List<Food>() { new Food("آبگوشت"), new Food("کباب شامی"), new Food("الویه"), new Food("دیزی"), new Food("دو پیازه"), new Food("املت")} },
                 new FoodCategory(){ Title= "غذاهای برنجی", foods = new List<Food>() { new Food("قرمه سبزی"), new Food("ته چین مرغ"), new Food("خوراک مرغ"), new Food("خورشت بامیه"), new Food("خورشت قیمه"), new Food("خورشت کرفس"), new Food("سبزی پلو با تن ماهی"), } },
                 new FoodCategory(){ Title = "غذاهای حبوباتی", foods = new List<Food>() { new Food("لوبیا چیتی"), new Food("عدسی"), } },
                 new FoodCategory(){ Title = "غذاهای نشاسته ای", foods = new List<Food>() { new Food("ماکارانی"), } },
-                new FoodCategory(){ Title = "غذاهای سبزیجاتی", foods = new List<Food>() { new Food("سبزیجات با فیله"), new Food("سبزیجات با استیک"), } }, 
+                new FoodCategory(){ Title = "غذاهای سبزیجاتی", foods = new List<Food>() { new Food("سبزیجات با فیله"), new Food("سبزیجات با استیک"), } },
                 new FoodCategory(){ Title = "غذاهای فوری", foods = new List<Food>() { new Food("ساندویچ مرغ"), new Food("ساندویچ تن ماهی و سیبزمینی"), new Food("بندری"), } },
                 new FoodCategory(){ Title = "غذاهای کناری", foods = new List<Food>() { new Food("سوپ ورمیشل"), new Food("سوپ مدیترانه"), new Food("سالاد شیرازی"), new Food("سالاد فصل"), new Food("سالاد سزار"), new Food("سالاد تن ماهی"), new Food("سالاد تن پیاز"), } },
             }
-        );
+            );
 
-        foreach (var category in FoodList)
-        {
-            foreach (var food in category.GetFoods())
+            foreach (var category in FoodList)
             {
-                food.Category = category.Title;
+                foreach (var food in category.GetFoods())
+                {
+                    food.Category = category.Title;
+                }
             }
         }
 
 
-        WeeksList.Add(FirstWeek);
-        WeeksList.Add(SecondWeek);
-        WeeksListIterable = WeeksList;
 
     }
 
@@ -357,12 +373,45 @@
     // 	await base.OnAfterRenderAsync();
     // }
 
-    public async Task OnCategorySelected(string category)
+
+
+
+
+    public async Task onClick()
     {
-        Models.FoodModel.Category = category;
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "aa");
     }
 
+    public async Task onGet()
+    {
+        var ss = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "aa");
+        Console.WriteLine(ss);
+    }
 
+    public async Task onClearLocalStorage()
+    {
+        await JSRuntime.InvokeVoidAsync("localStorage.clear");
+        StateHasChanged();
+    }
+
+    public async Task BindData()
+    {
+        //var weeksListToString = Newtonsoft.Json.JsonConvert.SerializeObject(WeeksList);
+        //var weeksListString = Newtonsoft.Json.JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(WeeksList);
+
+        var resultWeek = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "WeeksList");
+        if(resultWeek != null)
+        {
+            WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(resultWeek);
+        }
+
+        var resultFood = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "FoodList");
+        if(resultFood != null)
+        {
+            FoodList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FoodCategory>>(resultFood);
+        }
+        
+    }
 
 
     public void OnModelsChange(Models models)
@@ -370,13 +419,23 @@
         Models = models;
     }
 
-    public void OnWeeksListChange(IEnumerable<Week> list)
+    public async Task OnWeeksListChange(List<Week> list)
     {
-        WeeksListIterable = list;
+        WeeksList = list;
+
+        var WeeksListString = Newtonsoft.Json.JsonConvert.SerializeObject(WeeksList);
+        Console.WriteLine(WeeksListString);
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "WeeksList");
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "WeeksList", WeeksListString);
     }
 
-    public void OnFoodListChange(List<FoodCategory> list)
+    public async Task OnFoodListChange(List<FoodCategory> list)
     {
         FoodList = list;
+
+        var FoodListString = Newtonsoft.Json.JsonConvert.SerializeObject(FoodList);
+        Console.WriteLine(FoodListString);
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "FoodList");
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "FoodList", FoodListString);
     }
 }

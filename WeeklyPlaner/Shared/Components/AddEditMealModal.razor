@@ -91,7 +91,7 @@
     public List<FoodCategory> FoodList { get; set; }
 
     [Parameter]
-    public IEnumerable<Week> WeeksListIterable { get; set; }
+    public List<Week> WeeksList { get; set; }
 
     [Parameter]
     public Models Models { get; set; }
@@ -100,7 +100,7 @@
     public EventCallback<Models> OnModelsChangeModals { get; set; }
 
     [Parameter]
-    public EventCallback<IEnumerable<Week>> OnWeeksListChangeModals { get; set; }
+    public EventCallback<List<Week>> OnWeeksListChangeModals { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -114,7 +114,7 @@
 
         if (Models.DayModel.Title != null)
         {
-            list = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null).ToList();
+            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null).ToList();
         }
 
         return list;
@@ -165,14 +165,14 @@
     {
         if (Models.MealModel.Groceries != null)
         {
-            var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
             meal.Groceries = Models.MealModel.Groceries;
         }
     }
 
     public async Task OnNewMealHandler()
     {
-        var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+        var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
 
         meal.Food = Models.MealModel.Food;
         if (Models.MealModel.Groceries != null)
@@ -190,10 +190,10 @@
         await OnModelsChangeModals.InvokeAsync(Models);
     }
 
-    public async Task OnWeeksListChangeAddEditMealModal(IEnumerable<Week> WeeksList = null)
+    public async Task OnWeeksListChangeAddEditMealModal(List<Week> weeksList = null)
     {
-        if (WeeksList != null)
-            WeeksListIterable = WeeksList;
-        await OnWeeksListChangeModals.InvokeAsync(WeeksListIterable);
+        if (weeksList != null)
+            WeeksList = weeksList;
+        await OnWeeksListChangeModals.InvokeAsync(WeeksList);
     }
 }

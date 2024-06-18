@@ -1,5 +1,5 @@
 ﻿<!-- ADD/Edit meal Modal -->
-<AddEditMealModal FoodList="FoodList" WeeksListIterable="WeeksListIterable" Models="Models" OnModelsChangeModals="OnModelsChangeModals" OnWeeksListChangeModals="OnWeeksListChangeModals" />
+<AddEditMealModal FoodList="FoodList" WeeksList="WeeksList" Models="Models" OnModelsChangeModals="OnModelsChangeModals" OnWeeksListChangeModals="OnWeeksListChangeModals" />
 
 <!-- MealDeleteConfirmation Modal -->
 <ConfirmationModal Id="DelConfirmMealModal" Title="@(PersianPhrases.WarningByMark)" Color="@(Models.DayModel.color)" ValueChangedEventHandler="OnDeleteMeal">
@@ -40,7 +40,7 @@
 @code {
 
     [Parameter]
-    public IEnumerable<Week> WeeksListIterable { get; set; }
+    public List<Week> WeeksList { get; set; }
 
     [Parameter]
     public List<FoodCategory> FoodList { get; set; }
@@ -52,7 +52,7 @@
     public EventCallback<Models> OnModelsChange { get; set; }
 
     [Parameter]
-    public EventCallback<IEnumerable<Week>> OnWeeksListChange { get; set; }
+    public EventCallback<List<Week>> OnWeeksListChange { get; set; }
 
     [Parameter]
     public EventCallback<List<FoodCategory>> OnFoodListChange { get; set; }
@@ -70,7 +70,7 @@
     {
         if (value)
         {
-            var meal = WeeksListIterable.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
             meal.Food = new Food();
             meal.Groceries = new List<Grocery>();
 
@@ -130,11 +130,11 @@
         await OnModelsChange.InvokeAsync(Models);
     }
 
-    public async Task OnWeeksListChangeModals(IEnumerable<Week> WeeksList = null)
+    public async Task OnWeeksListChangeModals(List<Week> weeksList = null)
     {
-        if (WeeksList != null)
-            WeeksListIterable = WeeksList;
-        await OnWeeksListChange.InvokeAsync(WeeksListIterable);
+        if (weeksList != null)
+            WeeksList = weeksList;
+        await OnWeeksListChange.InvokeAsync(WeeksList);
     }
 
     public async Task OnFoodListChangeModals(List<FoodCategory> foodList = null)

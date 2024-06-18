@@ -2,7 +2,7 @@
 <div id="WeekCarousel" class="carousel slide mb-5">
     <div class="carousel-inner">
 
-        @foreach (var week in WeeksListIterable)
+        @foreach (var week in WeeksList)
         {
             if (FirstRender)
             {
@@ -59,7 +59,7 @@
     public Models Models { get; set; }
 
     [Parameter]
-    public IEnumerable<Week> WeeksListIterable { get; set; }
+    public List<Week> WeeksList { get; set; }
 
     [Parameter]
     public EventCallback<Models> OnModelsChange { get; set; }
