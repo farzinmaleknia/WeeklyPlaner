@@ -1,0 +1,130 @@
+﻿
+<div class="mb-3">
+    <div class="mb-3">
+        <span class=" f-size36 food-title just-bg-blue text-center">@(PersianPhrases.Foods)</span>
+    </div>
+
+
+    <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
+        @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
+    </button>
+
+    @foreach (var category in FoodList)
+    {
+        <div class="mb-5">
+            <div class="food-category-group d-flex justify-content-start">
+                <span class="category-title f-size24">@(category.Title)</span>
+                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
+                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
+            </div>
+            <div>
+                @foreach (var food in category.foods)
+                {
+                    <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
+                        @(food.Name)
+                        <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
+                    </button>
+                }
+            </div>
+        </div>
+    }
+
+</div>
+
+
+
+
+@code {
+
+    [Parameter]
+    public List<FoodCategory> FoodList { get; set; }
+
+    [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
+    public EventCallback<Models> OnModelsChange { get; set; }
+
+    [Parameter]
+    public EventCallback<List<FoodCategory>> OnFoodListChange { get; set; }
+
+    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    public async Task passingCategory(bool isForAddCat, FoodCategory category = null)
+    {
+        if (isForAddCat)
+        {
+            Models.CategoryModel = new FoodCategory();
+
+        }
+        else
+        {
+            var lst = new List<Food>();
+            lst.AddRange(category.foods);
+            Models.CategoryModel = new FoodCategory()
+                {
+                    Id = category.Id,
+                    Title = category.Title,
+
+                    foods = lst,
+                };
+        }
+        Models.IsForAddCat = isForAddCat;
+
+        await OnModelsChangeFoods();
+    }
+
+    public async Task OnFoodDelete(FoodCategory category, Food food)
+    {
+        if (food.IsSelectedForDel)
+        {
+            category.foods.Remove(food);
+            Models.FoodModel = new Food();
+        }
+        else
+        {
+            var lastCategory = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
+            if (lastCategory != null)
+            {
+                var lastFood = lastCategory.foods.FirstOrDefault(f => f.Name == Models.FoodModel.Name);
+                if (lastFood != null)
+                {
+                    lastFood.IsSelectedForDel = false;
+                }
+            }
+
+            food.IsSelectedForDel = true;
+            Models.FoodModel = new Food(food.Name);
+            Models.CategoryModel = new FoodCategory()
+            {
+                Id = category.Id,
+            };
+        }
+
+        await OnModelsChangeFoods();
+        await OnFoodListChangeFoods();
+    }
+
+    public async Task OnModelsChangeFoods(Models models = null)
+    {
+        if (models != null)
+            Models = models;
+        await OnModelsChange.InvokeAsync(Models);
+    }
+
+    public async Task OnFoodListChangeFoods(List<FoodCategory> foodList = null)
+    {
+        if (foodList != null)
+            FoodList = foodList;
+        await OnFoodListChange.InvokeAsync(FoodList);
+    }
+
+}

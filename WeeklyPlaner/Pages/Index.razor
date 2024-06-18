@@ -1,47 +1,19 @@
 ﻿@page "/"
 
+@inject JSRuntime JSRuntime 
+
 
 <div class="container-fluid">
     <div class="row bg-light-subtle">
 
         <Weeks Models="Models" FoodList="FoodList" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange"/>
 
-        <div class="mb-3">
-            <div class="mb-3">
-                <span class=" f-size36 food-title just-bg-blue text-center">@(PersianPhrases.Foods)</span>
-            </div>
+        <Foods FoodList="FoodList" Models="Models" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
 
-
-            <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
-                @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
-            </button>
-
-            @foreach (var category in FoodList)
-            {
-                <div class="mb-5">
-                    <div class="food-category-group d-flex justify-content-start">
-                        <span class="category-title f-size24">@(category.Title)</span>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
-                        <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
-                    </div>
-                    <div>
-                        @foreach (var food in category.foods)
-                        {
-                            <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
-                                @(food.Name)
-                                <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
-                            </button>
-                        }
-                    </div>
-                </div>
-            }
-
-        </div>
     </div>
 </div>
 
-<Modals FoodList="FoodList" Models="Models" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" />
+<Modals FoodList="FoodList" Models="Models" WeeksListIterable="WeeksListIterable" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" OnFoodListChange="OnFoodListChange" />
 
 
 
@@ -385,28 +357,6 @@
     // 	await base.OnAfterRenderAsync();
     // }
 
-    public async Task passingCategory(bool isForAddCat, FoodCategory category = null )
-    {
-        if(isForAddCat)
-        {
-            Models.CategoryModel = new FoodCategory();
-
-        }
-        else
-        {
-            var lst = new List<Food>();
-            lst.AddRange(category.foods);
-            Models.CategoryModel = new FoodCategory()
-            {
-                Id = category.Id,
-                Title = category.Title,
-
-                foods = lst,
-            };
-        }
-        Models.IsForAddCat = isForAddCat;
-    }
-
     public async Task OnCategorySelected(string category)
     {
         Models.FoodModel.Category = category;
@@ -414,33 +364,6 @@
 
 
 
-    public async Task OnFoodDelete(FoodCategory category, Food food)
-    {
-        if(food.IsSelectedForDel)
-        {
-            category.foods.Remove(food);
-            Models.FoodModel = new Food();
-        }
-        else
-        {
-            var lastCategory = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
-            if(lastCategory != null)
-            {
-                var lastFood = lastCategory.foods.FirstOrDefault(f => f.Name == Models.FoodModel.Name);
-                if(lastFood != null)
-                {
-                    lastFood.IsSelectedForDel = false;
-                }                
-            }
-
-            food.IsSelectedForDel = true;
-            Models.FoodModel = new Food(food.Name);
-            Models.CategoryModel = new FoodCategory()
-            {
-                Id = category.Id,
-            };
-        }
-    }
 
     public void OnModelsChange(Models models)
     {
@@ -450,5 +373,10 @@
     public void OnWeeksListChange(IEnumerable<Week> list)
     {
         WeeksListIterable = list;
+    }
+
+    public void OnFoodListChange(List<FoodCategory> list)
+    {
+        FoodList = list;
     }
 }

@@ -14,7 +14,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
-                    @if (IsForAdd)
+                    @if (IsForAddMeal)
                     {
                         <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(PersianPhrases.Save)</button>
                     }
@@ -49,12 +49,17 @@
     public bool IsForAdd { get; set; }
 
     [Parameter]
+    public bool IsForAddMeal { get; set; }
+
+    [Parameter]
     public EventCallback ValueChangedEventHandler { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+
+        IsForAddMeal = false;
     }
 
     private async Task OnValueChanged()
