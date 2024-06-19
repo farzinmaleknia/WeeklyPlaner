@@ -6,6 +6,8 @@ namespace WeeklyPlaner.Models
     {
         public string CurrentWeek  = "هفته کنونی";
         public string LastWeek  = "هفته‌ قبل";
+        public string TwoWeeksAgo  = "دو هفته‌ قبل";
+        public string ThreeWeeksAgo  = "سه هفته‌ قبل";
 
         public string Thursday = "پنجشنبه";
         public string Friday = "جمعه";

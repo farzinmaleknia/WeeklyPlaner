@@ -7,6 +7,7 @@ namespace WeeklyPlaner.Models
         static PersianPhrases PersianPhrases = new PersianPhrases();
         public int Id { get; set; } = 0;
         public string Title { get; set; }
+        public DateTime StartDate { get; set; }
         public Day Thursday { get; set; } = new Day(){ Title = PersianPhrases.Thursday, };
 		public Day Friday { get; set; } = new Day() { Title = PersianPhrases.Friday,};
 		public Day Saturday { get; set; } = new Day() { Title = PersianPhrases.Saturday, };
@@ -21,6 +22,12 @@ namespace WeeklyPlaner.Models
         public IEnumerable<Day> GetDays()
         {
 			return new List<Day>() { Thursday, Friday, Saturday, Sunday, Monday, Tuesday, Wednesday};
+
+		}
+
+        public List<string> GetWeeksTitle()
+        {
+			return new List<string>() { PersianPhrases.CurrentWeek, PersianPhrases.LastWeek, PersianPhrases.TwoWeeksAgo, PersianPhrases.ThreeWeeksAgo};
 
 		}
 

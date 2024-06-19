@@ -31,7 +31,7 @@
                 {
                     day.color = week.Colors[ColorCounter];
 
-                    <Days Models="Models" Week="week" Day="day" FoodList="@(FoodList)" ColorCounter="ColorCounter" OnModelsChangeWeeks="OnModelsChangeWeeks"/>
+                    <Days Models="Models" Week="week" Day="day" ColorCounter="ColorCounter" OnModelsChangeWeeks="OnModelsChangeWeeks"/>
 
                     @if (ColorCounter < week.Colors.Count() - 1)
                     {
@@ -51,9 +51,6 @@
 
 
 @code {
-
-    [Parameter]
-    public List<FoodCategory> FoodList { get; set; }
 
     [Parameter]
     public Models Models { get; set; }

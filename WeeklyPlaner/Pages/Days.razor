@@ -9,7 +9,7 @@
                     {
                         if (meal.Food.Name != null)
                         {
-                            <Meals Models="Models" FoodList="FoodList" Week="Week" Day="Day" Meal="meal" OnModelsChangeDays="OnModelsChangeDays"/>
+                            <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnModelsChangeDays="OnModelsChangeDays"/>
                         }
                         else
                         {
@@ -37,9 +37,6 @@
 
 
 @code {
-
-    [Parameter]
-    public List<FoodCategory> FoodList { get; set; }
 
     [Parameter]
     public Models Models { get; set; }
