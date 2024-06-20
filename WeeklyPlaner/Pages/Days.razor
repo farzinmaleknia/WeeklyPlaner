@@ -9,7 +9,7 @@
                     {
                         if (meal.Food.Name != null)
                         {
-                            <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnModelsChangeDays="OnModelsChangeDays"/>
+                            <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays" />
                         }
                         else
                         {
@@ -52,6 +52,9 @@
 
     [Parameter]
     public EventCallback<Models> OnModelsChangeWeeks { get; set; }
+
+    [Parameter]
+    public EventCallback OnWeeksListChangeWeeks { get; set; }
 
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
@@ -106,6 +109,11 @@
             Models = models;
 
         await OnModelsChangeWeeks.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeDays()
+    {
+        await OnWeeksListChangeWeeks.InvokeAsync();
     }
 
 }

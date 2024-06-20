@@ -9,7 +9,7 @@
     <div class="row bg-light-subtle">
         <button class="btn btn-warning" @onclick="onClearLocalStorage">clear</button>
 
-        <Weeks Models="Models" WeeksList="WeeksList" OnModelsChange="OnModelsChange" />
+        <Weeks Models="Models" WeeksList="WeeksList" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange" />
 
         <Foods FoodList="FoodList" Models="Models" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
 
@@ -52,18 +52,13 @@
 
         if(WeeksList.Count == 0)
         {
-            var responceWeekEmpty = await http.GetStringAsync("/sample-data/Weeks.json");
+            var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData.json");
 
-            WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekEmpty);
-
-            WeeksList[0].StartDate = CurrentTime;
-
-            // var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData.json");
-
-            // WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
+            WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
 
         }
 
+        await ManageWeeksList();
 
         if (FoodList.Count == 0)
         {
@@ -74,25 +69,68 @@
 
         }
 
-        await CalculateTime();
     }
 
-    private async Task CalculateTime()
+    private async Task ManageWeeksList()
     {
-        var jj = CurrentTime.AddDays(10);
-        Console.WriteLine(jj.DayOfWeek);
-
-        if(jj.Day - CurrentTime.Day > 6)
+        if (WeeksList.Count == 0 || (CurrentTime - WeeksList[0].StartDate).TotalDays > 27)
         {
-            var startTime = jj;
-            while (startTime.DayOfWeek.ToString() != "Wednesday")
+            WeeksList = new List<Week>()
             {
-                startTime = startTime.AddDays(-1);
+                new Week()
+                {
+                    Title = PersianPhrases.CurrentWeek,
+                    StartDate = LastWednsday(CurrentTime).Result,
+                },
+            };
+
+            //Console.WriteLine( $"after {startTime.DayOfWeek}");
+        }
+        else
+        {
+            var lastWed = LastWednsday(CurrentTime).Result;
+            int weekCounter = 0;
+            while (lastWed.Date != WeeksList[weekCounter].StartDate.Date)
+            {
+                await AddNewWeek(lastWed);
+                lastWed = LastWednsday(lastWed.AddDays(-1)).Result;
+                weekCounter++;
             }
 
-            Console.WriteLine( $"after {startTime.DayOfWeek}");
         }
 
+    }
+
+    private async Task<DateTime> LastWednsday(DateTime day)
+    {
+        while (day.DayOfWeek.ToString() != "Wednesday")
+        {
+            day = day.AddDays(-1);
+        }
+
+        return day;
+    }
+
+    private async Task AddNewWeek(DateTime day)
+    {
+        WeeksList.Insert(0, new Week()
+        {
+            StartDate = day,
+        });
+
+        WeeksList.OrderBy(w => w.StartDate.Day).ToList();
+
+        if(WeeksList.Count() > 4)
+        {
+            WeeksList.RemoveAt(WeeksList.Count() - 1);
+        }
+
+        int weekTitle = 0;
+        foreach (var week in WeeksList)
+        {
+            week.Title = week.GetWeeksTitle()[weekTitle];
+            weekTitle++;
+        }
     }
 
     public async Task onClearLocalStorage()

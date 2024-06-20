@@ -31,7 +31,7 @@
                 {
                     day.color = week.Colors[ColorCounter];
 
-                    <Days Models="Models" Week="week" Day="day" ColorCounter="ColorCounter" OnModelsChangeWeeks="OnModelsChangeWeeks"/>
+                    <Days Models="Models" Week="week" Day="day" ColorCounter="ColorCounter" OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" />
 
                     @if (ColorCounter < week.Colors.Count() - 1)
                     {
@@ -61,6 +61,9 @@
     [Parameter]
     public EventCallback<Models> OnModelsChange { get; set; }
 
+    [Parameter]
+    public EventCallback<List<Week>> OnWeeksListChange { get; set; }
+
     public Random Random { get; set; }
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
@@ -80,11 +83,15 @@
 
     }
 
-
     public async Task OnModelsChangeWeeks(Models models)
     {
         Models = models;
         await OnModelsChange.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeWeeks()
+    {
+        await OnWeeksListChange.InvokeAsync(WeeksList);
     }
 
 }

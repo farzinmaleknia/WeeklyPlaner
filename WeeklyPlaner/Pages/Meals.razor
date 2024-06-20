@@ -73,6 +73,9 @@
     [Parameter]
     public EventCallback<Models> OnModelsChangeDays { get; set; }
 
+    [Parameter]
+    public EventCallback OnWeeksListChangeDays { get; set; }
+
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
     public bool IsDataPassed { get; set; }
@@ -129,18 +132,17 @@
     public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
     {
         if (Models.MealModel.Groceries == null)
-            Models.MealModel.Groceries = new List<Grocery>
-                ();
+            Models.MealModel.Groceries = new List<Grocery>();
 
         Models.MealModel.Groceries.Add(Models.GroceryModel);
         Models.GroceryModel = new Grocery();
+
+        await OnModelsChangeMeals();
 
         if (isSubmitNeeded)
         {
             OnNewGrocerySubmitet();
         }
-
-        await OnModelsChangeMeals();
     }
 
     public async Task OnNewGrocerySubmitet()
@@ -150,12 +152,17 @@
             Meal.Groceries = Models.MealModel.Groceries;
         }
 
-        await OnModelsChangeMeals();
+        await OnWeeksListChangeMeals();
     }
 
     public async Task OnModelsChangeMeals()
     {
         await OnModelsChangeDays.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeMeals()
+    {
+        await OnWeeksListChangeDays.InvokeAsync();
     }
 
 }
