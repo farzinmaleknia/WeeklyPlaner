@@ -91,7 +91,15 @@
     padding-bottom: 15px;
 }
 
-
+.meal-passed {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    right: 0;
+    background: rgba(0,0,0,0.3);
+}
 
 .new-meal-buttons {
     margin-top: 20px;

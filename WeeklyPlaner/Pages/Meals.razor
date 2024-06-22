@@ -2,6 +2,11 @@
 
 <div class="card">
 
+    @if (isMealPassed().Result)
+    {
+        <div class="meal-passed">
+        </div>
+    }
     <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
         <span class="f-size36 meal-title" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(Meal.Title)</span>
         <button class="btn my-bg-@(Day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
@@ -20,7 +25,7 @@
                 </div>
                 <div class="col-2 padding-x-0">
                     <button class="btn btn-sm my-bg-@(Day.color)-outline text-white m-auto width-98 grocery-btn"
-                            @onclick="() => OnEditGeroceries(Meal)">
+                            @onclick="() => OnEditGeroceries()">
                         <i class="fa fa-cart-plus" aria-hidden="true"></i>
                     </button>
                 </div>
@@ -35,7 +40,8 @@
                     }
 
                     <div class="col-12 mt-3 padding-x-0">
-                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Day.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
+                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Day.color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
+
                     </div>
                 }
 
@@ -43,7 +49,7 @@
                 <div class="col-12 f-size18 padding-x-0 pt-3">
                     @if (Meal.Groceries != null)
                     {
-                        <GroceriesList MealModel="Meal" />
+                        <GroceriesList MealModel="Meal" OnWeeksListChangeGeroceriesList="OnWeeksListChangeMeals" />
                     }
                 </div>
             </div>
@@ -78,7 +84,11 @@
 
     private PersianPhrases PersianPhrases = new PersianPhrases();
 
+    private Timer GroceryTimer { set; get; }
+
     public bool IsDataPassed { get; set; }
+
+    public DateTime CurrentTime { get; set; }
 
 
 
@@ -86,8 +96,47 @@
     {
         await base.OnInitializedAsync();
 
+        GroceryTimer = new Timer(async _ =>
+        {
+            return;
+        },null , 0 , 0);
+
+        CurrentTime = DateTime.Now;
+
     }
 
+    private async Task<bool> isMealPassed()
+    {
+        int difference = (int)(CurrentTime - Week.StartDate).TotalDays;
+        int day = Models.DayOfWeek;
+        if (difference > day)
+        {
+            return true;
+        }
+        else if (difference == Models.DayOfWeek)
+        {
+            if (Meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 11)
+            {
+                return true;
+            }
+            else if (Meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 17)
+            {
+                return true;
+            }
+            else if (Meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 22)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false; 
+        }
+    } 
 
 
     public async Task passingData(bool isAddMeal, Meal? meal = null)
@@ -122,10 +171,23 @@
         await OnModelsChangeMeals();
     }
 
-    private void OnEditGeroceries(Meal meal)
+    private void OnEditGeroceries()
     {
-        meal.GroceryEditable = !meal.GroceryEditable;
-        IsDataPassed = !meal.GroceryEditable;
+        GroceryEditableHandler();
+        Meal.GroceryEditable = !Meal.GroceryEditable;
+        IsDataPassed = !Meal.GroceryEditable;
+    }
+
+    private void GroceryEditableHandler()
+    {
+        GroceryTimer.Dispose();
+        GroceryTimer = new System.Threading.Timer(async _ =>
+        {
+            Meal.GroceryEditable = false;
+            await InvokeAsync(StateHasChanged);
+            await OnWeeksListChangeMeals();
+
+        }, null, 20000, 0);
     }
 
 
@@ -150,9 +212,9 @@
         if (Models.MealModel.Groceries != null)
         {
             Meal.Groceries = Models.MealModel.Groceries;
+            await OnWeeksListChangeMeals();
         }
 
-        await OnWeeksListChangeMeals();
     }
 
     public async Task OnModelsChangeMeals()

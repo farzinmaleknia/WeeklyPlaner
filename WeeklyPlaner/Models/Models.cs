@@ -11,5 +11,6 @@
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;
+        public int DayOfWeek { get; set; }
     }
 }

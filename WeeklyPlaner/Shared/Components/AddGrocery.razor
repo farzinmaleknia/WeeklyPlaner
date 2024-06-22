@@ -3,12 +3,12 @@
 <EditForm Model="GroceryModel" OnSubmit="OnValueChanged">
 	<div class="mb-1">
 		<label for="groceryName" class="form-label">@(PersianPhrases.NeededGrocery)</label>
-		<InputText id="groceryName" class="form-control" @bind-Value="GroceryModel.Name" />
+		<InputText id="groceryName" class="form-control" Value="@GroceryModel.Name" ValueChanged="OnNameInputChanged" ValueExpression="() => GroceryModel.Name" />
 	</div>
 	<div class="mb-3 d-flex justify-content-between">
 		<div>
 			<label for="groceryAmount" class="form-label">@(PersianPhrases.Amount)</label>
-			<InputText id="groceryAmount" class="form-control" @bind-Value="GroceryModel.Amount" />
+			<InputText id="groceryAmount" class="form-control" Value="@GroceryModel.Amount" ValueChanged="OnAmountInputChanged" ValueExpression="() => GroceryModel.Amount" />
 		</div>
 		<div>
 			<button type="submit" class="btn my-bg-@(CurrentColor)-outline  grocery-add-btn  padding-t-10">
@@ -33,6 +33,9 @@
 	[Parameter]
 	public EventCallback<bool> ValueChangedEventHandler { get; set; }
 
+	[Parameter]
+	public EventCallback GroceryEditableHandler { get; set; }
+
 
 
 
@@ -42,8 +45,21 @@
 
 	}
 
+	private async Task OnNameInputChanged(string value)
+	{
+		GroceryModel.Name = value;
+		await GroceryEditableHandler.InvokeAsync();
+	}
+
+	private async Task OnAmountInputChanged(string value)
+	{
+		GroceryModel.Amount = value;
+		await GroceryEditableHandler.InvokeAsync();
+	}
+
 	private async Task OnValueChanged()
 	{
+		await GroceryEditableHandler.InvokeAsync();
 		await ValueChangedEventHandler.InvokeAsync(IsSubmitNeeded);
 	}
 }

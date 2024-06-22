@@ -4,6 +4,7 @@
 
         @foreach (var week in WeeksList)
         {
+            Models.DayOfWeek = DayCounter;
             if (FirstRender)
             {
                 ColorCounter = Random.Next(0, week.Colors.Count());
@@ -41,8 +42,13 @@
                     {
                         ColorCounter = (ColorCounter + 1) - week.Colors.Count();
                     }
+
+                    DayCounter++;
                 }
             </div>
+
+
+
         }
     </div>
 </div>
@@ -72,6 +78,8 @@
 
     public int ColorCounter { get; set; }
 
+    public int DayCounter { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -81,6 +89,7 @@
 
         Random = new Random();
 
+        DayCounter = 0;
     }
 
     public async Task OnModelsChangeWeeks(Models models)

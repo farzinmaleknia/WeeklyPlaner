@@ -22,6 +22,9 @@
     [Parameter, EditorRequired]
     public Meal MealModel { get; set; }
 
+    [Parameter]
+    public EventCallback<List<Week>> OnWeeksListChangeGeroceriesList { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -32,5 +35,6 @@
     private async Task OnGroceryDeleted(Grocery groc)
     {
         MealModel.Groceries.Remove(groc);
+        await OnWeeksListChangeGeroceriesList.InvokeAsync();
     }
 }
