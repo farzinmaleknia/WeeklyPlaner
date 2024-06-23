@@ -2,33 +2,48 @@
 
 <div class="card">
 
-    @if (isMealPassed().Result)
+    @if (Meal.IsMealPassed)
     {
-        <div class="meal-passed">
+        <div class="meal-passed f-size20">
+            <div class="bottom-44">
+                <span class="f-size20">@(PersianPhrases.DidYouEatIt)</span>
+            </div>
+            @if(Meal.Food.IsEatenRecently)
+            {
+                <div class="bottom-10">
+                    <span class="f-size20">@(PersianPhrases.FoodWillEarase)</span>
+                </div>
+            }
         </div>
     }
     <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
         <span class="f-size36 meal-title" data-bs-toggle="collapse" href="#dinnerBody" aria-expanded="true" aria-controls="dinnerBody">@(Meal.Title)</span>
-        <button class="btn my-bg-@(Day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
-            <i class="fa fa-times" aria-hidden="true"></i>
-        </button>
+        @if (!Meal.IsMealPassed)
+        {
+            <button class="btn my-bg-@(Day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
+                <i class="fa fa-times" aria-hidden="true"></i>
+            </button>            
+        }
     </div>
     <div id="dinnerBody" class="collapse show">
         <div class="card-body bg-light padding-t-5">
             <div class="row mx-auto">
-                <div class="col-10 padding-x-0">
+                <div class="col padding-x-0 @(Meal.IsMealPassed ? "padding-b-40" : "")">
                     <button class="btn btn-sm my-bg-@(Day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
                             @onclick="() => passingData(false, Meal)"
                             data-bs-toggle="modal" data-bs-target="#addEditMealModal">
                         @(Meal.Food.Name)
                     </button>
                 </div>
-                <div class="col-2 padding-x-0">
-                    <button class="btn btn-sm my-bg-@(Day.color)-outline text-white m-auto width-98 grocery-btn"
-                            @onclick="() => OnEditGeroceries()">
-                        <i class="fa fa-cart-plus" aria-hidden="true"></i>
-                    </button>
-                </div>
+                @if(!Meal.IsMealPassed)
+                {
+                    <div class="col-2 padding-x-0">
+                        <button class="btn btn-sm my-bg-@(Day.color)-outline text-white m-auto width-98 grocery-btn"
+                                @onclick="() => OnEditGeroceries()">
+                            <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>                    
+                }
 
 
                 @if (Meal.GroceryEditable)
@@ -41,13 +56,12 @@
 
                     <div class="col-12 mt-3 padding-x-0">
                         <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Day.color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
-
                     </div>
                 }
 
 
                 <div class="col-12 f-size18 padding-x-0 pt-3">
-                    @if (Meal.Groceries != null)
+                    @if (Meal.Groceries != null && !Meal.IsMealPassed)
                     {
                         <GroceriesList MealModel="Meal" OnWeeksListChangeGeroceriesList="OnWeeksListChangeMeals" />
                     }
@@ -75,6 +89,9 @@
 
     [Parameter]
     public Week Week { get; set; }
+
+    [Parameter]
+    public int DayOfWeek { get; set; }
 
     [Parameter]
     public EventCallback<Models> OnModelsChangeDays { get; set; }
@@ -107,34 +124,40 @@
 
     private async Task<bool> isMealPassed()
     {
-        int difference = (int)(CurrentTime - Week.StartDate).TotalDays;
-        int day = Models.DayOfWeek;
-        if (difference > day)
+        if(Week.Title == PersianPhrases.CurrentWeek)
         {
-            return true;
-        }
-        else if (difference == Models.DayOfWeek)
-        {
-            if (Meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 11)
+            int difference = (int)(CurrentTime - Week.StartDate).TotalDays;
+            if (difference > DayOfWeek)
             {
                 return true;
             }
-            else if (Meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 17)
+            else if (difference == DayOfWeek)
             {
-                return true;
-            }
-            else if (Meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 22)
-            {
-                return true;
+                if (Meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
+                {
+                    return true;
+                }
+                else if (Meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
+                {
+                    return true;
+                }
+                else if (Meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return false;
+                return false; 
             }
         }
         else
         {
-            return false; 
+            return true;
         }
     } 
 

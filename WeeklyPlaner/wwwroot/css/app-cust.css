@@ -37,6 +37,10 @@
     padding-top: 10px !important;
 }
 
+.padding-b-40 {
+    padding-bottom: 40px !important;
+}
+
 
 .dir-ltr{
     direction: ltr;
@@ -99,6 +103,21 @@
     top: 0;
     right: 0;
     background: rgba(0,0,0,0.3);
+    color: white;
+    justify-content: center;
+    align-content: center;
+}
+
+.bottom-44{
+    position: absolute;
+    bottom: 44px;
+    right:6px;
+}
+
+.bottom-10{
+    position: absolute;
+    bottom: 10px;
+    right:6px;
 }
 
 .new-meal-buttons {
@@ -178,6 +197,10 @@
 
 .f-size18 {
     font-size: 18px !important;
+}
+
+.f-size20 {
+    font-size: 20px !important;
 }
 
 .f-size24 {

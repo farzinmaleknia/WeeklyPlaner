@@ -43,6 +43,9 @@ namespace WeeklyPlaner.Models
         public string NeededGrocery  = "قلم مورد نیاز";
         public string Amount  = "مقدار";
 
+        public string DidYouEatIt  = "آیا این وعده غذا رو خوردی؟";
+        public string FoodWillEarase  = "این غذا موقتا از لیست غذاها حذف می‌شه";
+
 
         public string EnterNew(string entity)
         {
@@ -63,6 +66,12 @@ namespace WeeklyPlaner.Models
         public string SureDelete(string entity, string name)
         {
             return $"آیا از حذف {entity}‌ی {name} مطمئن هستی؟";
+
+        }
+
+        public string HowToRefreshFoodsList(string icon)
+        {
+            return $"با کلیک بر روی ایکون {icon} در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه و به اصطلاح لیست غذاها رفرش می‌شه";
 
         }
 

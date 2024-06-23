@@ -17,6 +17,8 @@
 			Title = PersianPhrases.Dinner,
 		};
 		public string color { get; set; } 
+		public bool IsDayPassed { get; set; }
+		public bool IsCreateBtnNeeded { get; set; } = false;
 
 		public IEnumerable<Meal> GetMeals()
 		{

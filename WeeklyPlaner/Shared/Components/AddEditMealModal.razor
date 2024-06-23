@@ -108,13 +108,13 @@
         await base.OnInitializedAsync();
     }
 
-    public IEnumerable<Meal> GetBlankMeals()
+    public List<Meal> GetBlankMeals()
     {
-        IEnumerable<Meal> list = new List<Meal>();
+        List<Meal> list = new List<Meal>();
 
         if (Models.DayModel.Title != null)
         {
-            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null).ToList();
+            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
         }
 
         return list;
@@ -172,12 +172,18 @@
 
     public async Task OnNewMealHandler()
     {
-        var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+        var day = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title);
+        var meal = day.GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
 
         meal.Food = Models.MealModel.Food;
         if (Models.MealModel.Groceries != null)
         {
             meal.Groceries = Models.MealModel.Groceries;
+        }
+
+        if(GetBlankMeals().Count() == 0)
+        {
+            day.IsCreateBtnNeeded = false;
         }
 
         await OnWeeksListChangeAddEditMealModal();

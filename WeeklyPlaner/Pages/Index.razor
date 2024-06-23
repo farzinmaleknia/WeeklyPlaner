@@ -60,6 +60,8 @@
 
         await ManageWeeksList();
 
+        await IsMealPassed();
+
         if (FoodList.Count == 0)
         {
 
@@ -128,6 +130,60 @@
         {
             week.Title = week.GetWeeksTitle()[weekTitle];
             weekTitle++;
+        }
+    }
+
+    private async Task IsMealPassed()
+    {
+        foreach (var week in WeeksList)
+        {
+            int dayOfWeek = 0;
+            foreach (var day in week.GetDays())
+            {
+                dayOfWeek++;
+                foreach (var meal in day.GetMeals())
+                {
+                    if (week.Title == PersianPhrases.CurrentWeek)
+                    {
+                        int difference = (int)(CurrentTime - week.StartDate).TotalDays;
+                        if (difference > dayOfWeek)
+                        {
+                            meal.IsMealPassed = true;
+                            day.IsDayPassed = true;
+                        }
+                        else if (difference == dayOfWeek)
+                        {
+                            if (meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
+                            {
+                                meal.IsMealPassed = true;
+                            }
+                            else if (meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
+                            {
+                                meal.IsMealPassed = true;
+                            }
+                            else if (meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
+                            {
+                                meal.IsMealPassed = true;
+                                day.IsDayPassed = true;
+                            }
+                            else
+                            {
+                                meal.IsMealPassed = false;
+                            }
+                        }
+                        else
+                        {
+                            meal.IsMealPassed = false;
+                        }
+                    }
+                    else
+                    {
+                        meal.IsMealPassed = true;
+                        day.IsDayPassed = true;
+                    }
+                        
+                }
+            }
         }
     }
 
