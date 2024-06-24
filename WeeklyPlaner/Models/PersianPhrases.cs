@@ -71,7 +71,7 @@ namespace WeeklyPlaner.Models
 
         public string HowToRefreshFoodsList(string icon)
         {
-            return $"با کلیک بر روی ایکون {icon} در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه و به اصطلاح لیست غذاها رفرش می‌شه";
+            return $"با کلیک بر روی ایکون {icon} لیست غذاها رفرش می‌شه و در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه ";
 
         }
 

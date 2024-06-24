@@ -9,7 +9,7 @@
     <div class="row bg-light-subtle">
         <button class="btn btn-warning" @onclick="onClearLocalStorage">clear</button>
 
-        <Weeks Models="Models" WeeksList="WeeksList" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange" />
+        <Weeks Models="Models" WeeksList="WeeksList" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange"/>
 
         <Foods FoodList="FoodList" Models="Models" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
 
@@ -28,8 +28,6 @@
 
     public List<FoodCategory> FoodList { get; set; }
 
-    public Week FirstWeek { get; set; }
-    public Week SecondWeek { get; set; }
     public List<Week> WeeksList { get; set; }
 
     public DateTime CurrentTime { get; set; }
@@ -41,7 +39,6 @@
 
         Models = new Models();
 
-        FirstWeek = new Week();
         WeeksList = new List<Week>();
 
         FoodList = new List<FoodCategory>();
@@ -56,6 +53,7 @@
 
             WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
 
+
         }
 
         await ManageWeeksList();
@@ -65,10 +63,40 @@
         if (FoodList.Count == 0)
         {
 
-            var responce = await http.GetStringAsync("/sample-data/foods.json");
-
+            var responce = await http.GetStringAsync("/sample-data/Foods.json");
             FoodList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FoodCategory>>(responce);
 
+
+        }
+
+
+        // foreach (var week in WeeksList)
+        // {
+        //     foreach (var day in week.GetDays())
+        //     {
+        //         foreach (var meal in day.GetMeals())
+        //         {
+        //             foreach (var cat in FoodList)
+        //             {
+        //                 var food = cat.foods.FirstOrDefault(f => f.Name == meal.Food.Name);
+        //                 if(food != null)
+        //                 {
+        //                     meal.Food.CategoryId = food.CategoryId;
+        //                     Console.WriteLine("yes");
+        //                     break;
+        //                 }
+        //             }
+
+        //         }
+        //     }
+        // }
+
+        foreach (var cat in FoodList)
+        {
+            foreach (var food in cat.foods)
+            {
+                food.IsEatenRecently = false;
+            }
         }
 
     }
@@ -143,6 +171,12 @@
                 dayOfWeek++;
                 foreach (var meal in day.GetMeals())
                 {
+                    meal.GroceryEditable = false;
+                    meal.Food.IsEatenRecently = false;
+
+                    // meal.IsMealPassed = false;
+                    // day.IsDayPassed = false;
+
                     if (week.Title == PersianPhrases.CurrentWeek)
                     {
                         int difference = (int)(CurrentTime - week.StartDate).TotalDays;
@@ -181,7 +215,7 @@
                         meal.IsMealPassed = true;
                         day.IsDayPassed = true;
                     }
-                        
+
                 }
             }
         }
@@ -207,13 +241,33 @@
         {
             FoodList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FoodCategory>>(responceFood);
         }
-        
+
+    }
+
+    public async Task OnFoodIsEaten()
+    {
+        var food = FoodList.FirstOrDefault(c => c.Id == Models.FoodModel.CategoryId).foods.FirstOrDefault(f => f.Id == Models.FoodModel.Id);
+        if(food != null)
+        {
+            food.IsEatenRecently = Models.FoodModel.IsEatenRecently;
+        }
+
+        Models.FoodModel = new Food();
+
+        await OnFoodListChange();
     }
 
 
-    public void OnModelsChange(Models models)
+    public async Task OnModelsChange(Models models)
     {
         Models = models;
+
+        if(Models.IsFoodEatenChanged)
+        {
+            await OnFoodIsEaten();
+
+            Models.IsFoodEatenChanged = false;
+        };
     }
 
     public async Task OnWeeksListChange(List<Week> list)
@@ -221,19 +275,20 @@
         WeeksList = list;
 
         var WeeksListString = Newtonsoft.Json.JsonConvert.SerializeObject(WeeksList);
-        //Console.WriteLine(WeeksListString);
-        Console.WriteLine("--------------------- WeeksList Updated");
+        Console.WriteLine(WeeksListString);
+        //Console.WriteLine("--------------------- WeeksList Updated");
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "WeeksList");
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "WeeksList", WeeksListString);
     }
 
-    public async Task OnFoodListChange(List<FoodCategory> list)
+    public async Task OnFoodListChange(List<FoodCategory> list = null)
     {
-        FoodList = list;
+        if(list != null)
+            FoodList = list;
 
         var FoodListString = Newtonsoft.Json.JsonConvert.SerializeObject(FoodList);
-        //Console.WriteLine(FoodListString);
-        Console.WriteLine("--------------------- FoodList Updated");
+        Console.WriteLine(FoodListString);
+        //Console.WriteLine("--------------------- FoodList Updated");
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "FoodList");
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "FoodList", FoodListString);
     }

@@ -21,10 +21,13 @@
             <div>
                 @foreach (var food in category.foods)
                 {
-                    <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
-                        @(food.Name)
-                        <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
-                    </button>
+                    @if(!food.IsEatenRecently)
+                    {
+                        <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
+                            @(food.Name)
+                            <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
+                        </button>                        
+                    }
                 }
             </div>
         </div>

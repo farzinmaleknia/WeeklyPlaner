@@ -5,13 +5,16 @@
     @if (Meal.IsMealPassed)
     {
         <div class="meal-passed f-size20">
-            <div class="bottom-44">
-                <span class="f-size20">@(PersianPhrases.DidYouEatIt)</span>
+            <div class="form-check bottom-40">
+                <label for="isEatenRecently" class="form-check-label f-size20">@(PersianPhrases.DidYouEatIt)</label>
+                <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="Meal.Food.IsEatenRecently" @onclick="() => OnFoodEated()"/>
             </div>
             @if(Meal.Food.IsEatenRecently)
             {
-                <div class="bottom-10">
+                <div class="bottom-8">
                     <span class="f-size20">@(PersianPhrases.FoodWillEarase)</span>
+                    <i class="fa fa-info" aria-hidden="true"></i>
+                    <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
             }
         </div>
@@ -120,45 +123,6 @@
 
         CurrentTime = DateTime.Now;
 
-    }
-
-    private async Task<bool> isMealPassed()
-    {
-        if(Week.Title == PersianPhrases.CurrentWeek)
-        {
-            int difference = (int)(CurrentTime - Week.StartDate).TotalDays;
-            if (difference > DayOfWeek)
-            {
-                return true;
-            }
-            else if (difference == DayOfWeek)
-            {
-                if (Meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
-                {
-                    return true;
-                }
-                else if (Meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
-                {
-                    return true;
-                }
-                else if (Meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false; 
-            }
-        }
-        else
-        {
-            return true;
-        }
     } 
 
 
@@ -167,6 +131,7 @@
         Models.WeekId = Week.Id;
         Models.DayModel = new Day()
         {
+            Id = Day.Id,
             Title = Day.Title,    
             color = Day.color,    
         };
@@ -237,6 +202,25 @@
             Meal.Groceries = Models.MealModel.Groceries;
             await OnWeeksListChangeMeals();
         }
+
+    }
+
+    public async Task OnFoodEated() 
+    {
+        Meal.Food.IsEatenRecently = !Meal.Food.IsEatenRecently;
+
+        Models.FoodModel = new Food()
+        {
+            Name = Meal.Food.Name,
+            Id = Meal.Food.Id,
+            CategoryId = Meal.Food.CategoryId,
+            IsEatenRecently = Meal.Food.IsEatenRecently,
+        };
+
+        Models.IsFoodEatenChanged = true;
+
+        await OnModelsChangeMeals();
+        await OnWeeksListChangeMeals();
 
     }
 

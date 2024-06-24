@@ -2,10 +2,10 @@
 
 namespace WeeklyPlaner.Models
 {
-    public class Week : PersianPhrases
+    public class Week
     {
         static PersianPhrases PersianPhrases = new PersianPhrases();
-        public int Id { get; set; } = 0;
+        public string Id { get; set; }
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public Day Thursday { get; set; } = new Day(){ Title = PersianPhrases.Thursday, };
@@ -16,6 +16,11 @@ namespace WeeklyPlaner.Models
         public Day Tuesday { get; set; } = new Day() { Title = PersianPhrases.Tuesday, };
         public Day Wednesday { get; set; } = new Day() { Title = PersianPhrases.Wednesday, };
         public string color { get; set; }
+
+        public Week()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
 
         public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink" };
 

@@ -2,7 +2,7 @@
 {
     public class Models
     {
-        public int WeekId { get; set; }
+        public string WeekId { get; set; }
         public Day DayModel { get; set; } = new Day();
         public Meal MealModel { get; set; } = new Meal();
         public Grocery GroceryModel { get; set; } = new Grocery();  
@@ -11,5 +11,8 @@
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;
+        public bool IsFoodEatenChanged { get; set; } = false;
+
+
     }
 }

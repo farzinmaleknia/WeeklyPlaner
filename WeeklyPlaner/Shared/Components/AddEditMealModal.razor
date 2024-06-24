@@ -45,7 +45,11 @@
                                     <div>
                                         @foreach (var food in categorty.foods)
                                         {
-                                            <button class="btn my-bg-@(Models.DayModel.color)-outline m-1 f-size18 " @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
+
+                                            @if (!food.IsEatenRecently)
+                                            {
+                                                <button class="btn my-bg-@(Models.DayModel.color)-outline m-1 f-size18 " @onclick="() => OnFoodSelected(food)">@(food.Name)</button>
+                                            }
                                         }
                                     </div>
                                 </div>
@@ -55,6 +59,7 @@
                     }
                     else
                     {
+
                         <button class="btn my-bg-@(Models.DayModel.color) m-1 f-size24" @onclick="() => OnFoodDiselected()">
                             @(Models.MealModel.Food.Name)
                             <i class="fa fa-times f-size16 food-name-icon" aria-hidden="true"></i>
@@ -133,7 +138,12 @@
 
     public async Task OnFoodSelected(Food food)
     {
-        Models.MealModel.Food = new Food(food.Name);
+        Models.MealModel.Food = new Food()
+        {
+            Name = food.Name,
+            Id = food.Id,
+            CategoryId = food.CategoryId,
+        };
 
         await OnModelsChangeAddEditMealModal();
     }

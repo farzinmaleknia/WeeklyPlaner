@@ -70,7 +70,7 @@
     {
         if (value)
         {
-            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Id == Models.DayModel.Id).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
             meal.Food = new Food();
             meal.Groceries = new List<Grocery>();
 
@@ -83,7 +83,7 @@
     {
         if (value)
         {
-            var category = FoodList.FirstOrDefault(c => c.Title == Models.CategoryModel.Title);
+            var category = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
 
             FoodList.Remove(category);
 
@@ -95,7 +95,9 @@
 
     public async Task OnNewFoodSubmited()
     {
-        var category = FoodList.FirstOrDefault(c => c.Title == Models.CategoryModel.Title);
+        var category = FoodList.FirstOrDefault(c => c.Id == Models.CategoryModel.Id);
+        Models.FoodModel.CategoryId = category.Id;
+
         category.foods.Add(Models.FoodModel);
 
         Models.FoodModel = new Food();
