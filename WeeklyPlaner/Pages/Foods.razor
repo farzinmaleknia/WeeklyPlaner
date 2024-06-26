@@ -4,11 +4,12 @@
         <span class=" f-size36 food-title just-bg-blue text-center">@(PersianPhrases.Foods)</span>
     </div>
 
-
-    <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
-        @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
-    </button>
-
+    <div class="d-flex justify-content-between">
+        <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
+            @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
+        </button>
+        <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-redo f-size24" aria-hidden="true"></i></button>
+    </div>
     @foreach (var category in FoodList)
     {
         <div class="mb-5">
@@ -16,6 +17,7 @@
                 <span class="category-title f-size24">@(category.Title)</span>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-redo f-size16" aria-hidden="true"></i></button>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
             </div>
             <div>
@@ -83,6 +85,33 @@
         Models.IsForAddCat = isForAddCat;
 
         await OnModelsChangeFoods();
+    }
+
+    public async Task OnFoodListRefresh(FoodCategory category = null)
+    {
+        if (category != null)
+        {
+            FoodCategory cat = FoodList.FirstOrDefault(c => c.Id == category.Id);
+            if(cat != null)
+            {
+                foreach (var food in cat.foods)
+                {
+                    food.IsEatenRecently = false;
+                }
+            }
+        }
+        else
+        {
+            foreach (var cat in FoodList)
+            {
+                foreach (var food in cat.foods)
+                {
+                    food.IsEatenRecently = false;
+                }
+            }
+        }
+
+        await OnFoodListChangeFoods();
     }
 
     public async Task OnFoodDelete(FoodCategory category, Food food)

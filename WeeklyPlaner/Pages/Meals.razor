@@ -12,9 +12,8 @@
             @if(Meal.Food.IsEatenRecently)
             {
                 <div class="bottom-8">
+                    <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
                     <span class="f-size20">@(PersianPhrases.FoodWillEarase)</span>
-                    <i class="fa fa-info" aria-hidden="true"></i>
-                    <i class="fa fa-refresh" aria-hidden="true"></i>
                 </div>
             }
         </div>

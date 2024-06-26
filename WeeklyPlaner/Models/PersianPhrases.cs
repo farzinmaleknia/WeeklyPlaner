@@ -19,6 +19,7 @@ namespace WeeklyPlaner.Models
 
         public string Name = "نام";
 
+        public string Info = "اطلاعات";
         public string Warning = "هشدار";
         public string WarningByMark = "هشدار!";
 
@@ -39,12 +40,15 @@ namespace WeeklyPlaner.Models
 
         public string Yes  = "بله";
         public string No = "نه";
+        public string Ok = "باشه";
 
         public string NeededGrocery  = "قلم مورد نیاز";
         public string Amount  = "مقدار";
 
         public string DidYouEatIt  = "آیا این وعده غذا رو خوردی؟";
         public string FoodWillEarase  = "این غذا موقتا از لیست غذاها حذف می‌شه";
+        public string WhyRemoveFood  = "این حذف موقتی غذا، در جهت رعایت تنوع و جلوگیری از تکراری شدن برنامه غذایی انجام می‌شه";
+        public string HowToRefreshFoodsList = "در صورت تمایل می‌تونی با کلیک بر روی ایکون زیر لیست غذاها رو رفرش کنی و در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه ";
 
 
         public string EnterNew(string entity)
@@ -66,12 +70,6 @@ namespace WeeklyPlaner.Models
         public string SureDelete(string entity, string name)
         {
             return $"آیا از حذف {entity}‌ی {name} مطمئن هستی؟";
-
-        }
-
-        public string HowToRefreshFoodsList(string icon)
-        {
-            return $"با کلیک بر روی ایکون {icon} لیست غذاها رفرش می‌شه و در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه ";
 
         }
 

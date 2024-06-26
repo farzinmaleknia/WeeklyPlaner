@@ -275,8 +275,8 @@
         WeeksList = list;
 
         var WeeksListString = Newtonsoft.Json.JsonConvert.SerializeObject(WeeksList);
-        Console.WriteLine(WeeksListString);
-        //Console.WriteLine("--------------------- WeeksList Updated");
+        //Console.WriteLine(WeeksListString);
+        Console.WriteLine("--------------------- WeeksList Updated");
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "WeeksList");
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "WeeksList", WeeksListString);
     }
@@ -287,8 +287,8 @@
             FoodList = list;
 
         var FoodListString = Newtonsoft.Json.JsonConvert.SerializeObject(FoodList);
-        Console.WriteLine(FoodListString);
-        //Console.WriteLine("--------------------- FoodList Updated");
+        //Console.WriteLine(FoodListString);
+        Console.WriteLine("--------------------- FoodList Updated");
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "FoodList");
         await JSRuntime.InvokeVoidAsync("localStorage.setItem", "FoodList", FoodListString);
     }

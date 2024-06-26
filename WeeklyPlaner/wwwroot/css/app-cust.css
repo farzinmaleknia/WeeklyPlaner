@@ -41,6 +41,10 @@
     padding-bottom: 40px !important;
 }
 
+.margin-l-5 {
+    margin-left: 5px !important;
+}
+
 
 .dir-ltr{
     direction: ltr;
@@ -99,7 +103,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    z-index: 9999;
+    z-index: 10;
     top: 0;
     right: 0;
     background: rgba(0,0,0,0.3);
@@ -186,6 +190,13 @@
 
 .food-name-icon {
     margin-right: 6px;
+}
+
+.food-ref-btn {
+    padding-left: 40px;
+    margin-top: 20px;
+    width: 48px;
+    height: 48px;
 }
 
 /*------------------------------- Font Sizes --------------------------------------*/
