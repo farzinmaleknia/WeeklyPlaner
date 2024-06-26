@@ -47,14 +47,14 @@
 
         await BindData();
 
-        if(WeeksList.Count == 0)
-        {
-            var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData.json");
+        // if(WeeksList.Count == 0)
+        // {
+        //     var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData - Copy.json");
 
-            WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
+        //     WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
 
 
-        }
+        // }
 
         await ManageWeeksList();
 
@@ -91,13 +91,13 @@
         //     }
         // }
 
-        foreach (var cat in FoodList)
-        {
-            foreach (var food in cat.foods)
-            {
-                food.IsEatenRecently = false;
-            }
-        }
+        // foreach (var cat in FoodList)
+        // {
+        //     foreach (var food in cat.foods)
+        //     {
+        //         food.IsEatenRecently = false;
+        //     }
+        // }
 
     }
 
@@ -116,11 +116,11 @@
         }
         else
         {
-            var lastWed = LastWednsday(CurrentTime).Result;
+            var lastWed = LastWednsday(CurrentTime.AddDays(-1)).Result;
             int weekCounter = 0;
             while (lastWed.Date != WeeksList[weekCounter].StartDate.Date)
             {
-                await AddNewWeek(lastWed);
+                await AddNewWeek(lastWed.Date);
                 lastWed = LastWednsday(lastWed.AddDays(-1)).Result;
                 weekCounter++;
             }
@@ -144,6 +144,7 @@
         WeeksList.Insert(0, new Week()
         {
             StartDate = day,
+
         });
 
         WeeksList.OrderBy(w => w.StartDate.Day).ToList();
@@ -172,49 +173,54 @@
                 foreach (var meal in day.GetMeals())
                 {
                     meal.GroceryEditable = false;
+                    if(meal.Food.IsEatenRecently)
+                    {
+                        meal.IsMealCollapsed = true;
+                    }
+                    
                     meal.Food.IsEatenRecently = false;
 
-                    // meal.IsMealPassed = false;
-                    // day.IsDayPassed = false;
+                    meal.IsMealPassed = false;
+                    day.IsDayPassed = false;
 
-                    if (week.Title == PersianPhrases.CurrentWeek)
-                    {
-                        int difference = (int)(CurrentTime - week.StartDate).TotalDays;
-                        if (difference > dayOfWeek)
-                        {
-                            meal.IsMealPassed = true;
-                            day.IsDayPassed = true;
-                        }
-                        else if (difference == dayOfWeek)
-                        {
-                            if (meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
-                            {
-                                meal.IsMealPassed = true;
-                            }
-                            else if (meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
-                            {
-                                meal.IsMealPassed = true;
-                            }
-                            else if (meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
-                            {
-                                meal.IsMealPassed = true;
-                                day.IsDayPassed = true;
-                            }
-                            else
-                            {
-                                meal.IsMealPassed = false;
-                            }
-                        }
-                        else
-                        {
-                            meal.IsMealPassed = false;
-                        }
-                    }
-                    else
-                    {
-                        meal.IsMealPassed = true;
-                        day.IsDayPassed = true;
-                    }
+                    // if (week.Title == PersianPhrases.CurrentWeek)
+                    // {
+                    //     int difference = (int)(CurrentTime - week.StartDate).TotalDays;
+                    //     if (difference > dayOfWeek)
+                    //     {
+                    //         meal.IsMealPassed = true;
+                    //         day.IsDayPassed = true;
+                    //     }
+                    //     else if (difference == dayOfWeek)
+                    //     {
+                    //         if (meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
+                    //         {
+                    //             meal.IsMealPassed = true;
+                    //         }
+                    //         else if (meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
+                    //         {
+                    //             meal.IsMealPassed = true;
+                    //         }
+                    //         else if (meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
+                    //         {
+                    //             meal.IsMealPassed = true;
+                    //             day.IsDayPassed = true;
+                    //         }
+                    //         else
+                    //         {
+                    //             meal.IsMealPassed = false;
+                    //         }
+                    //     }
+                    //     else
+                    //     {
+                    //         meal.IsMealPassed = false;
+                    //     }
+                    // }
+                    // else
+                    // {
+                    //     meal.IsMealPassed = true;
+                    //     day.IsDayPassed = true;
+                    // }
 
                 }
             }

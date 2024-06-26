@@ -7,6 +7,12 @@
             if (FirstRender)
             {
                 ColorCounter = Random.Next(0, week.Colors.Count());
+                WeekColorCounter = Random.Next(0, week.Colors.Count());
+                while (WeekColorCounter == ColorCounter)
+                {
+                    WeekColorCounter = Random.Next(0, week.Colors.Count());
+                }
+
                 FirstRender = false;
             }
 
@@ -18,7 +24,7 @@
                             <span class="visually-hidden">Next</span>
                         </button>
 
-                        <span class=" f-size36 weeks-title just-bg-@(week.Colors[Random.Next(0, week.Colors.Count())]) text-center">@(week.Title)</span>
+                        <span class=" f-size36 weeks-title just-bg-@(week.Colors[WeekColorCounter]) text-center">@(week.Title)</span>
 
                         <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon text-dark " aria-hidden="true"></span>
@@ -29,24 +35,24 @@
 
                 @foreach (var day in week.GetDays())
                 {
-                    day.color = week.Colors[ColorCounter];
+                    day.color = $"{week.Colors[ColorCounter]}";
 
-                    <Days Models="Models" Week="week" Day="day" ColorCounter="ColorCounter" OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" DayOfWeek="DayCounter" />
-
-                    @if (ColorCounter < week.Colors.Count() - 1)
-                    {
-                        ColorCounter = ColorCounter + 1;
-                    }
-                    else
-                    {
-                        ColorCounter = (ColorCounter + 1) - week.Colors.Count();
-                    }
+                    <Days Models="Models" Week="week" Day="day"  OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" DayOfWeek="DayCounter" />
 
                     DayCounter++;
                 }
             </div>
 
-
+            @if (ColorCounter < week.Colors.Count() - 1)
+            {
+                ColorCounter = ColorCounter + 1;
+                WeekColorCounter = WeekColorCounter + 1;
+            }
+            else
+            {
+                ColorCounter = (ColorCounter + 1) - week.Colors.Count();
+                WeekColorCounter = (WeekColorCounter + 1) - week.Colors.Count();
+            }
 
         }
     </div>
@@ -76,6 +82,8 @@
     public bool FirstRender { get; set; }
 
     public int ColorCounter { get; set; }
+
+    public int WeekColorCounter { get; set; }
 
     public int DayCounter { get; set; }
 

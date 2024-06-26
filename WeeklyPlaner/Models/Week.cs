@@ -22,7 +22,7 @@ namespace WeeklyPlaner.Models
             Id = Guid.NewGuid().ToString();
         }
 
-        public List<string> Colors { get; } = new List<string>() { "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink" };
+        public List<string> Colors { get; } = new List<string>() { "skyblue", "darkpink", "darkpurple", "mustard", "orange"};
 
         public IEnumerable<Day> GetDays()
         {
