@@ -49,7 +49,7 @@
 
         // if(WeeksList.Count == 0)
         // {
-        //     var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData - Copy.json");
+        //     var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData.json");
 
         //     WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
 
@@ -91,37 +91,47 @@
         //     }
         // }
 
-        // foreach (var cat in FoodList)
-        // {
-        //     foreach (var food in cat.foods)
-        //     {
-        //         food.IsEatenRecently = false;
-        //     }
-        // }
+        foreach (var cat in FoodList)
+        {
+            foreach (var food in cat.foods)
+            {
+                food.IsEatenRecently = false;
+            }
+        }
 
     }
 
     private async Task ManageWeeksList()
     {
-        if (WeeksList.Count == 0 || (CurrentTime - WeeksList[0].StartDate).TotalDays > 27)
+        CurrentTime = CurrentTime.AddDays(3);
+
+        if(WeeksList.Count() > 0)
         {
-            WeeksList = new List<Week>()
-            {
-                new Week()
-                {
-                    Title = PersianPhrases.CurrentWeek,
-                    StartDate = LastWednsday(CurrentTime).Result,
-                },
-            };
+            var diff = (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays;
+            
+        }
+
+        if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays > 27)
+        {
+            WeeksList = new List<Week>();
+            await AddNewWeek(FindWednsday(CurrentTime, true).Result);
+            await AddNewWeek(FindWednsday(CurrentTime).Result);
         }
         else
         {
-            var lastWed = LastWednsday(CurrentTime.AddDays(-1)).Result;
-            int weekCounter = 0;
-            while (lastWed.Date != WeeksList[weekCounter].StartDate.Date)
+            var nextWed = FindWednsday(CurrentTime.AddDays(1), true).Result;
+            var lastWed = FindWednsday(CurrentTime.AddDays(-1)).Result;
+
+            if (nextWed.Date != WeeksList[0].StartDate.Date)
             {
-                await AddNewWeek(lastWed.Date);
-                lastWed = LastWednsday(lastWed.AddDays(-1)).Result;
+                await AddNewWeek(nextWed);
+            }
+
+            int weekCounter = 1;
+            while (weekCounter < WeeksList.Count() && lastWed.Date != WeeksList[weekCounter].StartDate.Date)
+            {
+                await AddNewWeek(lastWed);
+                lastWed = FindWednsday(lastWed.AddDays(-1)).Result;
                 weekCounter++;
             }
 
@@ -129,11 +139,21 @@
 
     }
 
-    private async Task<DateTime> LastWednsday(DateTime day)
+    private async Task<DateTime> FindWednsday(DateTime day, bool isNextWed = false)
     {
-        while (day.DayOfWeek.ToString() != "Wednesday")
+        if (isNextWed)
         {
-            day = day.AddDays(-1);
+            while (day.DayOfWeek.ToString() != "Wednesday")
+            {
+                day = day.AddDays(1);
+            }
+        }
+        else
+        {
+            while (day.DayOfWeek.ToString() != "Wednesday")
+            {
+                day = day.AddDays(-1);
+            }            
         }
 
         return day;
@@ -143,13 +163,13 @@
     {
         WeeksList.Insert(0, new Week()
         {
-            StartDate = day,
+            StartDate = day.Date,
 
         });
 
-        WeeksList.OrderBy(w => w.StartDate.Day).ToList();
+        WeeksList = WeeksList.OrderByDescending(w => w.StartDate.Date).ToList();
 
-        if(WeeksList.Count() > 4)
+        if(WeeksList.Count() > 5)
         {
             WeeksList.RemoveAt(WeeksList.Count() - 1);
         }
@@ -158,7 +178,9 @@
         foreach (var week in WeeksList)
         {
             week.Title = week.GetWeeksTitle()[weekTitle];
-            weekTitle++;
+
+            if (weekTitle < (WeeksList.Count() - 1))
+                weekTitle++;
         }
     }
 

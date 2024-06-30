@@ -4,6 +4,7 @@ namespace WeeklyPlaner.Models
 {
     public class PersianPhrases
     {
+        public string NextWeek  = "هفته بعد";
         public string CurrentWeek  = "هفته کنونی";
         public string LastWeek  = "هفته‌ قبل";
         public string TwoWeeksAgo  = "دو هفته‌ قبل";

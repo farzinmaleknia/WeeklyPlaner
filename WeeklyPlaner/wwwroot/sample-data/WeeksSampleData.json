@@ -403,7 +403,7 @@
       "IsCreateBtnNeeded": true
     },
     "color": null,
-    "Colors": [ "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink" ]
+    "Colors": [ "skyblue", "darkpink", "darkpurple", "mustard", "orange" ]
   },
   {
     "Id": "e5253a32-840f-4c7f-8871-9c94fd1dcf36",
@@ -796,6 +796,6 @@
       "IsCreateBtnNeeded": true
     },
     "color": null,
-    "Colors": [ "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink", "blue", "red", "green", "brown", "orange", "purple", "mustard", "skyblue", "darkblue", "darkpurple", "darkpink" ]
+    "Colors": [ "skyblue", "darkpink", "darkpurple", "mustard", "orange" ]
   }
 ]
