@@ -14,12 +14,16 @@
     font-family: 'iransansweb(fanum)_light';
 }
 
+/*.carousel-indicators [data-bs-target] {
+    background-color: black !important;
+}*/
+
 .my-disabled {
     pointer-events: none;
     opacity: 0.6;
 }
 
-.opacity-08 {
+.opacity-06 {
     opacity: 0.6;
 }
 
@@ -57,6 +61,26 @@
 .my-sticky{
     position: sticky;
     top: 0;
+}
+
+.header {
+    height: 110px;
+    align-items: center;
+    /*background-image: url('../images/new project.png');*/
+    background-color: #2e7396;
+    color: white;
+    font-size : 24px;
+}
+
+.headers-title {
+    font-family: 'iransansweb(fanum)_bold';
+    margin-right: 20px;
+    font-size: 36px;
+    text-shadow: 2px 5px 5px black;
+} 
+
+.headers-option {
+    margin-left: 20px;
 }
 
 .weeks-title {
@@ -110,7 +134,6 @@
     z-index: 10;
     top: 0;
     right: 0;
-    background: rgba(0,0,0,0.3);
     color: white;
     justify-content: center;
     align-content: center;
@@ -388,6 +411,11 @@
     color: white;
 }
 
+.opacity-bg-orange {
+    background-color: #d9522630;
+    color: black;
+}
+
 .my-bg-orange {
     background-color: #d95226;
     color: white;
@@ -450,6 +478,11 @@
     color: white;
 }
 
+.opacity-bg-mustard {
+    background-color: #96912e30;
+    color: black;
+}
+
 .my-bg-mustard {
     background-color: #96912e;
     color: white;
@@ -479,6 +512,11 @@
 .just-bg-skyblue {
     background-color: #2e9691;
     color: white;
+}
+
+.opacity-bg-skyblue {
+    background-color: #2e969130;
+    color: black;
 }
 
 .my-bg-skyblue {
@@ -543,6 +581,11 @@
     color: white;
 }
 
+.opacity-bg-darkpurple {
+    background-color: #5D5FA230;
+    color: black;
+}
+
 .my-bg-darkpurple {
     background-color: #5D5FA2;
     color: white;
@@ -572,6 +615,11 @@
 .just-bg-darkpink {
     background-color: #A25D82;
     color: white;
+}
+
+.opacity-bg-darkpink {
+    background-color: #A25D8230;
+    color: black;
 }
 
 .my-bg-darkpink {

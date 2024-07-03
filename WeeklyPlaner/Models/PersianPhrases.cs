@@ -4,6 +4,8 @@ namespace WeeklyPlaner.Models
 {
     public class PersianPhrases
     {
+        public string FoodPlaning  = "برنامه‌ریزی غذایی";
+        
         public string NextWeek  = "هفته بعد";
         public string CurrentWeek  = "هفته کنونی";
         public string LastWeek  = "هفته‌ قبل";
@@ -17,12 +19,14 @@ namespace WeeklyPlaner.Models
         public string Monday = "دوشنبه";
         public string Tuesday = "سه‌شنبه";
         public string Wednesday = "چهارشنبه";
+        public string ChooseDay = "انتخاب روز";
 
         public string Name = "نام";
 
         public string Info = "اطلاعات";
         public string Warning = "هشدار";
         public string WarningByMark = "هشدار!";
+        public string Setting = "تنظیمات";
 
         public string Meal = "وعده";
         public string NewMeal = "وعده جدید";
@@ -50,6 +54,7 @@ namespace WeeklyPlaner.Models
         public string FoodWillEarase  = "این غذا موقتا از لیست غذاها حذف می‌شه";
         public string WhyRemoveFood  = "این حذف موقتی غذا، در جهت رعایت تنوع و جلوگیری از تکراری شدن برنامه غذایی انجام می‌شه";
         public string HowToRefreshFoodsList = "در صورت تمایل می‌تونی با کلیک بر روی ایکون زیر لیست غذاها رو رفرش کنی و در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه ";
+        public string WeeksStartDay = "روز شروع هفته";
 
 
         public string EnterNew(string entity)

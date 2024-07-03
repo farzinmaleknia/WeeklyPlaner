@@ -4,6 +4,7 @@
 
         @foreach (var week in WeeksList)
         {
+            WeekCounter = 0;
             if (FirstRender)
             {
                 ColorCounter = Random.Next(0, week.GetColors().Count());
@@ -16,15 +17,51 @@
                 FirstRender = false;
             }
 
+            if(week.Color == string.Empty)
+            {
+                week.Color = $"{week.GetColors()[ColorCounter]}";
+                week.HeaderColor = $"{week.GetColors()[ColorCounter]}";
+
+                @if (ColorCounter < week.GetColors().Count() - 1)
+                {
+                    ColorCounter = ColorCounter + 1;
+                }
+                else
+                {
+                    ColorCounter = (ColorCounter + 1) - week.GetColors().Count();
+                }
+
+                @if (WeekColorCounter < week.GetColors().Count() - 1)
+                {
+                    WeekColorCounter = WeekColorCounter + 1;
+                }
+                else
+                {
+                    WeekColorCounter = (WeekColorCounter + 1) - week.GetColors().Count();
+                }
+            }
+
             <div class="carousel-item @(week.Title == PersianPhrases.CurrentWeek ? "active": "") col-12 padding-x-0">
                 <div class="mb-3">
                     <div class="my-2 d-flex justify-content-between">
-                        <button class="border-0  " type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
+                        <button class="border-0" type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
 
-                        <span class=" f-size36 weeks-title just-bg-@(week.GetColors()[WeekColorCounter]) text-center">@(week.Title)</span>
+                        <div class ="weeks-title just-bg-@(week.HeaderColor) text-center">
+                            <span class=" f-size36 weeks-title">@(week.Title)</span>
+
+@*                             <div class="carousel-indicators" style="position: relative; direction: initial;">
+                                @foreach (var w in WeeksList)
+                                {
+                                    <button type="button" data-bs-target="#WeekCarousel" data-bs-slide-to="@(WeekCounter)" class="@(w.Title == PersianPhrases.ThreeWeeksAgo? "active" : "")" aria-label="Slide @(WeekCounter + 1)"></button>
+
+                                    WeekCounter++;
+                                }
+                            </div> *@
+
+                        </div>
 
                         <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon text-dark " aria-hidden="true"></span>
@@ -35,35 +72,11 @@
 
                 @foreach (var day in week.GetDays())
                 {
-                    day.color = $"{week.GetColors()[ColorCounter]}";
-
-                    <Days Models="Models" Week="week" Day="day"  OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" DayOfWeek="DayCounter" />
-
-                    DayCounter++;
-                    if (DayCounter > 7)
-                    {
-                        DayCounter = 1;
-                    }
+                    <Days Models="Models" Week="week" Day="day"  OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks"/>
                 }
             </div>
 
-            @if (ColorCounter < week.GetColors().Count() - 1)
-            {
-                ColorCounter = ColorCounter + 1;
-            }
-            else
-            {
-                ColorCounter = (ColorCounter + 1) - week.GetColors().Count();
-            }
 
-            @if (WeekColorCounter < week.GetColors().Count() - 1)
-            {
-                WeekColorCounter = WeekColorCounter + 1;
-            }
-            else
-            {
-                WeekColorCounter = (WeekColorCounter + 1) - week.GetColors().Count();
-            }
 
         }
     </div>
@@ -96,7 +109,7 @@
 
     public int WeekColorCounter { get; set; }
 
-    public int DayCounter { get; set; }
+    public int WeekCounter { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -107,7 +120,7 @@
 
         Random = new Random();
 
-        DayCounter = 1;
+        WeekCounter = 0;
     }
 
     public async Task OnModelsChangeWeeks(Models models)

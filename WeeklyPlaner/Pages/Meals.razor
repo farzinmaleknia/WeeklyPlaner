@@ -3,24 +3,26 @@
 <div class="card">
     @if (Meal.IsMealPassed)
     {
-        <div class="meal-passed f-size20">
-            <button class="btn my-bg-@(Day.color) btn-sm meal-collapse-btn" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
-                <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? "left" : "down")" aria-hidden="true"></i>
-            </button>
-            @if(!Meal.IsMealCollapsed)
-            {
-                <div class="bottom-40">
-                    <label for="isEatenRecently" class="form-check-label f-size20">@(PersianPhrases.DidYouEatIt)</label>
-                    <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.Food.IsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.Food.IsEatenRecently)" />
-                </div>
-                @if (Meal.Food.IsEatenRecently)
+        <div class="meal-passed opacity-bg-@(Week.Color) f-size20">
+            <div style="opacity: 1;">
+                <button class="btn my-bg-@(Week.Color) btn-sm meal-collapse-btn" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
+                    <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? "left" : "down")" aria-hidden="true"></i>
+                </button>
+                @if(!Meal.IsMealCollapsed)
                 {
-                    <div class="bottom-8">
-                        <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
-                        <span class="f-size18">@(PersianPhrases.FoodWillEarase)</span>
+                    <div class="bottom-40">
+                        <label for="isEatenRecently" class="form-check-label f-size20">@(PersianPhrases.DidYouEatIt)</label>
+                        <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.Food.IsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.Food.IsEatenRecently)" />
                     </div>
+                    @if (Meal.Food.IsEatenRecently)
+                    {
+                        <div class="bottom-8">
+                            <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
+                            <span class="f-size18">@(PersianPhrases.FoodWillEarase)</span>
+                        </div>
+                    }
                 }
-            }
+            </div>
         </div>
     }
     <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
@@ -30,16 +32,16 @@
         </span>
         @if (!Meal.IsMealPassed)
         {
-            <button class="btn my-bg-@(Day.color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
+            <button class="btn my-bg-@(Week.Color) btn-sm meal-del-btn" @onclick="() =>  passingData(false, Meal)" data-bs-toggle="modal" data-bs-target="#DelConfirmMealModal">
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>            
         }
     </div>
     <div id="@($"{Week.Id}{Day.Id}{Meal.Id}")" class="collapse @(!Meal.IsMealCollapsed ? "show" : "")">
-        <div class="card-body bg-light padding-t-5 @(Meal.IsMealPassed? "opacity-08" : "")">
+        <div class="card-body bg-light padding-t-5 @(Meal.IsMealPassed? "opacity-06" : "")">
             <div class="row mx-auto">
                 <div class="col padding-x-0 @(Meal.IsMealPassed ? "padding-b-40" : "")">
-                    <button class="btn btn-sm my-bg-@(Day.color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
+                    <button class="btn btn-sm my-bg-@(Week.Color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
                             @onclick="() => passingData(false, Meal)"
                             data-bs-toggle="modal" data-bs-target="#addEditMealModal">
                         @(Meal.Food.Name)
@@ -48,7 +50,7 @@
                 @if(!Meal.IsMealPassed)
                 {
                     <div class="col-2 padding-x-0">
-                        <button class="btn btn-sm my-bg-@(Day.color)-outline text-white m-auto width-98 grocery-btn"
+                        <button class="btn btn-sm my-bg-@(Week.Color)-outline text-white m-auto width-98 grocery-btn"
                                 @onclick="() => OnEditGeroceries()">
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                         </button>
@@ -65,7 +67,7 @@
                     }
 
                     <div class="col-12 mt-3 padding-x-0">
-                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Day.color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
+                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Week.Color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
                     </div>
                 }
 
@@ -99,9 +101,6 @@
 
     [Parameter]
     public Week Week { get; set; }
-
-    [Parameter]
-    public int DayOfWeek { get; set; }
 
     [Parameter]
     public EventCallback<Models> OnModelsChangeDays { get; set; }
@@ -140,7 +139,7 @@
         {
             Id = Day.Id,
             Title = Day.Title,    
-            color = Day.color,    
+            color = Week.Color,    
         };
         Models.IsForAddMeal = isAddMeal;
 

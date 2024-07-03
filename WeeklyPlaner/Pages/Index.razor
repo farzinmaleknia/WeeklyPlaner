@@ -3,15 +3,16 @@
 @inject IJSRuntime JSRuntime
 @inject HttpClient http
 
-
+<Header />
 
 <div class="container-fluid">
     <div class="row bg-light-subtle">
-        <button class="btn btn-warning" @onclick="onClearLocalStorage">clear</button>
 
         <Weeks Models="Models" WeeksList="WeeksList" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange"/>
 
         <Foods FoodList="FoodList" Models="Models" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
+
+        <button class="btn btn-warning" @onclick="onClearLocalStorage">clear</button>
 
     </div>
 </div>
@@ -32,6 +33,10 @@
 
     public DateTime CurrentTime { get; set; }
 
+    public StartDay StartDay { get; set; }
+
+    public List<Day> DaysList { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,6 +49,10 @@
         FoodList = new List<FoodCategory>();
 
         CurrentTime = DateTime.Now;
+
+        StartDay = new StartDay();
+
+        DaysList = new List<Day>();
 
         await BindData();
 
@@ -70,6 +79,8 @@
         }
 
 
+        await FixingDaysList();
+
         // foreach (var week in WeeksList)
         // {
         //     foreach (var day in week.GetDays())
@@ -91,47 +102,47 @@
         //     }
         // }
 
-        foreach (var cat in FoodList)
-        {
-            foreach (var food in cat.foods)
-            {
-                food.IsEatenRecently = false;
-            }
-        }
+        // foreach (var cat in FoodList)
+        // {
+        //     foreach (var food in cat.foods)
+        //     {
+        //         food.IsEatenRecently = false;
+        //     }
+        // }
 
     }
 
     private async Task ManageWeeksList()
     {
-        CurrentTime = CurrentTime.AddDays(3);
+        //CurrentTime = CurrentTime.AddDays(25);
 
         if(WeeksList.Count() > 0)
         {
             var diff = (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays;
-            
+
         }
 
         if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays > 27)
         {
             WeeksList = new List<Week>();
-            await AddNewWeek(FindWednsday(CurrentTime, true).Result);
-            await AddNewWeek(FindWednsday(CurrentTime).Result);
+            await AddNewWeek(FindStartDay(CurrentTime.AddDays(1), true).Result);
+            await AddNewWeek(FindStartDay(CurrentTime).Result);
         }
         else
         {
-            var nextWed = FindWednsday(CurrentTime.AddDays(1), true).Result;
-            var lastWed = FindWednsday(CurrentTime.AddDays(-1)).Result;
+            var nextStDay = FindStartDay(CurrentTime.AddDays(1), true).Result;
+            var lastStDay = FindStartDay(CurrentTime.AddDays(0)).Result;
 
-            if (nextWed.Date != WeeksList[0].StartDate.Date)
+            if (nextStDay.Date != WeeksList[0].StartDate.Date)
             {
-                await AddNewWeek(nextWed);
+                await AddNewWeek(nextStDay);
             }
 
             int weekCounter = 1;
-            while (weekCounter < WeeksList.Count() && lastWed.Date != WeeksList[weekCounter].StartDate.Date)
+            while (weekCounter < WeeksList.Count() && lastStDay.Date != WeeksList[weekCounter].StartDate.Date)
             {
-                await AddNewWeek(lastWed);
-                lastWed = FindWednsday(lastWed.AddDays(-1)).Result;
+                await AddNewWeek(lastStDay);
+                lastStDay = FindStartDay(lastStDay.AddDays(-1)).Result;
                 weekCounter++;
             }
 
@@ -139,18 +150,18 @@
 
     }
 
-    private async Task<DateTime> FindWednsday(DateTime day, bool isNextWed = false)
+    private async Task<DateTime> FindStartDay(DateTime day, bool isNextStDay = false)
     {
-        if (isNextWed)
+        if (isNextStDay)
         {
-            while (day.DayOfWeek.ToString() != "Wednesday")
+            while (day.DayOfWeek.ToString() != StartDay.English)
             {
                 day = day.AddDays(1);
             }
         }
         else
         {
-            while (day.DayOfWeek.ToString() != "Wednesday")
+            while (day.DayOfWeek.ToString() != StartDay.English)
             {
                 day = day.AddDays(-1);
             }            
@@ -189,9 +200,11 @@
         foreach (var week in WeeksList)
         {
             int dayOfWeek = 0;
+            week.HeaderColor = string.Empty;
+            week.Color = string.Empty;
+
             foreach (var day in week.GetDays())
             {
-                dayOfWeek++;
                 foreach (var meal in day.GetMeals())
                 {
                     meal.GroceryEditable = false;
@@ -199,52 +212,55 @@
                     {
                         meal.IsMealCollapsed = true;
                     }
-                    
-                    meal.Food.IsEatenRecently = false;
 
-                    meal.IsMealPassed = false;
-                    day.IsDayPassed = false;
+                    //meal.Food.IsEatenRecently = false;
+                    // meal.IsMealPassed = false;
+                    // day.IsDayPassed = false;
 
-                    // if (week.Title == PersianPhrases.CurrentWeek)
-                    // {
-                    //     int difference = (int)(CurrentTime - week.StartDate).TotalDays;
-                    //     if (difference > dayOfWeek)
-                    //     {
-                    //         meal.IsMealPassed = true;
-                    //         day.IsDayPassed = true;
-                    //     }
-                    //     else if (difference == dayOfWeek)
-                    //     {
-                    //         if (meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
-                    //         {
-                    //             meal.IsMealPassed = true;
-                    //         }
-                    //         else if (meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
-                    //         {
-                    //             meal.IsMealPassed = true;
-                    //         }
-                    //         else if (meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
-                    //         {
-                    //             meal.IsMealPassed = true;
-                    //             day.IsDayPassed = true;
-                    //         }
-                    //         else
-                    //         {
-                    //             meal.IsMealPassed = false;
-                    //         }
-                    //     }
-                    //     else
-                    //     {
-                    //         meal.IsMealPassed = false;
-                    //     }
-                    // }
-                    // else
-                    // {
-                    //     meal.IsMealPassed = true;
-                    //     day.IsDayPassed = true;
-                    // }
+                    if (week.Title == PersianPhrases.CurrentWeek)
+                    {
+                        int difference = (int)(CurrentTime - week.StartDate).TotalDays;
+                        if (difference > dayOfWeek)
+                        {
+                            meal.IsMealPassed = true;
+                            day.IsDayPassed = true;
+                        }
+                        else if (difference == dayOfWeek)
+                        {
+                            if (meal.Title == PersianPhrases.Breakfast && CurrentTime.Hour > 10)
+                            {
+                                meal.IsMealPassed = true;
+                            }
+                            else if (meal.Title == PersianPhrases.Lunch && CurrentTime.Hour > 16)
+                            {
+                                meal.IsMealPassed = true;
+                            }
+                            else if (meal.Title == PersianPhrases.Dinner && CurrentTime.Hour > 21)
+                            {
+                                meal.IsMealPassed = true;
+                                day.IsDayPassed = true;
+                            }
+                            else
+                            {
+                                meal.IsMealPassed = false;
+                                day.IsDayPassed = false;
+                            }
+                        }
+                        else
+                        {
+                            meal.IsMealPassed = false;
+                            day.IsDayPassed = false;
+                        }
+                    }
+                    else if (week.Title != PersianPhrases.NextWeek)
+                    {
+                        meal.IsMealPassed = true;
+                        day.IsDayPassed = true;
+                    }
 
                 }
+
+                dayOfWeek++;
             }
         }
     }
@@ -252,11 +268,42 @@
     public async Task onClearLocalStorage()
     {
         await JSRuntime.InvokeVoidAsync("localStorage.clear");
-        StateHasChanged();
+
+        await ManageWeeksList();
+    }
+
+    public async Task FixingDaysList()
+    {
+        if(WeeksList.Count != 0)
+        {
+            List<Day> list = WeeksList[0].GetDays();
+            var day = list[0];
+
+            while(list[0].Title != StartDay.Persian)
+            {
+                day = list[0];
+                list.RemoveAt(0);
+                list.Insert(list.Count, day);
+                DaysList = list;
+            }
+
+            foreach (var item in DaysList)
+            {
+                Console.WriteLine(item.Title);
+            }
+        }
     }
 
     public async Task BindData()
     {
+
+        var responceStartDay = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "StartDay");
+        if (responceStartDay != null)
+        {
+            StartDay = Newtonsoft.Json.JsonConvert.DeserializeObject<StartDay>(responceStartDay);
+        }
+
+        Console.WriteLine($"start {StartDay.English}");
 
         var responceWeek = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "WeeksList");
         if(responceWeek != null)
@@ -296,6 +343,28 @@
 
             Models.IsFoodEatenChanged = false;
         };
+
+        if(Models.StartDay.IsStartDayChanged)
+        {
+            StartDay = new StartDay()
+            {
+                Persian = Models.StartDay.Persian,
+                English = Models.StartDay.English,
+            };
+
+            await OnStartDayChange();
+
+            Models.StartDay = new StartDay();
+        };
+    }
+
+    public async Task OnStartDayChange()
+    {
+        var StartDayString = Newtonsoft.Json.JsonConvert.SerializeObject(StartDay);
+        //Console.WriteLine(StartDayString);
+        Console.WriteLine("--------------------- StartDay Updated");
+        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "StartDay");
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "StartDay", StartDayString);
     }
 
     public async Task OnWeeksListChange(List<Week> list)

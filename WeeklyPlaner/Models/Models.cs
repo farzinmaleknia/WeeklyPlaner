@@ -8,6 +8,7 @@
         public Grocery GroceryModel { get; set; } = new Grocery();  
         public FoodCategory CategoryModel { get; set; } = new FoodCategory();
         public Food FoodModel { get; set; } = new Food();
+        public StartDay StartDay { get; set; } = new StartDay();
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;

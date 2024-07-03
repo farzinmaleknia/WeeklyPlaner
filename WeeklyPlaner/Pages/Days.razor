@@ -1,7 +1,7 @@
 ﻿
 <div class="col-12  padding-x-0">
     <div class="card days">
-        <span class="card-img-top just-bg-@(Day.color) text-center f-size36 days-title  my-sticky">@(Day.Title)</span>
+        <span class="card-img-top just-bg-@(Week.Color) text-center f-size36 days-title  my-sticky">@(Day.Title)</span>
         <div class="card-body padding-x-0">
             <div class="list-group list-group-flush">
                 <div class="list-group-item padding-x-0">
@@ -9,7 +9,7 @@
                     {
                         if (meal.Food.Name != null)
                         {
-                            <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays" DayOfWeek="DayOfWeek" />
+                            <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays"/>
                         }
                         else if(!meal.IsMealPassed)
                         {
@@ -22,7 +22,7 @@
             @if (Day.IsCreateBtnNeeded && !Day.IsDayPassed)
             {
                 <div class="d-flex justify-content-center">
-                    <button class="btn my-bg-@(Day.color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(true)">
+                    <button class="btn my-bg-@(Week.Color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(true)">
                         @(PersianPhrases.NewMeal)
                     </button>
                 </div>
@@ -46,9 +46,6 @@
 
     [Parameter]
     public Day Day { get; set; }
-
-    [Parameter]
-    public int DayOfWeek { get; set; }
 
     [Parameter]
     public EventCallback<Models> OnModelsChangeWeeks { get; set; }
@@ -75,7 +72,7 @@
         Models.DayModel = new Day()
         {
             Title = Day.Title,
-            color = Day.color,
+            color = Week.Color,
         };
         Models.IsForAddMeal = isAddMeal;
 

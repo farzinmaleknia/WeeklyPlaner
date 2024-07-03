@@ -19,7 +19,7 @@
                             <ul class="dropdown-menu">
                                 @foreach (var meal in GetBlankMeals())
                                 {
-                                    <li><a class="dropdown-item" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
+                                    <li><a class="dropdown-item d-flex justify-content-start" @onclick="() => passingMeal(meal)">@(meal.Title)</a></li>
                                 }
                             </ul>
                         </div>

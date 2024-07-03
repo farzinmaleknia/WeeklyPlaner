@@ -1,0 +1,165 @@
+﻿
+
+
+<div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header just-bg-blue">
+                <h1 class="modal-title fs-5" id="settingModalLabel">@(PersianPhrases.Setting)</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <div>@(PersianPhrases.WeeksStartDay)</div>
+                    <div>
+                        <button class="btn my-bg-blue btn-sm dropdown-toggle meal-dropdown-btn mb-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="mx-1">@(PersianPhrases.ChooseDay)</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            @foreach (var day in WeeksList[0].GetDays())
+                            {
+                                <li><a class="dropdown-item d-flex justify-content-start" @onclick="() => passingDay(day)">@(day.Title)</a></li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    [Parameter]
+    public List<FoodCategory> FoodList { get; set; }
+
+    [Parameter]
+    public List<Week> WeeksList { get; set; }
+
+    [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
+    public EventCallback<Models> OnModelsChangeModals { get; set; }
+
+    [Parameter]
+    public EventCallback<List<Week>> OnWeeksListChangeModals { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    public List<Meal> GetBlankMeals()
+    {
+        List<Meal> list = new List<Meal>();
+
+        if (Models.DayModel.Title != null)
+        {
+            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
+        }
+
+        return list;
+    }
+
+
+
+
+
+    public async Task passingDay(Day day)
+    {
+        Models.StartDay = new StartDay()
+        {
+            Persian = day.Title,
+            English = day.TitleEn,
+            IsStartDayChanged = true,
+        };
+
+        await OnModelsChangeAddEditMealModal();
+    }
+
+
+
+
+
+    public async Task OnFoodSelected(Food food)
+    {
+        Models.MealModel.Food = new Food()
+        {
+            Name = food.Name,
+            Id = food.Id,
+            CategoryId = food.CategoryId,
+        };
+
+        await OnModelsChangeAddEditMealModal();
+    }
+
+    public async Task OnFoodDiselected()
+    {
+        Models.MealModel.Food = new Food();
+        Models.MealModel.Groceries = new List<Grocery>();
+        await OnModelsChangeAddEditMealModal();
+    }
+
+    public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
+    {
+        if (Models.MealModel.Groceries == null)
+            Models.MealModel.Groceries = new List<Grocery>();
+
+        Models.MealModel.Groceries.Add(Models.GroceryModel);
+        Models.GroceryModel = new Grocery();
+
+        if (isSubmitNeeded)
+        {
+            OnNewGrocerySubmitet();
+        }
+
+        await OnModelsChangeAddEditMealModal();
+    }
+
+    public async Task OnNewGrocerySubmitet()
+    {
+        if (Models.MealModel.Groceries != null)
+        {
+            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+            meal.Groceries = Models.MealModel.Groceries;
+        }
+    }
+
+    public async Task OnNewMealHandler()
+    {
+        var day = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title);
+        var meal = day.GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
+
+        meal.Food = Models.MealModel.Food;
+        if (Models.MealModel.Groceries != null)
+        {
+            meal.Groceries = Models.MealModel.Groceries;
+        }
+
+        if(GetBlankMeals().Count() == 0)
+        {
+            day.IsCreateBtnNeeded = false;
+        }
+
+        await OnWeeksListChangeAddEditMealModal();
+    }
+
+    public async Task OnModelsChangeAddEditMealModal(Models models = null)
+    {
+        if (models != null)
+            Models = models;
+        await OnModelsChangeModals.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeAddEditMealModal(List<Week> weeksList = null)
+    {
+        if (weeksList != null)
+            WeeksList = weeksList;
+        await OnWeeksListChangeModals.InvokeAsync(WeeksList);
+    }
+}
