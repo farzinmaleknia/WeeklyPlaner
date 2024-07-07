@@ -1,0 +1,55 @@
+﻿@inject IJSRuntime JSRuntime
+
+
+<div class="modal fade" id="@(Id)" tabindex="-1" aria-labelledby="@(Id)Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header just-bg-blue">
+                <h1 class="modal-title fs-5" id="@(Id)Label">@(PersianPhrases.Share)</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <div id="groceriesList" class="modal-body">
+                @if(GroceriesList.Count > 0)
+                {
+                    @foreach (var groc in GroceriesList)
+                    {
+                        <div>
+                            @($"{groc.Name} ({groc.Amount})")
+                        </div>
+                    }
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal" @onclick="OnCopy">@(PersianPhrases.Copy)</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public List<Grocery> GroceriesList { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    public PersianPhrases PersianPhrases { get; set; } = new PersianPhrases();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    protected async Task OnCopy()
+    {
+        await JSRuntime.InvokeVoidAsync("onCopyThings", "groceriesList");
+
+    }
+
+
+
+}

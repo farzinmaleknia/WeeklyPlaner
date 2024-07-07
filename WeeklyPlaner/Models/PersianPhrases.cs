@@ -42,10 +42,11 @@ namespace WeeklyPlaner.Models
 
         public string Cancle  = "انصراف";
         public string Save  = "ثبت";
-
         public string Yes  = "بله";
         public string No = "نه";
         public string Ok = "باشه";
+        public string Share = "اشتراک گذاری";
+        public string Copy = "کپی";
 
         public string NeededGrocery  = "قلم مورد نیاز";
         public string Amount  = "مقدار";
@@ -55,6 +56,8 @@ namespace WeeklyPlaner.Models
         public string WhyRemoveFood  = "این حذف موقتی غذا، در جهت رعایت تنوع و جلوگیری از تکراری شدن برنامه غذایی انجام می‌شه";
         public string HowToRefreshFoodsList = "در صورت تمایل می‌تونی با کلیک بر روی ایکون زیر لیست غذاها رو رفرش کنی و در بخش غذاها تمامی غذاها دوباره نشون داده می‌شه ";
         public string WeeksStartDay = "روز شروع هفته";
+        public string BlankDay = "در این روز وعده‌ای ثبت نشده است!";
+        public string GroceryListShare = "اشتراک گذاری لیست خرید هفته";
 
 
         public string EnterNew(string entity)

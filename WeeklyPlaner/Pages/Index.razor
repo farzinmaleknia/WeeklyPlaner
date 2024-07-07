@@ -33,10 +33,6 @@
 
     public DateTime CurrentTime { get; set; }
 
-    public StartDay StartDay { get; set; }
-
-    public List<Day> DaysList { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -50,10 +46,6 @@
 
         CurrentTime = DateTime.Now;
 
-        StartDay = new StartDay();
-
-        DaysList = new List<Day>();
-
         await BindData();
 
         // if(WeeksList.Count == 0)
@@ -64,6 +56,7 @@
 
 
         // }
+
 
         await ManageWeeksList();
 
@@ -77,9 +70,6 @@
 
 
         }
-
-
-        await FixingDaysList();
 
         // foreach (var week in WeeksList)
         // {
@@ -114,15 +104,9 @@
 
     private async Task ManageWeeksList()
     {
-        //CurrentTime = CurrentTime.AddDays(25);
+        CurrentTime = CurrentTime.AddDays(21);
 
-        if(WeeksList.Count() > 0)
-        {
-            var diff = (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays;
-
-        }
-
-        if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].StartDate.Date).TotalDays > 27)
+        if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].WeeksStartDay.Date.Date).TotalDays > 27)
         {
             WeeksList = new List<Week>();
             await AddNewWeek(FindStartDay(CurrentTime.AddDays(1), true).Result);
@@ -133,13 +117,13 @@
             var nextStDay = FindStartDay(CurrentTime.AddDays(1), true).Result;
             var lastStDay = FindStartDay(CurrentTime.AddDays(0)).Result;
 
-            if (nextStDay.Date != WeeksList[0].StartDate.Date)
+            if (nextStDay.Date != WeeksList[0].WeeksStartDay.Date.Date)
             {
                 await AddNewWeek(nextStDay);
             }
 
             int weekCounter = 1;
-            while (weekCounter < WeeksList.Count() && lastStDay.Date != WeeksList[weekCounter].StartDate.Date)
+            while (weekCounter < WeeksList.Count() && lastStDay.Date != WeeksList[weekCounter].WeeksStartDay.Date.Date)
             {
                 await AddNewWeek(lastStDay);
                 lastStDay = FindStartDay(lastStDay.AddDays(-1)).Result;
@@ -154,14 +138,14 @@
     {
         if (isNextStDay)
         {
-            while (day.DayOfWeek.ToString() != StartDay.English)
+            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.English : Models.StartDay.English))
             {
                 day = day.AddDays(1);
             }
         }
         else
         {
-            while (day.DayOfWeek.ToString() != StartDay.English)
+            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.English : Models.StartDay.English))
             {
                 day = day.AddDays(-1);
             }            
@@ -172,13 +156,11 @@
 
     private async Task AddNewWeek(DateTime day)
     {
-        WeeksList.Insert(0, new Week()
-        {
-            StartDate = day.Date,
+        WeeksList.Insert(0, new Week());
 
-        });
+        WeeksList[0].WeeksStartDay.Date = day.Date;
 
-        WeeksList = WeeksList.OrderByDescending(w => w.StartDate.Date).ToList();
+        WeeksList = WeeksList.OrderByDescending(w => w.WeeksStartDay.Date.Date).ToList();
 
         if(WeeksList.Count() > 5)
         {
@@ -219,7 +201,7 @@
 
                     if (week.Title == PersianPhrases.CurrentWeek)
                     {
-                        int difference = (int)(CurrentTime - week.StartDate).TotalDays;
+                        int difference = (int)(CurrentTime - week.WeeksStartDay.Date).TotalDays;
                         if (difference > dayOfWeek)
                         {
                             meal.IsMealPassed = true;
@@ -260,9 +242,26 @@
 
                 }
 
+                if (!day.IsDayCollapsed)
+                {
+                    var list = day.GetMeals().Where(m => m.Food.Name == null).ToList();
+
+                    if (list.Count == 3 && day.IsDayPassed)
+                    {
+                        day.IsDayCollapsed = true;
+                        day.IsDayBlank = true;
+                    }                    
+                }
+
                 dayOfWeek++;
             }
         }
+    }
+
+    public void IsDayBlank(Day day)
+    {
+
+
     }
 
     public async Task onClearLocalStorage()
@@ -272,39 +271,8 @@
         await ManageWeeksList();
     }
 
-    public async Task FixingDaysList()
-    {
-        if(WeeksList.Count != 0)
-        {
-            List<Day> list = WeeksList[0].GetDays();
-            var day = list[0];
-
-            while(list[0].Title != StartDay.Persian)
-            {
-                day = list[0];
-                list.RemoveAt(0);
-                list.Insert(list.Count, day);
-                DaysList = list;
-            }
-
-            foreach (var item in DaysList)
-            {
-                Console.WriteLine(item.Title);
-            }
-        }
-    }
-
     public async Task BindData()
     {
-
-        var responceStartDay = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "StartDay");
-        if (responceStartDay != null)
-        {
-            StartDay = Newtonsoft.Json.JsonConvert.DeserializeObject<StartDay>(responceStartDay);
-        }
-
-        Console.WriteLine($"start {StartDay.English}");
-
         var responceWeek = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "WeeksList");
         if(responceWeek != null)
         {
@@ -332,6 +300,57 @@
         await OnFoodListChange();
     }
 
+    public async Task OnStartDayChanged()
+    {
+        int forward = 0;
+
+        while (WeeksList[0].GetDays().ToList()[forward].Title != Models.StartDay.Persian)
+        {
+            forward++;
+        }
+
+        foreach (var week in WeeksList)
+        {
+            week.WeeksStartDay.Date = week.WeeksStartDay.Date.AddDays(forward);
+            week.WeeksStartDay.Persian = Models.StartDay.Persian;
+            week.WeeksStartDay.English = Models.StartDay.English;
+        }
+
+
+        for (int week = WeeksList.Count - 1; week > -1; week--)
+        {
+            for (int day = 0; day < forward ; day++)
+            {
+                var dayIndex = 7 - (forward - day);
+
+                if (week != 0)
+                {
+                    var theDay = WeeksList[week - 1].GetDays()[dayIndex];
+                    var thisDay = WeeksList[week].GetDays()[dayIndex];
+                    thisDay.Braekfast = theDay.Braekfast;
+                    thisDay.Lunch = theDay.Lunch;
+                    thisDay.Dinner = theDay.Dinner;
+
+                }
+                else
+                {
+                    var thisDay = WeeksList[week].GetDays()[dayIndex];
+                    thisDay.Braekfast = new Meal();
+                    thisDay.Lunch = new Meal();
+                    thisDay.Dinner = new Meal();
+                }
+
+
+
+
+                //WeeksList[week].GetDays()[dayIndex] = WeeksList[week - 1] != null ? WeeksList[week - 1].GetDays()[dayIndex] : null;
+            }
+        }
+
+        //await OnWeeksListChange();
+        StateHasChanged();
+    }
+
 
     public async Task OnModelsChange(Models models)
     {
@@ -346,30 +365,14 @@
 
         if(Models.StartDay.IsStartDayChanged)
         {
-            StartDay = new StartDay()
-            {
-                Persian = Models.StartDay.Persian,
-                English = Models.StartDay.English,
-            };
-
-            await OnStartDayChange();
-
-            Models.StartDay = new StartDay();
+            OnStartDayChanged();
         };
     }
 
-    public async Task OnStartDayChange()
+    public async Task OnWeeksListChange(List<Week> list = null)
     {
-        var StartDayString = Newtonsoft.Json.JsonConvert.SerializeObject(StartDay);
-        //Console.WriteLine(StartDayString);
-        Console.WriteLine("--------------------- StartDay Updated");
-        await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "StartDay");
-        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "StartDay", StartDayString);
-    }
-
-    public async Task OnWeeksListChange(List<Week> list)
-    {
-        WeeksList = list;
+        if(list != null)
+            WeeksList = list;
 
         var WeeksListString = Newtonsoft.Json.JsonConvert.SerializeObject(WeeksList);
         //Console.WriteLine(WeeksListString);

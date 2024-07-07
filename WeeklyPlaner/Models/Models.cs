@@ -8,11 +8,16 @@
         public Grocery GroceryModel { get; set; } = new Grocery();  
         public FoodCategory CategoryModel { get; set; } = new FoodCategory();
         public Food FoodModel { get; set; } = new Food();
-        public StartDay StartDay { get; set; } = new StartDay();
+        public StartDay StartDay { get; set; } = new StartDay()
+        {
+            Persian = "پنجشنبه",
+            English = "Thursday",
+        };
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;
         public bool IsFoodEatenChanged { get; set; } = false;
+        public bool IsGroceriesShareNextWeek { get; set; } = false;
 
 
     }

@@ -93,6 +93,9 @@
     [Parameter]
     public List<Week> WeeksList { get; set; }
 
+    // [Parameter]
+    // public StartDay StartDay { get; set; }
+
     [Parameter]
     public EventCallback<Models> OnModelsChange { get; set; }
 
@@ -134,4 +137,25 @@
         await OnWeeksListChange.InvokeAsync(WeeksList);
     }
 
+
+
+    // public async Task<List<Day>> FixingDaysList(Week week)
+    // {
+    //     List<Day> list = week.GetDays();
+    //     var day = list[0];
+
+    //     while (list[0].Title != StartDay.Persian)
+    //     {
+    //         day = list[0];
+    //         list.RemoveAt(0);
+    //         list.Insert(list.Count, day);
+    //     }
+
+    //     foreach (var item in list)
+    //     {
+    //         Console.WriteLine(item.Title);
+    //     }
+
+    //     return list;
+    // }
 }

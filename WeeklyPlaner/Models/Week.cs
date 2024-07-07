@@ -7,7 +7,7 @@ namespace WeeklyPlaner.Models
         static PersianPhrases PersianPhrases = new PersianPhrases();
         public string Id { get; set; }
         public string Title { get; set; }
-        public DateTime StartDate { get; set; }
+        public StartDay WeeksStartDay { get; set; }
         public Day Thursday { get; set; } 
 		public Day Friday { get; set; } 
 		public Day Saturday { get; set; } 
@@ -28,6 +28,11 @@ namespace WeeklyPlaner.Models
             Monday = new Day() { Title = PersianPhrases.Monday, TitleEn = "Monday", };
             Tuesday = new Day() { Title = PersianPhrases.Tuesday, TitleEn = "Tuesday", };
             Wednesday = new Day() { Title = PersianPhrases.Wednesday, TitleEn = "Wednesday", };
+            WeeksStartDay  = new StartDay()
+            {
+                Persian = PersianPhrases.Thursday,
+                English = "Thursday",
+            };
         }
 
         public List<string> GetColors()
@@ -38,8 +43,19 @@ namespace WeeklyPlaner.Models
 
         public List<Day> GetDays()
         {
-			return new List<Day>() { Thursday, Friday, Saturday, Sunday, Monday, Tuesday, Wednesday};
+            var list = new List<Day>() { Thursday, Friday, Saturday, Sunday, Monday, Tuesday, Wednesday };
 
+            if (WeeksStartDay.Persian != null)
+            {
+                while (list[0].Title != WeeksStartDay.Persian)
+                {
+                    var day = list[0];
+                    list.RemoveAt(0);
+                    list.Insert(list.Count, day);
+                }
+            }
+
+			return list;
 		}
 
         public List<string> GetWeeksTitle()

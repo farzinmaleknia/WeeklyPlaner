@@ -12,6 +12,8 @@
         public string color { get; set; }
         public bool IsDayPassed { get; set; }
 		public bool IsCreateBtnNeeded { get; set; } = false;
+        public bool IsDayCollapsed { get; set; } = false;
+        public bool IsDayBlank { get; set; } = false;
         public Day()
         {
             Id = Guid.NewGuid().ToString();

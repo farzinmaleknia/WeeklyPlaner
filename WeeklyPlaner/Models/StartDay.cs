@@ -4,6 +4,7 @@
     {
         public string Persian { get; set; }
         public string English { get; set; }
+        public DateTime Date { get; set; }
         public bool IsStartDayChanged { get; set; } = false;
     }
 }
