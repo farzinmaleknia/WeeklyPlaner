@@ -1,12 +1,12 @@
 ﻿
 <div class="mb-3">
     <div class="mb-3">
-        <span class=" f-size36 food-title just-bg-blue text-center">@(PersianPhrases.Foods)</span>
+        <span class=" f-size36 food-title just-bg-blue text-center">@(Language.Foods)</span>
     </div>
 
     <div class="d-flex justify-content-between">
         <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
-            @(PersianPhrases.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
+            @(Language.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
         </button>
         <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-redo f-size24" aria-hidden="true"></i></button>
     </div>
@@ -43,6 +43,9 @@
 @code {
 
     [Parameter]
+    public Language Language { get; set; }
+
+    [Parameter]
     public List<FoodCategory> FoodList { get; set; }
 
     [Parameter]
@@ -53,8 +56,6 @@
 
     [Parameter]
     public EventCallback<List<FoodCategory>> OnFoodListChange { get; set; }
-
-    private PersianPhrases PersianPhrases = new PersianPhrases();
 
 
     protected override async Task OnInitializedAsync()

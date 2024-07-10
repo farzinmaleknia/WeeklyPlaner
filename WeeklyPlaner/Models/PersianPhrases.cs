@@ -4,6 +4,9 @@ namespace WeeklyPlaner.Models
 {
     public class PersianPhrases
     {
+        public string Persian  = "فارسی";
+        public string English  = "English";
+
         public string FoodPlaning  = "برنامه‌ریزی غذایی";
         
         public string NextWeek  = "هفته بعد";
@@ -46,7 +49,9 @@ namespace WeeklyPlaner.Models
         public string No = "نه";
         public string Ok = "باشه";
         public string Share = "اشتراک گذاری";
+        public string Insert = "بارگذاری";
         public string Copy = "کپی";
+        public string Clear = "پاک کردن";
 
         public string NeededGrocery  = "قلم مورد نیاز";
         public string Amount  = "مقدار";
@@ -58,6 +63,12 @@ namespace WeeklyPlaner.Models
         public string WeeksStartDay = "روز شروع هفته";
         public string BlankDay = "در این روز وعده‌ای ثبت نشده است!";
         public string GroceryListShare = "اشتراک گذاری لیست خرید هفته";
+        public string WeekShare = "اشتراک گذاری برنامه یک هفته";
+        public string WeekInsert = "بارگذاری برنامه یک هفته";
+        public string WeekInsertPlaceHolder = "برنامه‌ی هفته کپی شده را در این قسمت بارگذاری کنید";
+        public string WeekInsertLabel = "متن Json منتشر شده";
+        public string WeeksClear = "پاک کردن اطلاعات هفته‌ها";
+        public string FoodsClear = "پاک کردن اطلاعات غذا‌ها";
 
 
         public string EnterNew(string entity)

@@ -5,11 +5,13 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header just-bg-blue">
-                <h1 class="modal-title fs-5" id="@(Id)Label">@(PersianPhrases.Share)</h1>
+                <h1 class="modal-title fs-5" id="@(Id)Label">@(Language.Share)</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
-            <div id="groceriesList" class="modal-body">
-                @if(GroceriesList.Count > 0)
+            <div id="sharelist" class="modal-body">
+                @(Body)
+
+@*                 @if(GroceriesList.Count > 0)
                 {
                     @foreach (var groc in GroceriesList)
                     {
@@ -17,10 +19,10 @@
                             @($"{groc.Name} ({groc.Amount})")
                         </div>
                     }
-                }
+                } *@
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal" @onclick="OnCopy">@(PersianPhrases.Copy)</button>
+                <button type="button" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal" @onclick="OnCopy">@(Language.Copy)</button>
             </div>
         </div>
     </div>
@@ -29,12 +31,13 @@
 @code {
 
     [Parameter]
-    public List<Grocery> GroceriesList { get; set; }
+    public Language Language { get; set; }
 
     [Parameter]
     public string Id { get; set; }
 
-    public PersianPhrases PersianPhrases { get; set; } = new PersianPhrases();
+    [Parameter]
+    public RenderFragment Body { get; set; }
 
 
 
@@ -46,7 +49,7 @@
 
     protected async Task OnCopy()
     {
-        await JSRuntime.InvokeVoidAsync("onCopyThings", "groceriesList");
+        await JSRuntime.InvokeVoidAsync("onCopyFromElement", "sharelist");
 
     }
 

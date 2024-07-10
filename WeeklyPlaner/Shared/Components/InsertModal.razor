@@ -1,0 +1,53 @@
+﻿@inject IJSRuntime JSRuntime
+
+
+<div class="modal fade" id="@(Id)" tabindex="-1" aria-labelledby="@(Id)Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header just-bg-blue">
+                <h1 class="modal-title fs-5" id="@(Id)Label">@(Language.Insert)</h1>
+                <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
+            </div>
+            <EditForm Model="Models" OnSubmit="OnWeekInsertSubmitet" >
+                <div class="modal-body">
+                    <label for="weekinsert" class="form-label">@(Language.WeekInsertLabel)</label>
+                    <InputTextArea id="weekinsert" class="form-control" @bind-Value="Models.InsertedWeek" rows="10" placeholder="@(Language.WeekInsertPlaceHolder)" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">@(Language.Insert)</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public Language Language { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnWeekInserted { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    protected async Task OnWeekInsertSubmitet()
+    {
+        await OnWeekInserted.InvokeAsync(Models.InsertedWeek);
+    }
+
+
+
+}

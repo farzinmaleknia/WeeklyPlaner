@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header just-bg-blue">
-                <h1 class="modal-title fs-5" id="@(Id)Label">@(IsForAdd ? PersianPhrases.EnterNew(Entity) : PersianPhrases.ChangeThe(Entity))</h1>
+                <h1 class="modal-title fs-5" id="@(Id)Label">@(IsForAdd ? Language.EnterNew(Entity) : Language.ChangeThe(Entity))</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <EditForm Model="Model" OnSubmit="OnValueChanged">
@@ -13,14 +13,14 @@
                     @(Body)
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
+                    <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
                     @if (IsForAddMeal)
                     {
-                        <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(PersianPhrases.Save)</button>
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(Language.Save)</button>
                     }
                     else
                     {
-                        <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Save)</button>
+                        <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">@(Language.Save)</button>
                     }
                 </div>
             </EditForm>
@@ -31,7 +31,9 @@
 
 
 @code {
-    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public string Id { get; set; }

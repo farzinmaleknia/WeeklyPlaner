@@ -1,50 +1,50 @@
 ﻿<!-- Setting Modal -->
-<Settings FoodList="FoodList" WeeksList="WeeksList" Models="Models" OnModelsChangeModals="OnModelsChangeModals" OnWeeksListChangeModals="OnWeeksListChangeModals" />
+<Settings FoodList="FoodList" WeeksList="WeeksList" Models="Models" Language="Language" OnModelsChangeModals="OnModelsChangeModals" />
 
 <!-- ADD/Edit meal Modal -->
-<AddEditMealModal FoodList="FoodList" WeeksList="WeeksList" Models="Models" OnModelsChangeModals="OnModelsChangeModals" OnWeeksListChangeModals="OnWeeksListChangeModals" />
+<AddEditMealModal FoodList="FoodList" WeeksList="WeeksList" Models="Models" Language="Language" OnModelsChangeModals="OnModelsChangeModals" OnWeeksListChangeModals="OnWeeksListChangeModals" />
 
 <!-- MealDeleteConfirmation Modal -->
-<ConfirmationModal Id="DelConfirmMealModal" Title="@(PersianPhrases.WarningByMark)" Color="@(Models.DayModel.color)" ValueChangedEventHandler="OnDeleteMeal">
+<ConfirmationModal Id="DelConfirmMealModal" Title="@(Language.WarningByMark)" Language="Language" Color="@(Models.DayModel.color)" ValueChangedEventHandler="OnDeleteMeal">
     <Body>
         <span>
-            @(PersianPhrases.SureDeleteMeal(Models.MealModel.Food.Name, Models.MealModel.Title))
+            @(Language.SureDeleteMeal(Models.MealModel.Food.Name, Models.MealModel.Title))
         </span>
     </Body>
 </ConfirmationModal>
 
 <!-- CategoryDeleteConfirmation Modal -->
-<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(PersianPhrases.WarningByMark)" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
+<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(Language.WarningByMark)" Language="Language" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
     <Body>
-        <span>@(PersianPhrases.SureDelete(PersianPhrases.Category, Models.CategoryModel.Title))</span>
+        <span>@(Language.SureDelete(Language.Category, Models.CategoryModel.Title))</span>
 
     </Body>
 </ConfirmationModal>
 
 <!-- ADD/Edit Food -->
-<AddEditModal Id="addEditFoodModal" Entity="@(PersianPhrases.Food)" IsForAdd="true" IsForAddMeal="true" Model="Models.FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
+<AddEditModal Id="addEditFoodModal" Entity="@(Language.Food)" IsForAdd="true" Language="Language" IsForAddMeal="true" Model="Models.FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
     <Body>
-        <label for="foodname" class="form-label">@(PersianPhrases.Name)</label>
+        <label for="foodname" class="form-label">@(Language.Name)</label>
         <InputText id="foodname" class="form-control" @bind-Value=(Models.FoodModel.Name) />
     </Body>
 </AddEditModal>
 
 <!-- ADD/Edit Category -->
-<AddEditModal Id="addEditCategoryModal" Entity="@(PersianPhrases.Category)" IsForAdd="Models.IsForAddCat" Model="Models.CategoryModel" ValueChangedEventHandler="OnNewCategorySubmited">
+<AddEditModal Id="addEditCategoryModal" Entity="@(Language.Category)" Language="Language" IsForAdd="Models.IsForAddCat" Model="Models.CategoryModel" ValueChangedEventHandler="OnNewCategorySubmited">
     <Body>
-        <label for="categoryname" class="form-label">@(PersianPhrases.Name)</label>
+        <label for="categoryname" class="form-label">@(Language.Name)</label>
         <InputText id="categoryname" class="form-control" @bind-Value=(Models.CategoryModel.Title) />
     </Body>
 </AddEditModal>
 
 <!-- FoodSectionRefresh -->
-<InfoModal Id="FoodSectionRefresh">
+<InfoModal Language="Language" Id="FoodSectionRefresh">
     <Body>
         <div class="">
-            <span class="">@(PersianPhrases.WhyRemoveFood)</span>
+            <span class="">@(Language.WhyRemoveFood)</span>
         </div>
         <div class="">
-            <span class="">@(PersianPhrases.HowToRefreshFoodsList)</span>
+            <span class="">@(Language.HowToRefreshFoodsList)</span>
         </div>
         <div class="d-flex justify-content-center mt-5">
             <i class="fa fa-redo my-txt-blue f-size36" aria-hidden="true"></i>
@@ -58,6 +58,9 @@
 
 
 @code {
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public List<Week> WeeksList { get; set; }
@@ -77,7 +80,6 @@
     [Parameter]
     public EventCallback<List<FoodCategory>> OnFoodListChange { get; set; }
 
-    private PersianPhrases PersianPhrases = new PersianPhrases();
 
 
     protected override async Task OnInitializedAsync()

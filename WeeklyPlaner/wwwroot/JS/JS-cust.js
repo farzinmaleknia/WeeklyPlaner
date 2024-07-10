@@ -1,8 +1,17 @@
-function onCopyThings (id){
-    var copyText = document.getElementById(id);
+function onCopyFromElement(id) {
 
-    copyText.select();
-    copyText.setSelectionRange(0, 99999); // For mobile devices
+    var range = document.createRange();
+    range.selectNode(document.getElementById(id));
+    window.getSelection().removeAllRanges(); // clear current selection
+    window.getSelection().addRange(range); // to select text
+    document.execCommand("copy");
+    window.getSelection().removeAllRanges();// to deselect
+}
 
-    navigator.clipboard.writeText(copyText.value);
+async function onCopyFromString(stringText) {
+
+    console.log(stringText);
+
+    await navigator.clipboard.writeText(stringText);
+
 }

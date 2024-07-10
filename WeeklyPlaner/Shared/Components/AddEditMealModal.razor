@@ -5,7 +5,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header just-bg-@(Models.DayModel.color)">
-                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(Models.IsForAddMeal ? PersianPhrases.EnterNew(PersianPhrases.Meal) : PersianPhrases.ChangeThe(PersianPhrases.Meal))</h1>
+                <h1 class="modal-title fs-5" id="addEditMealModalLabel">@(Models.IsForAddMeal ? Language.EnterNew(Language.Meal) : Language.ChangeThe(Language.Meal))</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <EditForm Model="Models.MealModel" OnSubmit="OnNewMealHandler">
@@ -14,7 +14,7 @@
                     <div class="d-flex justify-content-between">
                         <div class="btn-group">
                             <button class="btn my-bg-@(Models.DayModel.color) btn-sm dropdown-toggle meal-dropdown-btn mb-2 @(!Models.IsForAddMeal ? "disabled" : "")" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @(PersianPhrases.ChooseMeal)
+                                @(Language.ChooseMeal)
                             </button>
                             <ul class="dropdown-menu">
                                 @foreach (var meal in GetBlankMeals())
@@ -78,8 +78,8 @@
                 @if (Models.MealModel.Food.Name != null)
                 {
                     <div class="modal-footer">
-                        <button type="button" class="btn my-bg-@(Models.DayModel.color)-outline bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Cancle)</button>
-                        <button type="submit" class="btn my-bg-@(Models.DayModel.color) bootstrap-buttons" data-bs-dismiss="modal">@(PersianPhrases.Save)</button>
+                        <button type="button" class="btn my-bg-@(Models.DayModel.color)-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
+                        <button type="submit" class="btn my-bg-@(Models.DayModel.color) bootstrap-buttons" data-bs-dismiss="modal">@(Language.Save)</button>
                     </div>
                 }
             </EditForm>
@@ -90,7 +90,9 @@
 
 
 @code {
-    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public List<FoodCategory> FoodList { get; set; }

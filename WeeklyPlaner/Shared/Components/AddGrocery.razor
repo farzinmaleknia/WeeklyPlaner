@@ -2,12 +2,12 @@
 
 <EditForm Model="GroceryModel" OnSubmit="OnValueChanged">
 	<div class="mb-1">
-		<label for="groceryName" class="form-label">@(PersianPhrases.NeededGrocery)</label>
+		<label for="groceryName" class="form-label">@(Language.NeededGrocery)</label>
 		<InputText id="groceryName" class="form-control" Value="@GroceryModel.Name" ValueChanged="OnNameInputChanged" ValueExpression="() => GroceryModel.Name" />
 	</div>
 	<div class="mb-3 d-flex justify-content-between">
 		<div>
-			<label for="groceryAmount" class="form-label">@(PersianPhrases.Amount)</label>
+			<label for="groceryAmount" class="form-label">@(Language.Amount)</label>
 			<InputText id="groceryAmount" class="form-control" Value="@GroceryModel.Amount" ValueChanged="OnAmountInputChanged" ValueExpression="() => GroceryModel.Amount" />
 		</div>
 		<div>
@@ -19,10 +19,12 @@
 </EditForm>
 
 @code {
-	private PersianPhrases PersianPhrases = new PersianPhrases();
 
 	[Parameter, EditorRequired]
 	public Grocery GroceryModel { get; set; }
+
+	[Parameter]
+	public Language Language { get; set; } 
 
 	[Parameter]
 	public bool IsSubmitNeeded { get; set; } = false;

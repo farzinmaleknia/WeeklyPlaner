@@ -3,6 +3,7 @@
     public class Day
     {
 		static PersianPhrases PersianPhrases = new PersianPhrases();
+		static EnglishPhrases EnglishPhrases = new EnglishPhrases();
         public string Id { get; set; }
         public string Title { get; set; }
         public string TitleEn { get; set; }
@@ -14,12 +15,12 @@
 		public bool IsCreateBtnNeeded { get; set; } = false;
         public bool IsDayCollapsed { get; set; } = false;
         public bool IsDayBlank { get; set; } = false;
-        public Day()
+        public Day(string selectedLang)
         {
             Id = Guid.NewGuid().ToString();
-            Braekfast = new Meal(){ Title = PersianPhrases.Breakfast, }; 
-			Lunch = new Meal() { Title = PersianPhrases.Lunch, };
-            Dinner = new Meal(){ Title = PersianPhrases.Dinner, };
+            Braekfast = new Meal(){ Title = selectedLang == PersianPhrases.Persian? PersianPhrases.Breakfast: EnglishPhrases.Breakfast, }; 
+			Lunch = new Meal() { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Lunch : EnglishPhrases.Lunch, };
+            Dinner = new Meal(){ Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Dinner : EnglishPhrases.Dinner, };
         }
 
 		public IEnumerable<Meal> GetMeals()

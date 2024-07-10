@@ -1,7 +1,7 @@
 ﻿
 <div class="d-flex justify-content-between header w-100">
     <div class="headers-title">
-        @(PersianPhrases.FoodPlaning)
+        @(Language.FoodPlaning)
     </div>
     <div class="headers-option">
         
@@ -10,5 +10,6 @@
 </div>
 
 @code {
-    private PersianPhrases PersianPhrases = new PersianPhrases();
+    [Parameter]
+    public Language Language { get; set; }
 }

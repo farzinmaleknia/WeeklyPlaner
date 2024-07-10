@@ -5,6 +5,7 @@ namespace WeeklyPlaner.Models
     public class Week
     {
         static PersianPhrases PersianPhrases = new PersianPhrases();
+        static EnglishPhrases EnglishPhrases = new EnglishPhrases();
         public string Id { get; set; }
         public string Title { get; set; }
         public StartDay WeeksStartDay { get; set; }
@@ -18,20 +19,20 @@ namespace WeeklyPlaner.Models
         public string HeaderColor { get; set; }
         public string Color { get; set; }
 
-        public Week()
+        public Week(string selectedLang)
         {
             Id = Guid.NewGuid().ToString();
-            Thursday = new Day() { Title = PersianPhrases.Thursday, TitleEn = "Thursday" };
-            Friday = new Day() { Title = PersianPhrases.Friday, TitleEn = "Friday" };
-            Saturday = new Day() { Title = PersianPhrases.Saturday, TitleEn = "Saturday" };
-            Sunday = new Day() { Title = PersianPhrases.Sunday, TitleEn = "Sunday", };
-            Monday = new Day() { Title = PersianPhrases.Monday, TitleEn = "Monday", };
-            Tuesday = new Day() { Title = PersianPhrases.Tuesday, TitleEn = "Tuesday", };
-            Wednesday = new Day() { Title = PersianPhrases.Wednesday, TitleEn = "Wednesday", };
+            Thursday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Thursday: EnglishPhrases.Thursday, TitleEn = EnglishPhrases.Thursday };
+            Friday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Friday : EnglishPhrases.Friday, TitleEn = EnglishPhrases.Friday };
+            Saturday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Saturday : EnglishPhrases.Saturday, TitleEn = EnglishPhrases.Saturday };
+            Sunday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Sunday : EnglishPhrases.Sunday, TitleEn = EnglishPhrases.Sunday, };
+            Monday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Monday : EnglishPhrases.Monday, TitleEn = EnglishPhrases.Monday, };
+            Tuesday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Tuesday : EnglishPhrases.Tuesday, TitleEn = EnglishPhrases.Tuesday, };
+            Wednesday = new Day(selectedLang) { Title = selectedLang == PersianPhrases.Persian ? PersianPhrases.Wednesday : EnglishPhrases.Wednesday, TitleEn = EnglishPhrases.Wednesday, };
             WeeksStartDay  = new StartDay()
             {
                 Persian = PersianPhrases.Thursday,
-                English = "Thursday",
+                English = EnglishPhrases.Thursday,
             };
         }
 

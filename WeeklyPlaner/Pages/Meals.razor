@@ -11,14 +11,14 @@
                 @if(!Meal.IsMealCollapsed)
                 {
                     <div class="bottom-40">
-                        <label for="isEatenRecently" class="form-check-label f-size20">@(PersianPhrases.DidYouEatIt)</label>
+                        <label for="isEatenRecently" class="form-check-label f-size20">@(Language.DidYouEatIt)</label>
                         <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.Food.IsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.Food.IsEatenRecently)" />
                     </div>
                     @if (Meal.Food.IsEatenRecently)
                     {
                         <div class="bottom-8">
                             <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
-                            <span class="f-size18">@(PersianPhrases.FoodWillEarase)</span>
+                            <span class="f-size18">@(Language.FoodWillEarase)</span>
                         </div>
                     }
                 }
@@ -67,7 +67,7 @@
                     }
 
                     <div class="col-12 mt-3 padding-x-0">
-                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="true" CurrentColor="@(Week.Color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
+                        <AddGrocery GroceryModel="Models.GroceryModel" Language="Language" IsSubmitNeeded="true" CurrentColor="@(Week.Color)" ValueChangedEventHandler="OnNewGroceryAdded" GroceryEditableHandler="GroceryEditableHandler" />
                     </div>
                 }
 
@@ -91,6 +91,9 @@
 @code {
 
     [Parameter]
+    public Language Language { get; set; }
+
+    [Parameter]
     public Models Models { get; set; }
 
     [Parameter]
@@ -107,8 +110,6 @@
 
     [Parameter]
     public EventCallback OnWeeksListChangeDays { get; set; }
-
-    private PersianPhrases PersianPhrases = new PersianPhrases();
 
     private Timer GroceryTimer { set; get; }
 
@@ -135,7 +136,7 @@
     public async Task passingData(bool isAddMeal, Meal? meal = null)
     {
         Models.WeekId = Week.Id;
-        Models.DayModel = new Day()
+        Models.DayModel = new Day(Language.SelectedLang)
         {
             Id = Day.Id,
             Title = Day.Title,    

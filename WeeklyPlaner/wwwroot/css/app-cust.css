@@ -49,8 +49,16 @@
     padding-bottom: 40px !important;
 }
 
+.padding-l-40 {
+    padding-left: 40px !important;
+}
+
 .margin-l-5 {
     margin-left: 5px !important;
+}
+
+.margin-l-0 {
+    margin-left: 0px !important;
 }
 
 

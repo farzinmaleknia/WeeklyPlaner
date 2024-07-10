@@ -8,7 +8,7 @@
                 @if(Day.IsDayBlank)
                 {
                     <span class="d-flex justify-content-center">
-                        @(PersianPhrases.BlankDay)
+                        @(Language.BlankDay)
                     </span>
                 }
                 else
@@ -19,7 +19,7 @@
                             {
                                 if (meal.Food.Name != null)
                                 {
-                                    <Meals Models="Models" Week="Week" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays" />
+                                    <Meals Models="Models" Week="Week" Language="Language" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays" />
                                 }
                                 else if (!meal.IsMealPassed)
                                 {
@@ -33,7 +33,7 @@
                     {
                         <div class="d-flex justify-content-center">
                             <button class="btn my-bg-@(Week.Color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(true)">
-                                @(PersianPhrases.NewMeal)
+                                @(Language.NewMeal)
                             </button>
                         </div>
                     }
@@ -47,6 +47,9 @@
 
 
 @code {
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public Models Models { get; set; }
@@ -63,8 +66,6 @@
     [Parameter]
     public EventCallback OnWeeksListChangeWeeks { get; set; }
 
-    private PersianPhrases PersianPhrases = new PersianPhrases();
-
     public string DayModelTitle { get; set; }
 
 
@@ -79,7 +80,7 @@
     public async Task passingData(bool isAddMeal, Meal? meal = null)
     {
         Models.WeekId = Week.Id;
-        Models.DayModel = new Day()
+        Models.DayModel = new Day(Language.SelectedLang)
         {
             Title = Day.Title,
             color = Week.Color,

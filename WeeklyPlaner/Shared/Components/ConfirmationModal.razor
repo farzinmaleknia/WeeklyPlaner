@@ -11,8 +11,8 @@
                 @(Body)
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn my-bg-@(Color)-outline bootstrap-buttons" data-bs-dismiss="modal" @onclick="() => OnValueChanged(false)">@(PersianPhrases.No)</button>
-                <button class="btn my-bg-@(Color) bootstrap-buttons" data-bs-dismiss="modal" @onclick="() => OnValueChanged(true)">@(PersianPhrases.Yes)</button>
+                <button type="button" class="btn my-bg-@(Color)-outline bootstrap-buttons" data-bs-dismiss="modal" @onclick="() => OnValueChanged(false)">@(Language.No)</button>
+                <button class="btn my-bg-@(Color) bootstrap-buttons" data-bs-dismiss="modal" @onclick="() => OnValueChanged(true)">@(Language.Yes)</button>
             </div>
         </div>
     </div>
@@ -21,7 +21,9 @@
 
 
 @code {
-    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public string Id { get; set; }

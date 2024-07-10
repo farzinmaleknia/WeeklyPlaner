@@ -1,19 +1,19 @@
-﻿
+﻿@inject IJSRuntime JSRuntime
 
 
 <div class="modal fade" id="settingModal" tabindex="-1" aria-labelledby="settingModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header just-bg-blue">
-                <h1 class="modal-title fs-5" id="settingModalLabel">@(PersianPhrases.Setting)</h1>
+                <h1 class="modal-title fs-5" id="settingModalLabel">@(Language.Setting)</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <div class="modal-body">
                 <div class="d-flex justify-content-between mb-3">
-                    <div class="f-size20">@(PersianPhrases.WeeksStartDay)</div>
+                    <div class="f-size20">@(Language.WeeksStartDay)</div>
                     <div>
                         <button class="btn my-bg-blue btn-sm dropdown-toggle meal-dropdown-btn mb-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="mx-1 f-size20">@(WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.Persian : PersianPhrases.ChooseDay)</span>
+                            <span class="mx-1 f-size20">@(WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.Persian : Language.ChooseDay)</span>
                         </button>
                         <ul class="dropdown-menu">
                             @if(WeeksList.Count > 0)
@@ -26,17 +26,61 @@
                         </ul>
                     </div>
                 </div>
-                <div class=" mb-3">
+                <div class="mb-3">
                     <div class="d-flex justify-content-between mb-1">
-                        <div class=" f-size20 mb-1">@(PersianPhrases.GroceryListShare)</div>
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.GroceryListShare)</div>
                         <div class="form-check form-switch">
                             <input class="form-check-input" @bind-value="IsForNextWeekGrocery" type="checkbox" role="switch" id="isNextWeek">
-                            <label class="form-check-label  f-size20" for="isNextWeek">@(IsForNextWeekGrocery ? PersianPhrases.NextWeek : PersianPhrases.CurrentWeek)</label>
+                            <label class="form-check-label  f-size20" for="isNextWeek">@(IsForNextWeekGrocery ? Language.NextWeek : Language.CurrentWeek)</label>
                         </div>
                     </div>
-                    <div class="d-flex float-start">
+                    <div class="d-flex justify-content-end">
                         <button class="btn my-bg-blue btn-sm mb-2" type="button" @onclick="OnShareGroceries" data-bs-toggle="modal" data-bs-target="#GeroceriesShareModal">
-                            <span class="mx-1 f-size20">@(PersianPhrases.Share)</span>
+                            <span class="mx-1 f-size20">@(Language.Share)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.WeekShare)</div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" @bind-value="IsForNextWeekShare" type="checkbox" role="switch" id="isNextWeekShare">
+                            <label class="form-check-label  f-size20" for="isNextWeekShare">@(IsForNextWeekShare ? Language.NextWeek : Language.CurrentWeek)</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn my-bg-blue btn-sm mb-2" type="button" @onclick="OnShareWeek" >
+                            <span class="mx-1 f-size20">@(Language.Share)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.WeekInsert)</div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" @bind-value="Models.IsForNextWeekInsert" type="checkbox" role="switch" id="isNextWeekInsert">
+                            <label class="form-check-label  f-size20" for="isNextWeekInsert">@(Models.IsForNextWeekInsert ? Language.NextWeek : Language.CurrentWeek)</label>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn my-bg-blue btn-sm mb-2" type="button" data-bs-toggle="modal" data-bs-target="#WeekInserModal">
+                            <span class="mx-1 f-size20">@(Language.Insert)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.WeeksClear)</div>
+                        <button class="btn my-bg-blue btn-sm mb-2" type="button" @onclick="OnClearWeeks">
+                            <span class="mx-1 f-size20">@(Language.Clear)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class=" mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.FoodsClear)</div>
+                        <button class="btn my-bg-blue btn-sm mb-2" type="button" @onclick="OnClearFoods">
+                            <span class="mx-1 f-size20">@(Language.Clear)</span>
                         </button>
                     </div>
                 </div>
@@ -47,13 +91,32 @@
 
 
 <!-- Groceries Share Modal -->
-<GroceriesShare Id="GeroceriesShareModal" GroceriesList="GroceriesList" />
+<ShareModal Id="GeroceriesShareModal">
+    <Body>
+        @if (GroceriesList.Count > 0)
+        {
+            @foreach (var groc in GroceriesList)
+            {
+                <div>
+                    @($"{groc.Name} ({groc.Amount})")
+                </div>
+            }
+        }
+    </Body>
+</ShareModal>
+
+
+<!-- Groceries Share Modal -->
+<InsertModal Id="WeekInserModal" Models="Models" OnWeekInserted="OnWeekInserted"/>
+
 
 
 
 
 @code {
-    private PersianPhrases PersianPhrases = new PersianPhrases();
+
+    [Parameter]
+    public Language Language { get; set; }
 
     [Parameter]
     public List<FoodCategory> FoodList { get; set; }
@@ -67,12 +130,11 @@
     [Parameter]
     public EventCallback<Models> OnModelsChangeModals { get; set; }
 
-    [Parameter]
-    public EventCallback<List<Week>> OnWeeksListChangeModals { get; set; }
-
     public List<Grocery> GroceriesList { get; set; }
 
     public bool IsForNextWeekGrocery { get; set; }
+
+    public bool IsForNextWeekShare { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -81,38 +143,9 @@
 
         IsForNextWeekGrocery = false;
 
+        IsForNextWeekShare = false;
+
         GroceriesList = new List<Grocery>();
-    }
-
-    public List<Meal> GetBlankMeals()
-    {
-        List<Meal> list = new List<Meal>();
-
-        if (Models.DayModel.Title != null)
-        {
-            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
-        }
-
-        return list;
-    }
-
-    public async Task OnShareGroceries()
-    {
-        GroceriesList = new List<Grocery>();
-        string week = IsForNextWeekGrocery ? PersianPhrases.NextWeek : PersianPhrases.CurrentWeek;
-
-        foreach (var day in WeeksList.FirstOrDefault(w => w.Title == week).GetDays())
-        {
-            foreach (var meal in day.GetMeals())
-            {
-                if (meal.Groceries != null)
-                {
-                    GroceriesList.AddRange(meal.Groceries);
-                }
-            }
-        }
-
-        await OnModelsChangeSettingsModal();
     }
 
     public async Task passingDay(Day day)
@@ -127,71 +160,71 @@
         await OnModelsChangeSettingsModal();
     }
 
-
-
-
-
-    public async Task OnFoodSelected(Food food)
+    public async Task OnShareGroceries()
     {
-        Models.MealModel.Food = new Food()
+        GroceriesList = new List<Grocery>();
+        string week = IsForNextWeekGrocery ? Language.NextWeek : Language.CurrentWeek;
+
+        foreach (var day in WeeksList.FirstOrDefault(w => w.Title == week).GetDays())
         {
-            Name = food.Name,
-            Id = food.Id,
-            CategoryId = food.CategoryId,
-        };
+            foreach (var meal in day.GetMeals())
+            {
+                if (meal.Groceries != null)
+                {
+                    GroceriesList.AddRange(meal.Groceries);
+                }
+            }
+        }
+    }
+
+    public async Task OnShareWeek()
+    {
+        string selectedWeek = IsForNextWeekShare ? Language.NextWeek : Language.CurrentWeek;
+
+        var week = WeeksList.FirstOrDefault(w => w.Title == selectedWeek); 
+
+        if(week != null)
+        {
+            foreach (var day in week.GetDays())
+            {
+                day.IsDayPassed = false;
+                day.IsDayBlank = false;
+                day.IsDayCollapsed = false;
+                day.IsCreateBtnNeeded = false;
+
+                foreach (var meal in day.GetMeals())
+                {
+                    meal.IsMealCollapsed = false;
+                    meal.IsMealPassed = false;
+                }
+            }
+
+            var WeekString = Newtonsoft.Json.JsonConvert.SerializeObject(week);
+            await JSRuntime.InvokeVoidAsync("onCopyFromString", WeekString);
+
+        }
+
+    }
+
+    public async Task OnWeekInserted(string value)
+    {
+        Models.InsertedWeek = value;
 
         await OnModelsChangeSettingsModal();
     }
 
-    public async Task OnFoodDiselected()
+    public async Task OnClearWeeks()
     {
-        Models.MealModel.Food = new Food();
-        Models.MealModel.Groceries = new List<Grocery>();
-        await OnModelsChangeSettingsModal();
-    }
-
-    public async Task OnNewGroceryAdded(bool isSubmitNeeded = false)
-    {
-        if (Models.MealModel.Groceries == null)
-            Models.MealModel.Groceries = new List<Grocery>();
-
-        Models.MealModel.Groceries.Add(Models.GroceryModel);
-        Models.GroceryModel = new Grocery();
-
-        if (isSubmitNeeded)
-        {
-            OnNewGrocerySubmitet();
-        }
+        Models.IsForWeeksClear = true;
 
         await OnModelsChangeSettingsModal();
     }
 
-    public async Task OnNewGrocerySubmitet()
+    public async Task OnClearFoods()
     {
-        if (Models.MealModel.Groceries != null)
-        {
-            var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
-            meal.Groceries = Models.MealModel.Groceries;
-        }
-    }
+        Models.IsForFoodsClear = true;
 
-    public async Task OnNewMealHandler()
-    {
-        var day = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title);
-        var meal = day.GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
-
-        meal.Food = Models.MealModel.Food;
-        if (Models.MealModel.Groceries != null)
-        {
-            meal.Groceries = Models.MealModel.Groceries;
-        }
-
-        if(GetBlankMeals().Count() == 0)
-        {
-            day.IsCreateBtnNeeded = false;
-        }
-
-        await OnWeeksListChangeSettingsModal();
+        await OnModelsChangeSettingsModal();
     }
 
     public async Task OnModelsChangeSettingsModal(Models models = null)
@@ -199,12 +232,5 @@
         if (models != null)
             Models = models;
         await OnModelsChangeModals.InvokeAsync(Models);
-    }
-
-    public async Task OnWeeksListChangeSettingsModal(List<Week> weeksList = null)
-    {
-        if (weeksList != null)
-            WeeksList = weeksList;
-        await OnWeeksListChangeModals.InvokeAsync(WeeksList);
     }
 }
