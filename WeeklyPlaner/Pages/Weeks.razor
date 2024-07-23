@@ -45,7 +45,7 @@
                 <div class="mb-3">
                     <div class="my-2 d-flex justify-content-between">
                         <button class="border-0" type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "next" : "prev")-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
 
@@ -64,11 +64,39 @@
                         </div>
 
                         <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon text-dark " aria-hidden="true"></span>
+                            <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "prev" : "next")-icon text-dark " aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
                     </div>
                 </div>
+                
+@*                 <div class="mb-3">
+                    <div class="my-2 d-flex justify-content-between">
+                        <button class="border-0" type="button" data-bs-target="#WeekCarousel" data-bs-slide="@(Language.SelectedLang == Language.Persian? "next" : "prev")">
+                            <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "next" : "prev")-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">@(Language.SelectedLang == Language.Persian ? "Next" : "Previous")</span>
+                        </button>
+
+                        <div class ="weeks-title just-bg-@(week.HeaderColor) text-center">
+                            <span class=" f-size36 weeks-title">@(week.Title)</span>
+
+@*                             <div class="carousel-indicators" style="position: relative; direction: initial;">
+                                @foreach (var w in WeeksList)
+                                {
+                                    <button type="button" data-bs-target="#WeekCarousel" data-bs-slide-to="@(WeekCounter)" class="@(w.Title == Language.ThreeWeeksAgo? "active" : "")" aria-label="Slide @(WeekCounter + 1)"></button>
+
+                                    WeekCounter++;
+                                }
+                            </div> *@
+
+                        @*</div>
+
+                        <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="@(Language.SelectedLang == Language.Persian? "prev" : "next")">
+                            <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "prev" : "next")-icon text-dark " aria-hidden="true"></span>
+                            <span class="visually-hidden">@(Language.SelectedLang == Language.Persian ? "Previous" : "Next")</span>
+                        </button>
+                    </div>
+                </div> *@
 
                 @foreach (var day in week.GetDays())
                 {
@@ -86,7 +114,7 @@
 
 
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public Language Language { get; set; }
 
     [Parameter]

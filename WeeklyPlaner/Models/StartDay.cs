@@ -2,8 +2,9 @@
 {
     public class StartDay
     {
-        public string Persian { get; set; }
-        public string English { get; set; }
+        public string TitleFa { get; set; }
+        public string TitleEn { get; set; }
+        public string Title { get; set; }
         public DateTime Date { get; set; }
         public bool IsStartDayChanged { get; set; } = false;
     }

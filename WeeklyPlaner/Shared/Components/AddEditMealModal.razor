@@ -67,7 +67,7 @@
 
                         <hr />
 
-                        <AddGrocery GroceryModel="Models.GroceryModel" IsSubmitNeeded="false" CurrentColor="@(Models.DayModel.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
+                        <AddGrocery GroceryModel="Models.GroceryModel" Language="Language" IsSubmitNeeded="false" CurrentColor="@(Models.DayModel.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
 
                         @if (Models.MealModel.Groceries != null)
                         {
@@ -91,7 +91,7 @@
 
 @code {
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public Language Language { get; set; }
 
     [Parameter]

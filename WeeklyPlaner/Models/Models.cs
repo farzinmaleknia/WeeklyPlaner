@@ -2,6 +2,7 @@
 {
     public class Models
     {
+        public PersianPhrases PersianPhrases { get; set; }
         public string WeekId { get; set; }
         public string InsertedWeek { get; set; }
         public Day DayModel { get; set; } 
@@ -11,15 +12,15 @@
         public Food FoodModel { get; set; } = new Food();
         public StartDay StartDay { get; set; } = new StartDay()
         {
-            Persian = "پنجشنبه",
-            English = "Thursday",
+            TitleFa = "پنجشنبه",
+            TitleEn = "Thursday",
         };
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;
         public bool IsFoodEatenChanged { get; set; } = false;
         public bool IsGroceriesShareNextWeek { get; set; } = false;
-        public bool IsForNextWeekInsert { get; set; } = false;
+        public bool IsForNextWeek { get; set; } = false;
         public bool IsForWeeksClear { get; set; } = false;
         public bool IsForFoodsClear { get; set; } = false;
 

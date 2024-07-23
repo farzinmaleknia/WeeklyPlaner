@@ -1,22 +1,30 @@
 ﻿
 @font-face {
-    font-family: 'iransansweb(fanum)_light';
+    font-family: 'my-font';
     src: url('../fonts/iransans/ttf/iransansweb(fanum)_light.ttf') format('truetype');
+    unicode-range: U+0600-06FF;
 }
 @font-face {
-    font-family: 'iransansweb(fanum)_bold';
+    font-family: 'my-font';
+    src: url('../fonts/exo_2/static/exo2-regular.ttf') format('truetype');
+    unicode-range: U+0020-007F;
+}
+@font-face {
+    font-family: 'my-font-bold';
     src: url('../fonts/iransans/ttf/iransansweb(fanum)_bold.ttf') format('truetype');
+    unicode-range: U+0600-06FF;
+}
+@font-face {
+    font-family: 'my-font-bold';
+    src: url('../fonts/exo_2/static/exo2-bold.ttf') format('truetype');
+    unicode-range: U+0020-007F;
 }
 
 * {
     font-size: 24px;
     scroll-behavior: smooth;
-    font-family: 'iransansweb(fanum)_light';
+    font-family: 'my-font';
 }
-
-/*.carousel-indicators [data-bs-target] {
-    background-color: black !important;
-}*/
 
 .my-disabled {
     pointer-events: none;
@@ -50,7 +58,7 @@
 }
 
 .padding-l-40 {
-    padding-left: 40px !important;
+    padding-inline-end: 40px !important;
 }
 
 .margin-l-5 {
@@ -59,6 +67,15 @@
 
 .margin-l-0 {
     margin-left: 0px !important;
+}
+
+.margin-start-auto {
+    margin-inline-start: auto !important;
+}
+
+.height-52{
+    height: 52px;
+    
 }
 
 
@@ -81,18 +98,18 @@
 }
 
 .headers-title {
-    font-family: 'iransansweb(fanum)_bold';
-    margin-right: 20px;
+    font-family: 'my-font-bold';
+    margin-inline-start: 20px;
     font-size: 36px;
     text-shadow: 2px 5px 5px black;
 } 
 
 .headers-option {
-    margin-left: 20px;
+    margin-inline-end: 20px;
 }
 
 .weeks-title {
-    font-family: 'iransansweb(fanum)_bold';
+    font-family: 'my-font-bold';
     color: white;
     margin-left: 10px;
     margin-right: 10px;
@@ -103,7 +120,7 @@
 
 .food-title {
     display: block;
-    font-family: 'iransansweb(fanum)_bold';
+    font-family: 'my-font-bold';
     color: white;
     margin-bottom: 20px;
     width: 100%;
@@ -205,7 +222,7 @@
 .meal-del-btn {
     padding-top: 7px;
     margin-top: 20px;
-    margin-left: 26px;
+    margin-inline-end: 26px;
     width: 42px;
     height: 42px;
 }
@@ -213,17 +230,16 @@
 .meal-collapse-btn {
     position: absolute;
     top: 0px;
-    left: 0px;
     padding-top: 10px;
     margin-top: 20px;
-    margin-left: 26px;
+    margin-inline-end: 26px;
     width: 45px;
     height: 45px;
 }
 
 .meal-title {
     margin-top: 15px;
-    margin-right: 24px;
+    margin-inline-start: 24px;
 }
 
 .food-category-group {

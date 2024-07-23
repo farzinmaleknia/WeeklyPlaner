@@ -5,8 +5,8 @@
     {
         <div class="meal-passed opacity-bg-@(Week.Color) f-size20">
             <div style="opacity: 1;">
-                <button class="btn my-bg-@(Week.Color) btn-sm meal-collapse-btn" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
-                    <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? "left" : "down")" aria-hidden="true"></i>
+                <button class="btn my-bg-@(Week.Color) btn-sm meal-collapse-btn" style="@(Language.SelectedLang == Language.Persian ? "left: 0": "right: 0")" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
+                    <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? Language.SelectedLang == Language.Persian ? "left": "right" : "down")" aria-hidden="true"></i>
                 </button>
                 @if(!Meal.IsMealCollapsed)
                 {
@@ -17,8 +17,8 @@
                     @if (Meal.Food.IsEatenRecently)
                     {
                         <div class="bottom-8">
-                            <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
                             <span class="f-size18">@(Language.FoodWillEarase)</span>
+                            <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
                         </div>
                     }
                 }
@@ -28,7 +28,7 @@
     <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
         <span class="f-size36 meal-title" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
             @(Meal.Title)
-            <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? "left" : "down") @(Meal.IsMealPassed ? "d-none" : string.Empty)" aria-hidden="true"></i>
+            <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? Language.SelectedLang == Language.Persian ? "left": "right"  : "down") @(Meal.IsMealPassed ? "d-none" : string.Empty)" aria-hidden="true"></i>
         </span>
         @if (!Meal.IsMealPassed)
         {
@@ -90,7 +90,7 @@
 
 @code {
 
-    [Parameter]
+    [Parameter, EditorRequired]
     public Language Language { get; set; }
 
     [Parameter]

@@ -4,12 +4,11 @@
         @(Language.FoodPlaning)
     </div>
     <div class="headers-option">
-        
-        <button type="button" class="btn text-white m-right-auto" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="fa fa-bars f-size36 mt-2" aria-hidden="true"></i></button>
+        <button type="button" class="btn text-white margin-start-auto" data-bs-toggle="modal" data-bs-target="#settingModal"><i class="fa fa-bars f-size36 mt-2" aria-hidden="true"></i></button>
     </div>
 </div>
 
 @code {
-    [Parameter]
+    [Parameter, EditorRequired]
     public Language Language { get; set; }
 }

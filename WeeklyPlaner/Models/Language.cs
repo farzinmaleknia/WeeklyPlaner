@@ -4,6 +4,7 @@ namespace WeeklyPlaner.Models
 {
     public class Language
     {
+
         private readonly PersianPhrases PersianPhrases = new PersianPhrases();
         private readonly EnglishPhrases EnglishPhrases = new EnglishPhrases();
 

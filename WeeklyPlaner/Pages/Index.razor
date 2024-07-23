@@ -3,23 +3,25 @@
 @inject IJSRuntime JSRuntime
 @inject HttpClient http
 
-<Header />
+<div dir="@(SelectedLang == Language.Persian? "rtl" : "ltr")">
+    <Header Language="Language" />
 
-@(Language.FoodPlaning)
+    <button class="btn btn-primary" @onclick="OnSetLanguage">Change</button>
 
-<button class="btn btn-primary" @onclick="OnSetLanguage"></button>
+    <div class="container-fluid">
+        <div class="row bg-light-subtle">
 
-<div class="container-fluid">
-    <div class="row bg-light-subtle">
+            <Weeks Models="Models" WeeksList="WeeksList" Language="Language" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange" />
 
-        <Weeks Models="Models" WeeksList="WeeksList" Language="Language" OnWeeksListChange="OnWeeksListChange" OnModelsChange="OnModelsChange" />
+            <Foods FoodList="FoodList" Models="Models" Language="Language" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
 
-        <Foods FoodList="FoodList" Models="Models" Language="Language" OnFoodListChange="OnFoodListChange" OnModelsChange="OnModelsChange" />
-
+        </div>
     </div>
+
+    <Modals FoodList="FoodList" Models="Models" WeeksList="WeeksList" Language="Language" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" OnFoodListChange="OnFoodListChange" />
+
 </div>
 
-<Modals FoodList="FoodList" Models="Models" WeeksList="WeeksList" Language="Language" OnModelsChange="OnModelsChange" OnWeeksListChange="OnWeeksListChange" OnFoodListChange="OnFoodListChange" />
 
 
 
@@ -44,7 +46,9 @@
     {
         await base.OnInitializedAsync();
 
-        Language = new Language(PersianPhrases.Persian);
+        SelectedLang = PersianPhrases.English;
+
+        Language = new Language(SelectedLang);
 
         Models = new Models(Language.SelectedLang);
 
@@ -71,18 +75,13 @@
             SelectedLang = PersianPhrases.Persian;
         }
 
-        await OnSetLanguage();
-
         await ManageWeeksList();
 
         await IsMealPassed();
 
         if (FoodList.Count == 0)
         {
-
             await BindSampleFoodList();
-
-
         }
 
         // foreach (var week in WeeksList)
@@ -122,6 +121,23 @@
 
         Language = new Language(SelectedLang);
 
+        foreach (var week in WeeksList)
+        {
+            week.Title = SelectedLang == PersianPhrases.Persian ? week.TitleFa : week.TitleEn;
+
+            foreach (var day in week.GetDays())
+            {
+                day.Title = SelectedLang == PersianPhrases.Persian ? day.TitleFa : day.TitleEn;
+
+                foreach (var meal in day.GetMeals())
+                {
+                    meal.Title = SelectedLang == PersianPhrases.Persian ? meal.TitleFa : meal.TitleEn;
+                }
+            }
+
+            week.WeeksStartDay.Title = SelectedLang == PersianPhrases.Persian ? week.WeeksStartDay.TitleFa : week.WeeksStartDay.TitleEn;
+        }
+
     }
 
     private async Task BindSampleFoodList()
@@ -133,7 +149,7 @@
 
     private async Task ManageWeeksList()
     {
-        CurrentTime = CurrentTime.AddDays(0);
+        CurrentTime = CurrentTime.AddDays(18);
 
         if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].WeeksStartDay.Date.Date).TotalDays > 27)
         {
@@ -167,14 +183,14 @@
     {
         if (isNextStDay)
         {
-            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.English : Models.StartDay.English))
+            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.TitleEn : Models.StartDay.TitleEn))
             {
                 day = day.AddDays(1);
             }
         }
         else
         {
-            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.English : Models.StartDay.English))
+            while (day.DayOfWeek.ToString() != (WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.TitleEn : Models.StartDay.TitleEn))
             {
                 day = day.AddDays(-1);
             }            
@@ -199,7 +215,9 @@
         int weekTitle = 0;
         foreach (var week in WeeksList)
         {
-            week.Title = week.GetWeeksTitle()[weekTitle];
+            week.TitleFa = week.GetWeeksTitleFa()[weekTitle];
+            week.TitleEn = week.GetWeeksTitleEn()[weekTitle];
+            week.Title = SelectedLang == Language.Persian ? week.TitleFa : week.TitleEn;
 
             if (weekTitle < (WeeksList.Count() - 1))
                 weekTitle++;
@@ -210,11 +228,9 @@
     {
         Week week = Newtonsoft.Json.JsonConvert.DeserializeObject<Week>(insertedWeek);
 
-        week.Title = Models.IsForNextWeekInsert ? Language.NextWeek : Language.CurrentWeek;
+        week.Title = Models.IsForNextWeek ? Language.NextWeek : Language.CurrentWeek;
 
-        Models.IsForNextWeekInsert = false;
-
-        if (week.Id != null && WeeksList[0].GetWeeksTitle().Contains(week.Title))
+        if (week.Id != null && (WeeksList[0].GetWeeksTitleFa().Contains(week.Title) || WeeksList[0].GetWeeksTitleEn().Contains(week.Title)))
         {
             week.WeeksStartDay = WeeksList.FirstOrDefault(w => w.Title == week.Title).WeeksStartDay;
 
@@ -314,7 +330,7 @@
 
     public async Task BindData()
     {
-        SelectedLang = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "SelectedLangList");
+        //SelectedLang = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "SelectedLangList");
 
         var responceWeek = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "WeeksList");
         if(responceWeek != null)
@@ -347,7 +363,7 @@
     {
         int forward = 0;
 
-        while (WeeksList[0].GetDays().ToList()[forward].Title != Models.StartDay.Persian)
+        while (WeeksList[0].GetDays().ToList()[forward].Title != Models.StartDay.Title)
         {
             forward++;
         }
@@ -355,8 +371,9 @@
         foreach (var week in WeeksList)
         {
             week.WeeksStartDay.Date = week.WeeksStartDay.Date.AddDays(forward);
-            week.WeeksStartDay.Persian = Models.StartDay.Persian;
-            week.WeeksStartDay.English = Models.StartDay.English;
+            week.WeeksStartDay.Title = Models.StartDay.Title;
+            week.WeeksStartDay.TitleFa = Models.StartDay.TitleFa;
+            week.WeeksStartDay.TitleEn = Models.StartDay.TitleEn;
         }
 
 
@@ -402,6 +419,8 @@
 
         await ManageWeeksList();
 
+        await IsMealPassed();
+
     }
 
     public async Task onClearFoodsLsit()
@@ -410,7 +429,6 @@
 
         FoodList = new List<FoodCategory>();
 
-        await BindSampleFoodList();
     }
 
 
