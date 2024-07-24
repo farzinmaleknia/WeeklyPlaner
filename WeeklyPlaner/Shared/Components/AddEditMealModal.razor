@@ -121,7 +121,8 @@
 
         if (Models.DayModel.Title != null)
         {
-            list = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
+            var daylist = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays();//.FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
+            list = daylist.FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
         }
 
         return list;

@@ -6,6 +6,7 @@ namespace WeeklyPlaner.Models
     {
         public string Persian = "فارسی";
         public string English = "English";
+        public string LanguageMean = "Language";
 
         public string FoodPlaning = "Food Planing";
 
@@ -56,11 +57,11 @@ namespace WeeklyPlaner.Models
         public string NeededGrocery = "Needed grocery";
         public string Amount = "Amount";
 
-        public string DidYouEatIt = "Did you had eat this meal";
+        public string DidYouEatIt = "Had you eaten this meal?";
         public string FoodWillEarase = "This food will be earase temprarly";
-        public string WhyRemoveFood = "";
-        public string HowToRefreshFoodsList = "";
-        public string WeeksStartDay = "Weeks startDay";
+        public string WhyRemoveFood = "This temporary removal of food is done in order to observe diversity and prevent repetition of the food plan";
+        public string HowToRefreshFoodsList = "If you wish, you can refresh the food list by clicking on the icon similar to the one below, and all the foods will be displayed again in the food section.";
+        public string WeeksStartDay = "Weeks start day";
         public string BlankDay = "No meal has been saved on this day!";
         public string GroceryListShare = "Sharing the shopping list of the week";
         public string WeekShare = "Sharing a week plan";
@@ -83,13 +84,13 @@ namespace WeeklyPlaner.Models
 
         public string SureDeleteMeal(string foodName, string meal)
         {
-            return $"Are you sure to delete {foodName} as {meal}";
+            return $"Are you sure you want to delete {foodName} as {meal}";
 
         }
 
         public string SureDelete(string entity, string name)
         {
-            return $"Are you sure to delete {name} as {entity}";
+            return $"Are you sure you want to delete {name} as {entity}";
 
         }
     }

@@ -10,6 +10,7 @@ namespace WeeklyPlaner.Models
 
         public string Persian = "فارسی";
         public string English = "English";
+        public string LanguageMean { get; }
 
         public string SelectedLang { get; }
 
@@ -106,6 +107,8 @@ namespace WeeklyPlaner.Models
         public Language(string selectedLang)
         {
             SelectedLang = selectedLang;
+
+            LanguageMean = selectedLang == PersianPhrases.Persian ? PersianPhrases.LanguageMean : EnglishPhrases.LanguageMean;
 
             FoodPlaning = selectedLang == PersianPhrases.Persian ? PersianPhrases.FoodPlaning : EnglishPhrases.FoodPlaning;
 

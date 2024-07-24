@@ -8,7 +8,7 @@
         <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
             @(Language.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
         </button>
-        <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-redo f-size24" aria-hidden="true"></i></button>
+        <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-undo f-size24" aria-hidden="true"></i></button>
     </div>
     @foreach (var category in FoodList)
     {
@@ -17,7 +17,7 @@
                 <span class="category-title f-size24">@(category.Title)</span>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
-                <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-redo f-size16" aria-hidden="true"></i></button>
+                <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-undo f-size16" aria-hidden="true"></i></button>
                 <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
             </div>
             <div>

@@ -6,6 +6,7 @@ namespace WeeklyPlaner.Models
     {
         public string Persian  = "فارسی";
         public string English  = "English";
+        public string LanguageMean  = "زبان";
 
         public string FoodPlaning  = "برنامه‌ریزی غذایی";
         

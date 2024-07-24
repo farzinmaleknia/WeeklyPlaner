@@ -23,6 +23,7 @@
         public bool IsForNextWeek { get; set; } = false;
         public bool IsForWeeksClear { get; set; } = false;
         public bool IsForFoodsClear { get; set; } = false;
+        public bool IsForChangeLanguage { get; set; } = false;
 
         public Models(string selectedLang)
         {

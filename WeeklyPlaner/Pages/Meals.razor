@@ -10,13 +10,13 @@
                 </button>
                 @if(!Meal.IsMealCollapsed)
                 {
-                    <div class="bottom-40">
+                    <div class="bottom-40" style="@(Language.SelectedLang == Language.Persian? "right":"left") : 16px;">
                         <label for="isEatenRecently" class="form-check-label f-size20">@(Language.DidYouEatIt)</label>
                         <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.Food.IsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.Food.IsEatenRecently)" />
                     </div>
                     @if (Meal.Food.IsEatenRecently)
                     {
-                        <div class="bottom-8">
+                        <div class="bottom-8" style="@(Language.SelectedLang == Language.Persian? "right" :"left") : 16px;">
                             <span class="f-size18">@(Language.FoodWillEarase)</span>
                             <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
                         </div>

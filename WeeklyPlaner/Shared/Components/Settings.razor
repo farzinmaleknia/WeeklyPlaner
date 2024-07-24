@@ -27,6 +27,16 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-between mb-3">
+                    <div class="mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.LanguageMean)</div>
+                    </div>
+                    <div class="mb-1">
+                        <button class="btn my-bg-blue btn-sm height-52 mb-2 text-nowrap" type="button" @onclick="OnChangeLanguage">
+                            <span class="mx-1 f-size20">@(Language.SelectedLang == Language.Persian ? Language.English : Language.Persian)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
                     <div class="f-size20">@(Models.IsForNextWeek ? Language.NextWeek : Language.CurrentWeek)</div>
                     <div>
                         <div class="form-check form-switch">
@@ -145,6 +155,13 @@
             TitleEn = day.TitleEn,
             IsStartDayChanged = true,
         };
+
+        await OnModelsChangeSettingsModal();
+    }
+
+    public async Task OnChangeLanguage()
+    {
+        Models.IsForChangeLanguage = true;
 
         await OnModelsChangeSettingsModal();
     }

@@ -8,7 +8,7 @@
                 <h1 class="modal-title fs-5" id="@(Id)Label">@(IsForAdd ? Language.EnterNew(Entity) : Language.ChangeThe(Entity))</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
-            <EditForm Model="Model" OnSubmit="OnValueChanged">
+            <EditForm Model="Model" OnValidSubmit="OnValueChanged">
                 <div class="modal-body">
                     @(Body)
                 </div>

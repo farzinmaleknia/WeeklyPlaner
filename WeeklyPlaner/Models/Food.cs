@@ -1,8 +1,12 @@
-﻿namespace WeeklyPlaner.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace WeeklyPlaner.Models
 {
     public class Food
     {
         public string Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
         public string CategoryId { get; set; }
         public bool IsEatenRecently { get; set; } = false;

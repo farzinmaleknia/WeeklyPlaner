@@ -1,6 +1,6 @@
 ﻿
 
-<EditForm Model="GroceryModel" OnSubmit="OnValueChanged">
+<EditForm Model="GroceryModel" OnValidSubmit="OnValueChanged">
 	<div class="mb-1">
 		<label for="groceryName" class="form-label">@(Language.NeededGrocery)</label>
 		<InputText id="groceryName" class="form-control" Value="@GroceryModel.Name" ValueChanged="OnNameInputChanged" ValueExpression="() => GroceryModel.Name" />
