@@ -24,6 +24,7 @@
         public bool IsForWeeksClear { get; set; } = false;
         public bool IsForFoodsClear { get; set; } = false;
         public bool IsForChangeLanguage { get; set; } = false;
+        public bool IsActionNeeded { get; set; } = false;
 
         public Models(string selectedLang)
         {

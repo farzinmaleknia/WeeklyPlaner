@@ -155,6 +155,7 @@
             TitleEn = day.TitleEn,
             IsStartDayChanged = true,
         };
+        Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();
     }
@@ -162,6 +163,7 @@
     public async Task OnChangeLanguage()
     {
         Models.IsForChangeLanguage = true;
+        Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();
     }
@@ -215,6 +217,7 @@
     public async Task OnWeekInserted(string value)
     {
         Models.InsertedWeek = value;
+        Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();
     }
@@ -222,6 +225,7 @@
     public async Task OnClearWeeks()
     {
         Models.IsForWeeksClear = true;
+        Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();
     }
@@ -229,6 +233,7 @@
     public async Task OnClearFoods()
     {
         Models.IsForFoodsClear = true;
+        Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();
     }

@@ -167,7 +167,7 @@
 
     private async Task ManageWeeksList()
     {
-        CurrentTime = CurrentTime.AddDays(11);
+        //CurrentTime = CurrentTime.AddDays(11);
 
         if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].WeeksStartDay.Date.Date).TotalDays > 27)
         {
@@ -194,6 +194,8 @@
             }
 
         }
+
+        await OnWeeksListChange();
 
     }
 
@@ -348,11 +350,11 @@
 
     public async Task BindData()
     {
-        // var selectedLang = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "SelectedLang");
-        // if (selectedLang != null)
-        // {
-        //     SelectedLang = selectedLang;
-        // }
+        var selectedLang = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "SelectedLang");
+        if (selectedLang != null)
+        {
+            SelectedLang = selectedLang;
+        }
 
         var responceWeek = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "WeeksList");
         if(responceWeek != null)
@@ -408,28 +410,36 @@
                 if (week != 0)
                 {
                     var theDay = WeeksList[week - 1].GetDays()[dayIndex];
-                    var thisDay = WeeksList[week].GetDays()[dayIndex];
-                    thisDay.Braekfast = theDay.Braekfast;
-                    thisDay.Lunch = theDay.Lunch;
-                    thisDay.Dinner = theDay.Dinner;
+                    var targetDay = WeeksList[week].GetDays()[dayIndex];
+                    targetDay.Braekfast = theDay.Braekfast;
+                    targetDay.Lunch = theDay.Lunch;
+                    targetDay.Dinner = theDay.Dinner;
+                    targetDay.IsCreateBtnNeeded = theDay.IsCreateBtnNeeded;
+                    targetDay.IsDayBlank = theDay.IsDayBlank;
+                    targetDay.IsDayCollapsed = theDay.IsDayCollapsed;
+                    targetDay.IsDayPassed = theDay.IsDayPassed;
 
                 }
                 else
                 {
-                    var thisDay = WeeksList[week].GetDays()[dayIndex];
-                    thisDay.Braekfast = new Meal();
-                    thisDay.Lunch = new Meal();
-                    thisDay.Dinner = new Meal();
+                    var targetDayNextWeek = WeeksList[week].GetDays()[dayIndex];
+                    targetDayNextWeek.Braekfast = new Meal();
+                    targetDayNextWeek.Lunch = new Meal();
+                    targetDayNextWeek.Dinner = new Meal();
+                    targetDayNextWeek.IsCreateBtnNeeded = false;
+                    targetDayNextWeek.IsDayBlank = false;
+                    targetDayNextWeek.IsDayCollapsed = false;
+                    targetDayNextWeek.IsDayPassed = false;
                 }
 
 
 
 
-                //WeeksList[week].GetDays()[dayIndex] = WeeksList[week - 1] != null ? WeeksList[week - 1].GetDays()[dayIndex] : null;
+                WeeksList[week].GetDays()[dayIndex] = WeeksList[week - 1] != null ? WeeksList[week - 1].GetDays()[dayIndex] : null;
             }
         }
 
-        //await OnWeeksListChange();
+        await OnWeeksListChange();
         StateHasChanged();
     }
 
@@ -453,65 +463,71 @@
 
     }
 
-    public async Task onClearLocalStorage()
-    {
-        await JSRuntime.InvokeVoidAsync("localStorage.clear");
+    // public async Task onClearLocalStorage()
+    // {
+    //     await JSRuntime.InvokeVoidAsync("localStorage.clear");
 
-        // await OnSetLanguage(Language.Persian);
+    //     // await OnSetLanguage(Language.Persian);
 
-        // await ManageWeeksList();
+    //     // await ManageWeeksList();
 
-        // await IsMealPassed();
+    //     // await IsMealPassed();
 
-        // FoodList = new List<FoodCategory>();
-    }
+    //     // FoodList = new List<FoodCategory>();
+    // }
 
 
     public async Task OnModelsChange(Models models)
     {
         Models = models;
 
-        if(Models.IsFoodEatenChanged)
+        if(Models.IsActionNeeded)
         {
-            await OnFoodIsEaten();
+            if(Models.IsFoodEatenChanged)
+            {
+                await OnFoodIsEaten();
 
-            Models.IsFoodEatenChanged = false;
-        };
+                Models.IsFoodEatenChanged = false;
+            };
 
-        if(Models.StartDay.IsStartDayChanged)
-        {
-            OnStartDayChanged();
+            if(Models.StartDay.IsStartDayChanged)
+            {
+                OnStartDayChanged();
 
-            Models.StartDay.IsStartDayChanged = false;
-        };
+                Models.StartDay.IsStartDayChanged = false;
+            };
 
-        if (Models.InsertedWeek != null && Models.InsertedWeek != string.Empty)
-        {
-            await InsertNewWeek(Models.InsertedWeek);
+            if (Models.InsertedWeek != null && Models.InsertedWeek != string.Empty)
+            {
+                await InsertNewWeek(Models.InsertedWeek);
 
-            Models.InsertedWeek = string.Empty;
-        };
+                Models.InsertedWeek = string.Empty;
+            };
 
-        if(Models.IsForWeeksClear)
-        {
-            await onClearWeeksLsit();
+            if(Models.IsForWeeksClear)
+            {
+                await onClearWeeksLsit();
 
-            Models.IsForWeeksClear = false;
-        };
+                Models.IsForWeeksClear = false;
+            };
 
-        if(Models.IsForFoodsClear)
-        {
-            await onClearFoodsLsit();
+            if(Models.IsForFoodsClear)
+            {
+                await onClearFoodsLsit();
 
-            Models.IsForFoodsClear = false;
-        };
+                Models.IsForFoodsClear = false;
+            };
 
-        if(Models.IsForChangeLanguage)
-        {
-            await OnSetLanguage();
+            if(Models.IsForChangeLanguage)
+            {
+                await OnSetLanguage();
 
-            Models.IsForChangeLanguage = false;
-        };
+                Models.IsForChangeLanguage = false;
+            };
+
+            Models.IsActionNeeded = false;
+        }
+
     }
 
     public async Task OnSelectedLangChange(string lang = null)
