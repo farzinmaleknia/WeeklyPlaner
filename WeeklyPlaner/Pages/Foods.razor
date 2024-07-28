@@ -10,30 +10,32 @@
         </button>
         <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-undo f-size24" aria-hidden="true"></i></button>
     </div>
-    @foreach (var category in FoodList)
-    {
-        <div class="mb-5">
-            <div class="food-category-group d-flex justify-content-start">
-                <span class="category-title f-size24">@(category.Title)</span>
-                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
-                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
-                <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-undo f-size16" aria-hidden="true"></i></button>
-                <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
-            </div>
-            <div>
-                @foreach (var food in category.foods)
-                {
-                    @if(!food.IsEatenRecently)
+    <div class="row">
+        @foreach (var category in FoodList)
+        {
+            <div class="col-md-6 padding-x-10 mb-5">
+                <div class="food-category-group d-flex justify-content-start">
+                    <span class="category-title f-size24">@(category.Title)</span>
+                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-undo f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
+                </div>
+                <div>
+                    @foreach (var food in category.foods)
                     {
-                        <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
-                            @(food.Name)
-                            <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
-                        </button>                        
+                        @if(!food.IsEatenRecently)
+                        {
+                            <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
+                                @(food.Name)
+                                <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
+                            </button>                        
+                        }
                     }
-                }
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 
 </div>
 

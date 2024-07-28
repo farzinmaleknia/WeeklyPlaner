@@ -1,5 +1,5 @@
 ﻿
-<div id="WeekCarousel" class="carousel slide mb-5">
+<div id="WeekCarousel" class="carousel slide mb-5 p-2">
     <div class="carousel-inner">
 
         @foreach (var week in WeeksList)
@@ -97,11 +97,12 @@
                         </button>
                     </div>
                 </div> *@
-
-                @foreach (var day in week.GetDays())
-                {
-                    <Days Models="Models" Week="week" Day="day" Language="Language" OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" />
-                }
+                <div class="row row">
+                    @foreach (var day in week.GetDays())
+                    {
+                        <Days Models="Models" Week="week" Day="day" Language="Language" OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" />
+                    }
+                </div>
             </div>
 
 

@@ -1,7 +1,7 @@
 ﻿
 
-<div class="col-12  padding-x-0">
-    <div class="card days">
+<div class="col-xl-3 col-lg-4 col-md-6  d-flex justify-content-center padding-x-0" style="height: min-content">
+    <div class="card days w-100">
         <span class="card-img-top just-bg-@(Week.Color) text-center f-size36 days-title  my-sticky" data-bs-toggle="collapse" @onclick="() =>  OnCollapsDay()" href="#@($"{Week.Id}{Day.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}")">@(Day.Title)</span>
         <div id="@($"{Week.Id}{Day.Id}")" class="collapse @(!Day.IsDayCollapsed ? "show" : "")">
             <div class="card-body padding-x-0">

@@ -131,7 +131,7 @@
 
 
 .days {
-    border: 2px solid lightgray;
+    border: 2px solid lightgray; 
 }
 
 .days-img-top {
@@ -665,3 +665,18 @@
         background-color: #A25D82;
         color: white !important;
     }
+
+
+/*------------------------------- @media --------------------------------------*/
+
+
+
+@media only screen and (min-width: 540px) {
+
+    div .carousel-item.col-12 {
+        padding-right: 20px !important;
+        padding-left: 20px !important;
+    }
+}
+
+

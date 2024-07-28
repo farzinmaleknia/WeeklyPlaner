@@ -26,6 +26,7 @@
 
 @code {
     private PersianPhrases PersianPhrases = new PersianPhrases();
+    private EnglishPhrases EnglishPhrases = new EnglishPhrases();
 
     private Language Language { get; set; }
 
@@ -423,9 +424,9 @@
                 else
                 {
                     var targetDayNextWeek = WeeksList[week].GetDays()[dayIndex];
-                    targetDayNextWeek.Braekfast = new Meal();
-                    targetDayNextWeek.Lunch = new Meal();
-                    targetDayNextWeek.Dinner = new Meal();
+                    targetDayNextWeek.Braekfast = new Meal(){ TitleFa = PersianPhrases.Breakfast, TitleEn = EnglishPhrases.Breakfast, Title = SelectedLang == PersianPhrases.Persian? PersianPhrases.Breakfast : EnglishPhrases.Breakfast, }; 
+                    targetDayNextWeek.Lunch = new Meal() { TitleFa = PersianPhrases.Lunch, TitleEn = EnglishPhrases.Lunch, Title = SelectedLang == PersianPhrases.Persian ? PersianPhrases.Lunch : EnglishPhrases.Lunch, };
+                    targetDayNextWeek.Dinner = new Meal() { TitleFa = PersianPhrases.Dinner, TitleEn = EnglishPhrases.Dinner, Title = SelectedLang == PersianPhrases.Persian ? PersianPhrases.Dinner : EnglishPhrases.Dinner, };
                     targetDayNextWeek.IsCreateBtnNeeded = false;
                     targetDayNextWeek.IsDayBlank = false;
                     targetDayNextWeek.IsDayCollapsed = false;
