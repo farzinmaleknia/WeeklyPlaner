@@ -26,6 +26,13 @@
     font-family: 'my-font';
 }
 
+.grid {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(350px,1fr));
+    grid-auto-rows: 20px;
+}
+
 .my-disabled {
     pointer-events: none;
     opacity: 0.6;
@@ -43,6 +50,16 @@
 .padding-x-10 {
     padding-left: 10px !important;
     padding-right: 10px !important;
+}
+
+.padding-x-20 {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.padding-x-30 {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
 }
 
 .padding-t-5 {
@@ -88,13 +105,17 @@
     top: 0;
 }
 
+.invalid {
+    border: 1px solid red;
+}
+
 .header {
     height: 110px;
     align-items: center;
     /*background-image: url('../images/new project.png');*/
     background-color: #2e7396;
     color: white;
-    font-size : 24px;
+    font-size: 24px;
 }
 
 .headers-title {
@@ -132,6 +153,7 @@
 
 .days {
     border: 2px solid lightgray; 
+
 }
 
 .days-img-top {
@@ -296,9 +318,6 @@
 
 /*------------------------------- BG & Colors --------------------------------------*/
 
-.top-bg {
-    background-color: #5096af;
-}
 
 .my-txt-blue {
     color: #2e7396;
@@ -676,6 +695,55 @@
     div .carousel-item.col-12 {
         padding-right: 20px !important;
         padding-left: 20px !important;
+    }
+}
+
+
+
+/*------------------------------- @Spinner --------------------------------------*/
+
+.loading {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    right: 0;
+    background: rgba(0,0,0,0.3);
+}
+
+    .form-progressing .loading-spinner {
+        display: inline-block;
+        width: 80px;
+        height: 80px;
+    }
+
+.loader {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #5D5FA2;
+    position: relative;
+}
+
+    .loader:before,
+    .loader:after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        inset: 0;
+        background: #fff;
+        transform: rotate(0deg) translate(30px);
+        animation: rotate 1s ease infinite;
+    }
+
+    .loader:after {
+        animation-delay: 0.5s
+    }
+
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg) translate(30px)
     }
 }
 

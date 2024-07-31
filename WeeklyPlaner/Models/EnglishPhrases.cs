@@ -92,6 +92,10 @@ namespace WeeklyPlaner.Models
         {
             return $"Are you sure you want to delete {name} as {entity}";
 
-        }
-    }
+		}
+		public string FieldValidation(string entity)
+		{
+			return $"The {entity} must be entered";
+		}
+	}
 }

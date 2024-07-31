@@ -1,6 +1,7 @@
 ﻿
 
 <EditForm Model="GroceryModel" OnValidSubmit="OnValueChanged">
+	<DataAnnotationsValidator />
 	<div class="mb-1">
 		<label for="groceryName" class="form-label">@(Language.NeededGrocery)</label>
 		<InputText id="groceryName" class="form-control" Value="@GroceryModel.Name" ValueChanged="OnNameInputChanged" ValueExpression="() => GroceryModel.Name" />
@@ -16,6 +17,7 @@
 			</button>
 		</div>
 	</div>
+
 </EditForm>
 
 @code {

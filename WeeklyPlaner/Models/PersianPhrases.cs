@@ -92,7 +92,11 @@ namespace WeeklyPlaner.Models
         {
             return $"آیا از حذف {entity}‌ی {name} مطمئن هستی؟";
 
-        }
+		}
+		public string FieldValidation(string entity)
+		{
+			return $"وارد کردن {entity} لازم هست";
+		}
 
-    }
+	}
 }

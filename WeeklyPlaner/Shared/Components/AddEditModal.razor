@@ -9,19 +9,13 @@
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
             <EditForm Model="Model" OnValidSubmit="OnValueChanged">
+                <DataAnnotationsValidator />
                 <div class="modal-body">
                     @(Body)
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
-                    @if (IsForAddMeal)
-                    {
-                        <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(Language.Save)</button>
-                    }
-                    else
-                    {
-                        <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">@(Language.Save)</button>
-                    }
+                    <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(Language.Save)</button>
                 </div>
             </EditForm>
         </div>
@@ -51,17 +45,12 @@
     public bool IsForAdd { get; set; }
 
     [Parameter]
-    public bool IsForAddMeal { get; set; }
-
-    [Parameter]
     public EventCallback ValueChangedEventHandler { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        IsForAddMeal = false;
     }
 
     private async Task OnValueChanged()

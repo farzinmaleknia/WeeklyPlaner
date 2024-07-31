@@ -3,7 +3,7 @@
 @inject IJSRuntime JSRuntime
 @inject HttpClient http
 
-<div dir="@(SelectedLang == Language.Persian? "rtl" : "ltr")">
+<div id="body" dir="@(SelectedLang == Language.Persian? "rtl" : "ltr")">
     <Header Language="Language" />
 
     <div class="container-fluid">
@@ -40,6 +40,8 @@
 
     public DateTime CurrentTime { get; set; }
 
+    private bool NeedToCollapse { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,6 +53,8 @@
         FoodList = new List<FoodCategory>();
 
         CurrentTime = DateTime.Now;
+
+        await SetNeedToCollapse();
 
         await BindData();
 
@@ -112,8 +116,28 @@
         //         food.IsEatenRecently = false;
         //     }
         // }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await OnGridloaded();
+        }
+    }
+
+
+    private async Task SetNeedToCollapse()
+    {
+        var width = await JSRuntime.InvokeAsync<int>("getElementDimension");
+
+        if (width != null && width < 774)
+        {
+            NeedToCollapse = true;
+        }
 
     }
+
 
     private async Task OnSetLanguage(string lang = null)
     {
@@ -281,7 +305,8 @@
                 foreach (var meal in day.GetMeals())
                 {
                     meal.GroceryEditable = false;
-                    if(meal.Food.IsEatenRecently)
+                    meal.IsMealCollapsed = false;
+                    if(meal.Food.IsEatenRecently && NeedToCollapse)
                     {
                         meal.IsMealCollapsed = true;
                     }
@@ -333,16 +358,18 @@
 
                 }
 
-                if (!day.IsDayCollapsed)
-                {
-                    var list = day.GetMeals().Where(m => m.Food.Name == null).ToList();
+                day.IsDayCollapsed = false;
 
-                    if (list.Count == 3 && day.IsDayPassed)
+                var list = day.GetMeals().Where(m => m.Food.Name == null).ToList();
+
+                if (list.Count == 3 && day.IsDayPassed)
+                {
+                    if(NeedToCollapse)
                     {
                         day.IsDayCollapsed = true;
-                        day.IsDayBlank = true;
-                    }                    
-                }
+                    }
+                    day.IsDayBlank = true;
+                }      
 
                 dayOfWeek++;
             }
@@ -442,6 +469,11 @@
 
         await OnWeeksListChange();
         StateHasChanged();
+    }
+
+    public async Task OnGridloaded()
+    {
+        await JSRuntime.InvokeVoidAsync("resizeAllGridItems");
     }
 
     public async Task onClearWeeksLsit()

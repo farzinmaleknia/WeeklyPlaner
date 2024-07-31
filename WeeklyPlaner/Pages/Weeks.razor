@@ -1,4 +1,6 @@
-﻿
+﻿@inject IJSRuntime JSRuntime
+
+
 <div id="WeekCarousel" class="carousel slide mb-5 p-2">
     <div class="carousel-inner">
 
@@ -44,7 +46,7 @@
             <div class="carousel-item @(week.Title == Language.CurrentWeek ? "active": "") col-12 padding-x-0">
                 <div class="mb-3">
                     <div class="my-2 d-flex justify-content-between">
-                        <button class="border-0" type="button" data-bs-target="#WeekCarousel" data-bs-slide="next">
+                        <button class="border-0" type="button" data-bs-target="#WeekCarousel" data-bs-slide="next" @onclick="OnGridChange">
                             <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "next" : "prev")-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -63,7 +65,7 @@
 
                         </div>
 
-                        <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev">
+                        <button class="border-0 " type="button" data-bs-target="#WeekCarousel" data-bs-slide="prev" @onclick="OnGridChange">
                             <span class="carousel-control-@(Language.SelectedLang == Language.Persian? "prev" : "next")-icon text-dark " aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
@@ -97,7 +99,7 @@
                         </button>
                     </div>
                 </div> *@
-                <div class="row row">
+                <div class="grid">
                     @foreach (var day in week.GetDays())
                     {
                         <Days Models="Models" Week="week" Day="day" Language="Language" OnWeeksListChangeWeeks="OnWeeksListChangeWeeks" OnModelsChangeWeeks="OnModelsChangeWeeks" />
@@ -156,6 +158,11 @@
         WeekCounter = 0;
     }
 
+    public async Task OnGridChange()
+    {
+        await JSRuntime.InvokeVoidAsync("resizeAllGridItems");
+    }
+
     public async Task OnModelsChangeWeeks(Models models)
     {
         Models = models;
@@ -166,26 +173,4 @@
     {
         await OnWeeksListChange.InvokeAsync(WeeksList);
     }
-
-
-
-    // public async Task<List<Day>> FixingDaysList(Week week)
-    // {
-    //     List<Day> list = week.GetDays();
-    //     var day = list[0];
-
-    //     while (list[0].Title != StartDay.Persian)
-    //     {
-    //         day = list[0];
-    //         list.RemoveAt(0);
-    //         list.Insert(list.Count, day);
-    //     }
-
-    //     foreach (var item in list)
-    //     {
-    //         Console.WriteLine(item.Title);
-    //     }
-
-    //     return list;
-    // }
 }

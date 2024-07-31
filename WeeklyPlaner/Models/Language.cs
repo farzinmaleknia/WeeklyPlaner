@@ -1,4 +1,5 @@
-﻿using WeeklyPlaner.Pages;
+﻿using System.Xml.Linq;
+using WeeklyPlaner.Pages;
 
 namespace WeeklyPlaner.Models
 {
@@ -101,12 +102,16 @@ namespace WeeklyPlaner.Models
         {
             string text = SelectedLang == PersianPhrases.Persian ? PersianPhrases.SureDelete(entity, name) : EnglishPhrases.SureDelete(entity, name);
             return text;
-            return $"آیا از حذف {entity}‌ی {name} مطمئن هستی؟";
-        }
+		}
+		public string FieldValidation(string entity)
+		{
+			string text = SelectedLang == PersianPhrases.Persian ? PersianPhrases.FieldValidation(entity) : EnglishPhrases.FieldValidation(entity);
+			return text;
+		}
 
-        public Language(string selectedLang)
-        {
-            SelectedLang = selectedLang;
+		public Language(string selectedLang)
+		{
+			SelectedLang = selectedLang;
 
             LanguageMean = selectedLang == PersianPhrases.Persian ? PersianPhrases.LanguageMean : EnglishPhrases.LanguageMean;
 

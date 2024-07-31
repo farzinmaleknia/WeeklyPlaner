@@ -22,7 +22,7 @@
 </ConfirmationModal>
 
 <!-- ADD/Edit Food -->
-<AddEditModal Id="addEditFoodModal" Entity="@(Language.Food)" IsForAdd="true" Language="Language" IsForAddMeal="true" Model="Models.FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
+<AddEditModal Id="addEditFoodModal" Entity="@(Language.Food)" IsForAdd="true" Language="Language" Model="Models.FoodModel" ValueChangedEventHandler="OnNewFoodSubmited">
     <Body>
         <label for="foodname" class="form-label">@(Language.Name)</label>
         <InputText id="foodname" class="form-control" @bind-Value=(Models.FoodModel.Name) />

@@ -1,0 +1,63 @@
+﻿@inject IJSRuntime JsRuntime
+
+
+<div class="loading"
+        style="
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        right: unset;
+    ">
+    <div class="d-flex justify-content-center align-items-center" style="min-height: 100px; height: 100%;">
+        <div class="text-center text-white">
+
+            <div class="loader"></div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    // ********************
+    #region Properties
+
+    private string Height { get; set; }
+    private string Width { get; set; }
+    private string Top { get; set; }
+    private string Right { get; set; }
+    private string Left { get; set; }
+    #endregion
+
+    // ********************
+    #region Events
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Height = "100%";
+        Width = "100%";
+        Top = "0";
+        Right = "unset";
+        Left = "0";
+
+        // string elementTag = (Id != null) ? $"#{Id}" : "body";
+
+        // Dictionary<string, string> displayDimention = await JsRuntime.InvokeAsync<Dictionary<string, string>>("getElementDimension", elementTag);
+
+        // Width = $"{displayDimention["width"]}px";
+        // Height = $"{displayDimention["height"]}px";
+
+        // if (Id != null)
+        // {
+        //     Top = $"{displayDimention["top"]}px";
+        //     Left = $"{displayDimention["left"]}px";
+        //     //Right = $"{displayDimention["right"]}px";
+        // }
+
+
+
+        //Console.WriteLine($"{elementTag} => width : {Width} - Height : {Height} - Top : {Top} - Right : {Right} - Left : {Left}");
+    }
+
+    #endregion
+}
