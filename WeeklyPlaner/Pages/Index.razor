@@ -68,18 +68,9 @@
 
         Models = new Models(Language.SelectedLang);
 
-        // if(WeeksList.Count == 0)
-        // {
-        //     var responceWeekSampleData = await http.GetStringAsync("/sample-data/WeeksSampleData.json");
-
-        //     WeeksList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Week>>(responceWeekSampleData);
-
-
-        // }
-
-
-
         await ManageWeeksList();
+
+        await FoodListRefresh();
 
         await IsMealPassed();
 
@@ -88,34 +79,6 @@
             await BindSampleFoodList();
         }
 
-        // foreach (var week in WeeksList)
-        // {
-        //     foreach (var day in week.GetDays())
-        //     {
-        //         foreach (var meal in day.GetMeals())
-        //         {
-        //             foreach (var cat in FoodList)
-        //             {
-        //                 var food = cat.foods.FirstOrDefault(f => f.Name == meal.Food.Name);
-        //                 if(food != null)
-        //                 {
-        //                     meal.Food.CategoryId = food.CategoryId;
-        //                     Console.WriteLine("yes");
-        //                     break;
-        //                 }
-        //             }
-
-        //         }
-        //     }
-        // }
-
-        // foreach (var cat in FoodList)
-        // {
-        //     foreach (var food in cat.foods)
-        //     {
-        //         food.IsEatenRecently = false;
-        //     }
-        // }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -181,6 +144,18 @@
         }
 
         await OnSelectedLangChange();
+    }
+
+    private async Task FoodListRefresh()
+    {
+        foreach (var cat in FoodList)
+        {
+            foreach (var food in cat.foods)
+            {
+                food.IsSelectedForDel = false;
+            }
+        }
+
     }
 
     private async Task BindSampleFoodList()

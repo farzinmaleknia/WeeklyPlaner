@@ -113,7 +113,7 @@
     height: 110px;
     align-items: center;
     /*background-image: url('../images/new project.png');*/
-    background-color: #2e7396;
+    background-color: #5D5FA2;
     color: white;
     font-size: 24px;
 }
@@ -709,7 +709,8 @@
     z-index: 9999;
     top: 0;
     right: 0;
-    background: rgba(0,0,0,0.3);
+    background: #fff;
+    
 }
 
     .form-progressing .loading-spinner {
@@ -732,7 +733,7 @@
         position: absolute;
         border-radius: 50%;
         inset: 0;
-        background: #fff;
+        background: #5D5FA2;
         transform: rotate(0deg) translate(30px);
         animation: rotate 1s ease infinite;
     }

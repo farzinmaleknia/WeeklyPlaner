@@ -41,7 +41,7 @@ namespace WeeklyPlaner.Models
 
         public List<string> GetColors()
         {
-			return new List<string>() { "skyblue", "darkpink", "darkpurple", "mustard", "orange" };
+			return new List<string>() { "skyblue", "darkpink", "blue", "mustard", "orange" };
 
 		}
 

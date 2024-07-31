@@ -20,7 +20,6 @@ function resizeGridItem(item) {
     rowGap = parseInt(window.getComputedStyle(grid).getPropertyValue('grid-row-gap'));
     rowSpan = Math.ceil((item.querySelector('.content').getBoundingClientRect().height + rowGap) / (rowHeight + rowGap));
     item.style.gridRowEnd = "span " + rowSpan;
-    console.log(rowSpan)
 }
 
 async function resizeAllGridItems() {

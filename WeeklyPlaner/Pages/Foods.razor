@@ -1,14 +1,14 @@
 ﻿
 <div class="mb-3 padding-x-0">
     <div class="mb-3">
-        <span class=" f-size36 food-title just-bg-blue text-center">@(Language.Foods)</span>
+        <span class=" f-size36 food-title just-bg-darkpurple text-center">@(Language.Foods)</span>
     </div>
 
     <div class="d-flex justify-content-between padding-x-30">
-        <button class="btn my-bg-blue new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
+        <button class="btn my-bg-darkpurple new-meal-buttons mb-3" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(true)">
             @(Language.NewCategory)<i class="fa fa-plus f-size16 mx-1" aria-hidden="true"></i>
         </button>
-        <button class="btn my-bg-blue-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-undo f-size24" aria-hidden="true"></i></button>
+        <button class="btn my-bg-darkpurple-outline border-0 food-ref-btn" @onclick="() => OnFoodListRefresh()"><i class="fa fa-undo f-size24" aria-hidden="true"></i></button>
     </div>
     <div class="row">
         @foreach (var category in FoodList)
@@ -16,17 +16,17 @@
             <div class="col-md-6 mb-5  padding-x-30">
                 <div class="food-category-group d-flex justify-content-start">
                     <span class="category-title f-size24">@(category.Title)</span>
-                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
-                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
-                    <button class="btn my-bg-blue-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-undo f-size16" aria-hidden="true"></i></button>
-                    <button class="btn my-bg-blue-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-darkpurple-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditFoodModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-plus f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-darkpurple-outline border-0" data-bs-toggle="modal" data-bs-target="#addEditCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-pen f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-darkpurple-outline border-0" @onclick="() => OnFoodListRefresh(category)"><i class="fa fa-undo f-size16" aria-hidden="true"></i></button>
+                    <button class="btn my-bg-darkpurple-outline border-0" data-bs-toggle="modal" data-bs-target="#DelConfirmCategoryModal" @onclick="() => passingCategory(false, category)"><i class="fa fa-minus f-size16" aria-hidden="true"></i></button>
                 </div>
                 <div>
                     @foreach (var food in category.foods)
                     {
                         @if(!food.IsEatenRecently)
                         {
-                            <button class="btn my-bg-blue@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
+                            <button class="btn my-bg-darkpurple@(!food.IsSelectedForDel? "-outline" : "") m-1 f-size18" @onclick="() => OnFoodDelete(category, food)">
                                 @(food.Name)
                                 <i class="fa fa-times f-size16 food-name-icon @(!food.IsSelectedForDel ? "d-none" : "")" aria-hidden="true"></i>
                             </button>                        
