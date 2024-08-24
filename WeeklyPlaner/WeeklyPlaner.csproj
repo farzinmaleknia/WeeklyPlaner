@@ -33,4 +33,10 @@
     <None Include="Shared\Components\Loading.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Shared\Components\FoodsList.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

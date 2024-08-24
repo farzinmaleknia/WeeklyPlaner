@@ -1,4 +1,4 @@
-﻿<!-- Setting Modal -->
+﻿ <!-- Setting Modal -->
 <Settings FoodList="FoodList" WeeksList="WeeksList" Models="Models" Language="Language" OnModelsChangeModals="OnModelsChangeModals" />
 
 <!-- ADD/Edit meal Modal -->
@@ -8,13 +8,13 @@
 <ConfirmationModal Id="DelConfirmMealModal" Title="@(Language.WarningByMark)" Language="Language" Color="@(Models.DayModel.color)" ValueChangedEventHandler="OnDeleteMeal">
     <Body>
         <span>
-            @(Language.SureDeleteMeal(Models.MealModel.Food.Name, Models.MealModel.Title))
+            @(Language.SureDeleteMeal(Models.MealModel.Foods, Models.MealModel.Title))
         </span>
     </Body>
 </ConfirmationModal>
 
 <!-- CategoryDeleteConfirmation Modal -->
-<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(Language.WarningByMark)" Language="Language" Color="blue" ValueChangedEventHandler="OnDeleteCategory">
+<ConfirmationModal Id="DelConfirmCategoryModal" Title="@(Language.WarningByMark)" Language="Language" Color="darkpurple" ValueChangedEventHandler="OnDeleteCategory">
     <Body>
         <span>@(Language.SureDelete(Language.Category, Models.CategoryModel.Title))</span>
 
@@ -47,9 +47,18 @@
             <span class="">@(Language.HowToRefreshFoodsList)</span>
         </div>
         <div class="d-flex justify-content-center mt-5">
-            <i class="fa fa-undo my-txt-blue f-size36" aria-hidden="true"></i>
+            <i class="fa fa-undo my-txt-darkpurple f-size36" aria-hidden="true"></i>
         </div>
 
+    </Body>
+</InfoModal>
+
+<!-- StartDayChangeGuid -->
+<InfoModal Language="Language" Id="StartDayChangeGuid">
+    <Body>
+        <div class="">
+            <span class="">@(Language.StartDayChangeGuid)</span>
+        </div>
     </Body>
 </InfoModal>
 
@@ -93,7 +102,7 @@
         if (value)
         {
             var meal = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Id == Models.DayModel.Id).GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
-            meal.Food = new Food();
+            meal.Foods = new List<Food>();
             meal.Groceries = new List<Grocery>();
 
             await OnWeeksListChangeModals();

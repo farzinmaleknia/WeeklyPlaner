@@ -1,34 +1,21 @@
-﻿
+﻿@inject IJSRuntime JSRuntime
 
 <div class="card">
-    @if (Meal.IsMealPassed)
+@*     @if (Meal.IsMealPassed)
     {
         <div class="meal-passed opacity-bg-@(Week.Color) f-size20">
             <div style="opacity: 1;">
                 <button class="btn my-bg-@(Week.Color) btn-sm meal-collapse-btn" style="@(Language.SelectedLang == Language.Persian ? "left: 0": "right: 0")" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
                     <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? Language.SelectedLang == Language.Persian ? "left": "right" : "down")" aria-hidden="true"></i>
                 </button>
-                @if(!Meal.IsMealCollapsed)
-                {
-                    <div class="bottom-40" style="@(Language.SelectedLang == Language.Persian? "right":"left") : 16px;">
-                        <label for="isEatenRecently" class="form-check-label f-size20">@(Language.DidYouEatIt)</label>
-                        <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.Food.IsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.Food.IsEatenRecently)" />
-                    </div>
-                    @if (Meal.Food.IsEatenRecently)
-                    {
-                        <div class="bottom-8" style="@(Language.SelectedLang == Language.Persian? "right" :"left") : 16px;">
-                            <span class="f-size18">@(Language.FoodWillEarase)</span>
-                            <i class="fa fa-info margin-l-5 my-txt-blue" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
-                        </div>
-                    }
-                }
+
             </div>
         </div>
-    }
+    } *@
     <div class="card-img-top bg-light days-img-top rounded border-0 d-flex justify-content-between">
         <span class="f-size36 meal-title" data-bs-toggle="collapse" @onclick="() =>  OnCollapseMeal()" href="#@($"{Week.Id}{Day.Id}{Meal.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}{Meal.Id}")">
             @(Meal.Title)
-            <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? Language.SelectedLang == Language.Persian ? "left": "right"  : "down") @(Meal.IsMealPassed ? "d-none" : string.Empty)" aria-hidden="true"></i>
+            <i class="fa fa-chevron-@(Meal.IsMealCollapsed ? Language.SelectedLang == Language.Persian ? "left": "right"  : "down") " aria-hidden="true"></i>
         </span>
         @if (!Meal.IsMealPassed)
         {
@@ -38,9 +25,12 @@
         }
     </div>
     <div id="@($"{Week.Id}{Day.Id}{Meal.Id}")" class="collapse @(!Meal.IsMealCollapsed ? "show" : "")">
-        <div class="card-body bg-light padding-t-5 @(Meal.IsMealPassed? "opacity-06" : "")">
+        <div class="card-body bg-light padding-t-5">
             <div class="row mx-auto">
-                <div class="col padding-x-0 @(Meal.IsMealPassed ? "padding-b-40" : "")">
+
+                <FoodsList Language="Language" MealModel="Meal" Week="Week" Day="Day" Models="Models" WeekColor="@(Week.Color)" OnModelsChangeMeals="OnModelsChangeMeals" OnWeeksListChangeMeals="OnWeeksListChangeMeals" OnEditGeroceries="OnEditGeroceries" />
+
+@*                 <div class="col padding-x-0 @(Meal.IsMealPassed ? "padding-b-40" : "")">
                     <button class="btn btn-sm my-bg-@(Week.Color)-outline m-auto width-98 bootstrap-buttons food-name f-size24 "
                             @onclick="() => passingData(false, Meal)"
                             data-bs-toggle="modal" data-bs-target="#addEditMealModal">
@@ -55,8 +45,22 @@
                             <i class="fa fa-cart-plus" aria-hidden="true"></i>
                         </button>
                     </div>                    
-                }
+                } *@
 
+                @if (Meal.IsMealPassed && !Meal.IsMealCollapsed)
+                {
+                    <div class="" style="">
+                        <label for="isEatenRecently" class="form-check-label text-black f-size20">@(Language.DidYouEatIt)</label>
+                        <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(Meal.IsFoodsEatenRecently)" @onclick="() => OnFoodEated()" checked="@(Meal.IsFoodsEatenRecently)" />
+                    </div>
+                    @if (Meal.IsFoodsEatenRecently)
+                    {
+                        <div class="" style="">
+                            <span class="f-size18 text-black">@(Language.FoodWillEarase)</span>
+                            <i class="fa fa-info margin-l-5 my-txt-@(Week.Color)" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#FoodSectionRefresh"></i>
+                        </div>
+                    }
+                }
 
                 @if (Meal.GroceryEditable)
                 {
@@ -72,12 +76,12 @@
                 }
 
 
-                <div class="col-12 f-size18 padding-x-0 pt-3">
-                    @if (Meal.Groceries != null && !Meal.IsMealPassed)
-                    {
-                        <GroceriesList MealModel="Meal" OnWeeksListChangeGeroceriesList="OnWeeksListChangeMeals" />
-                    }
-                </div>
+                @if (Meal.Groceries != null && !Meal.IsMealPassed)
+                {
+                    <div class="col-12 f-size18 padding-x-0 pt-3">
+                            <GroceriesList MealModel="Meal" OnWeeksListChangeGeroceriesList="OnWeeksListChangeMeals" />
+                    </div>
+                }
             </div>
         </div>
     </div>
@@ -158,9 +162,11 @@
             {
                 Id = meal.Id,
                 Title = meal.Title,
-                Food = new Food(meal.Food.Name),
+                Foods = new List<Food>(),
                 Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
             };
+
+            Models.MealModel.Foods.AddRange(meal.Foods);
         }
 
         await OnModelsChangeMeals();
@@ -173,11 +179,12 @@
         await OnWeeksListChangeMeals();
     }
 
-    private void OnEditGeroceries()
+    private async void OnEditGeroceries()
     {
         GroceryEditableHandler();
         Meal.GroceryEditable = !Meal.GroceryEditable;
         IsDataPassed = !Meal.GroceryEditable;
+
     }
 
     private void GroceryEditableHandler()
@@ -221,15 +228,21 @@
 
     public async Task OnFoodEated() 
     {
-        Meal.Food.IsEatenRecently = !Meal.Food.IsEatenRecently;
+        Meal.IsFoodsEatenRecently = !Meal.IsFoodsEatenRecently;
 
-        Models.FoodModel = new Food()
+        foreach (var food in Meal.Foods)
         {
-            Name = Meal.Food.Name,
-            Id = Meal.Food.Id,
-            CategoryId = Meal.Food.CategoryId,
-            IsEatenRecently = Meal.Food.IsEatenRecently,
-        };
+            food.IsEatenRecently = Meal.IsFoodsEatenRecently;
+            Models.FoodsModel.Add(new Food()
+            {
+                Name = food.Name,
+                Id = food.Id,
+                CategoryId = food.CategoryId,
+                IsEatenRecently = food.IsEatenRecently,
+
+            });
+        }
+
 
         Models.IsFoodEatenChanged = true;
         Models.IsActionNeeded = true;

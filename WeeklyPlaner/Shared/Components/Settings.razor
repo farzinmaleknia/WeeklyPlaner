@@ -10,7 +10,10 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex justify-content-between mb-3">
-                    <div class="f-size20">@(Language.WeeksStartDay)</div>
+                    <div class="f-size20">
+                        @(Language.WeeksStartDay)
+                        <i class="fa fa-info margin-l-5 my-txt-darkpurple" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#StartDayChangeGuid"></i>
+                    </div>
                     <div>
                         <button class="btn my-bg-darkpurple btn-sm dropdown-toggle meal-dropdown-btn mb-2 height-52 text-nowrap" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <span class="mx-1 f-size20">@(WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.Title : Language.ChooseDay)</span>
@@ -20,7 +23,10 @@
                             {
                                 @foreach (var day in WeeksList[0].GetDays())
                                 {
-                                    <li><a class="dropdown-item d-flex justify-content-start f-size20" @onclick="() => passingDay(day)">@(day.Title)</a></li>
+                                    if(day.TitleEn == CurrentTime.DayOfWeek.ToString() || day.TitleEn == CurrentTime.AddDays(1).DayOfWeek.ToString())
+                                    {
+                                        <li><a class="dropdown-item d-flex justify-content-start f-size20" @onclick="() => passingDay(day)">@(day.Title)</a></li>
+                                    }
                                 }
                             }
                         </ul>
@@ -74,6 +80,26 @@
                         </button>
                     </div>
                 </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <div class="mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.FoodListShare)</div>
+                    </div>
+                    <div class="mb-1">
+                        <button class="btn my-bg-darkpurple btn-sm height-52 mb-2 text-nowrap" type="button" @onclick="OnShareFoodList" data-bs-dismiss="modal">
+                            <span class="mx-1 f-size20">@(Language.Share)</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between  mb-3">
+                    <div class="mb-1">
+                        <div class=" f-size20 mb-1 padding-l-40">@(Language.FoodListInsert)</div>
+                    </div>
+                    <div class="mb-1">
+                        <button class="btn my-bg-darkpurple height-52 btn-sm mb-2 text-nowrap" type="button" data-bs-toggle="modal" data-bs-target="#FoodListInserModal">
+                            <span class="mx-1 f-size20">@(Language.Insert)</span>
+                        </button>
+                    </div>
+                </div>
                 <div class=" mb-3">
                     <div class="d-flex justify-content-between mb-1">
                         <div class=" f-size20 mb-1 padding-l-40">@(Language.WeeksClear)</div>
@@ -113,7 +139,10 @@
 
 
 <!-- Week Insert Modal -->
-<InsertModal Id="WeekInserModal" Models="Models" Language="Language" OnWeekInserted="OnWeekInserted" />
+<InsertModal Id="WeekInserModal" Models="Models" Value="@(Models.InsertedWeek)" PlaceHolder="@(Language.WeekInsertPlaceHolder)" Language="Language" OnInsertMethod="OnWeekInserted" />
+
+<!-- FoodList Insert Modal -->
+<InsertModal Id="FoodListInserModal" Models="Models" Value="@(Models.InsertedFoodList)" PlaceHolder="@(Language.FoodListInsertPlaceHolder)" Language="Language" OnInsertMethod="OnFoodListInserted" />
 
 
 
@@ -136,6 +165,8 @@
     [Parameter]
     public EventCallback<Models> OnModelsChangeModals { get; set; }
 
+    public DateTime CurrentTime { get; set; }
+
     public List<Grocery> GroceriesList { get; set; }
 
 
@@ -144,6 +175,8 @@
         await base.OnInitializedAsync();
 
         GroceriesList = new List<Grocery>();
+
+        CurrentTime = DateTime.Now;
     }
 
     public async Task passingDay(Day day)
@@ -214,9 +247,44 @@
 
     }
 
+    public async Task OnShareFoodList()
+    {
+
+        var foodList = new List<FoodCategory>();
+
+        foreach (var cat in FoodList)
+        {
+            foodList.Add(new FoodCategory()
+            {
+                Title = cat.Title,
+                foods = new List<Food>(),
+
+            });
+
+            var catfoods = foodList.FirstOrDefault(c => c.Title == cat.Title).foods;
+
+            foreach (var food in cat.foods)
+            {
+                catfoods.Add(new Food(food.Name));
+            }
+        }
+
+        var foodListString = Newtonsoft.Json.JsonConvert.SerializeObject(foodList);
+        await JSRuntime.InvokeVoidAsync("onCopyFromString", foodListString);
+
+    }
+
     public async Task OnWeekInserted(string value)
     {
         Models.InsertedWeek = value;
+        Models.IsActionNeeded = true;
+
+        await OnModelsChangeSettingsModal();
+    }
+
+    public async Task OnFoodListInserted(string value)
+    {
+        Models.InsertedFoodList = value;
         Models.IsActionNeeded = true;
 
         await OnModelsChangeSettingsModal();

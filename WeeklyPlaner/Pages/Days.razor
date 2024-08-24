@@ -2,7 +2,7 @@
 
 <div class="grid-item padding-x-0">
     <div class="content">
-        <div class="card days">
+        <div class="card days my-border-@(Week.Color)">
             <span class="card-img-top just-bg-@(Week.Color) text-center f-size36 days-title  my-sticky" data-bs-toggle="collapse" @onclick="() =>  OnCollapsDay()" href="#@($"{Week.Id}{Day.Id}")" aria-expanded="true" aria-controls="@($"{Week.Id}{Day.Id}")">@(Day.Title)</span>
             <div id="@($"{Week.Id}{Day.Id}")" class="collapse @(!Day.IsDayCollapsed ? "show" : "")">
                 <div class="card-body padding-x-0">
@@ -18,7 +18,7 @@
                             <div class="list-group-item padding-x-0">
                                 @foreach (var meal in Day.GetMeals())
                                 {
-                                    if (meal.Food.Name != null)
+                                    if (meal.Foods.Count > 0)
                                     {
                                         <Meals Models="Models" Week="Week" Language="Language" Day="Day" Meal="meal" OnWeeksListChangeDays="OnWeeksListChangeDays" OnModelsChangeDays="OnModelsChangeDays" />
                                     }
@@ -33,7 +33,7 @@
                         @if (Day.IsCreateBtnNeeded && !Day.IsDayPassed)
                         {
                             <div class="d-flex justify-content-center">
-                                <button class="btn my-bg-@(Week.Color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData(true)">
+                                <button class="btn my-bg-@(Week.Color) new-meal-buttons" data-bs-toggle="modal" data-bs-target="#addEditMealModal" @onclick="() => passingData()">
                                     @(Language.NewMeal)
                                 </button>
                             </div>
@@ -79,31 +79,20 @@
 
 
 
-    public async Task passingData(bool isAddMeal, Meal? meal = null)
+    public async Task passingData()
     {
+        Models.IsForAddMeal = true;
         Models.WeekId = Week.Id;
         Models.DayModel = new Day(Language.SelectedLang)
         {
             Title = Day.Title,
             color = Week.Color,
         };
-        Models.IsForAddMeal = isAddMeal;
 
-        if (Models.IsForAddMeal)
-        {
-            Models.MealModel = new Meal();
-            Models.GroceryModel = new Grocery();
-        }
-        else
-        {
-            Models.MealModel = new Meal()
-            {
-                Id = meal.Id,
-                Title = meal.Title,
-                Food = new Food(meal.Food.Name),
-                Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
-            };
-        }
+        Models.MealModel = new Meal();
+        Models.GroceryModel = new Grocery();
+
+
 
         await OnModelsChangeDays();
     }
@@ -127,7 +116,7 @@
     public async Task OnWeeksListChangeDays()
     {
 
-        await JSRuntime.InvokeVoidAsync("resizeAllGridItems");
+        //await JSRuntime.InvokeVoidAsync("resizeAllGridItems");
 
         await OnWeeksListChangeWeeks.InvokeAsync();
     }

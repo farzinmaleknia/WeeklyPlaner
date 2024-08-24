@@ -1,0 +1,138 @@
+﻿
+@foreach (var food in MealModel.Foods)
+{
+    <div class="@(MealModel.IsMealPassed && !MealModel.IsFoodsEatenRecently? "col-12" : "col-10") padding-x-0 ">
+        <button class="btn btn-sm my-bg-@(WeekColor)-outline m-auto width-98 bootstrap-buttons food-name f-size24 mb-1 @(MealModel.IsMealPassed ? "disabled opacity-06" : "")"
+            @onclick="() => passingData(MealModel)"
+                data-bs-toggle="modal" data-bs-target="#addEditMealModal">
+            @(food.Name)
+        </button>
+    </div>
+    @if (MealModel.IsMealPassed && MealModel.IsFoodsEatenRecently)
+    {
+        <div class="col-2 mt-2" style="">
+            <input id="isEatenRecently" type="checkbox" class="form-check-input" @bind-value="@(food.IsEatenRecently)" @onclick="() => OnFoodEated(food)" checked="@(food.IsEatenRecently)" />
+        </div>
+    }
+    @if(!MealModel.IsMealPassed )
+    {
+        <div class="col-2 padding-x-0">
+            @if(foodCounter == (MealModel.Foods.Count -1))
+            {
+                <button class="btn btn-sm my-bg-@(WeekColor)-outline text-white m-auto width-98 grocery-btn mb-1"
+                        @onclick="() => onGroceriesEdit()">
+                    <i class="fa fa-cart-plus" aria-hidden="true"></i>
+                </button>
+
+                foodCounter = -1;
+            }
+        </div>                    
+    }
+
+    foodCounter++;
+}
+
+
+
+@code {
+
+    [Parameter, EditorRequired]
+    public Meal MealModel { get; set; }
+
+    [Parameter]
+    public Language Language { get; set; }
+
+    [Parameter]
+    public Models Models { get; set; }
+
+    [Parameter]
+    public Week Week { get; set; }
+
+    [Parameter]
+    public Day Day { get; set; }
+
+    [Parameter]
+    public string WeekColor { get; set; }
+
+    [Parameter]
+    public EventCallback OnEditGeroceries { get; set; }
+
+    [Parameter]
+    public EventCallback<Models> OnModelsChangeMeals { get; set; }
+
+    [Parameter]
+    public EventCallback<List<Week>> OnWeeksListChangeMeals { get; set; }
+
+    private int foodCounter { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+    }
+
+    public async Task passingData(Meal? meal = null)
+    {
+        Models.WeekId = Week.Id;
+        Models.DayModel = new Day(Language.SelectedLang)
+            {
+                Id = Day.Id,
+                Title = Day.Title,
+                color = Week.Color,
+            };
+
+        Models.MealModel = new Meal()
+        {
+            Id = meal.Id,
+            Title = meal.Title,
+            Foods = new List<Food>(),
+            Groceries = meal.Groceries != null ? new List<Grocery>(meal.Groceries) : null,
+        };
+
+        Models.MealModel.Foods.AddRange(meal.Foods);
+
+        await OnModelsChangeMealFoodLists();
+    }
+
+    private async Task OnFoodEated(Food food)
+    {
+        food.IsEatenRecently = !food.IsEatenRecently;
+
+        Models.FoodsModel = new List<Food>();
+
+        Models.FoodsModel.Add(new Food()
+        {
+            Id = food.Id,
+            IsEatenRecently = food.IsEatenRecently,
+            CategoryId = food.CategoryId,
+        });
+
+        Models.IsFoodEatenChanged = true;
+        Models.IsActionNeeded = true;
+
+        await OnModelsChangeMealFoodLists();
+        await OnWeeksListChangeMealFoodLists();
+    }
+
+    private async Task onGroceriesEdit()
+    {
+        await OnEditGeroceries.InvokeAsync();
+    }
+
+    private async Task OnFoodDeleted(Food food)
+    {
+        MealModel.Foods.Remove(food);
+
+        await OnWeeksListChangeMealFoodLists();
+    }
+
+    public async Task OnModelsChangeMealFoodLists()
+    {
+        await OnModelsChangeMeals.InvokeAsync(Models);
+    }
+
+    public async Task OnWeeksListChangeMealFoodLists()
+    {
+        await OnWeeksListChangeMeals.InvokeAsync();
+    }
+}

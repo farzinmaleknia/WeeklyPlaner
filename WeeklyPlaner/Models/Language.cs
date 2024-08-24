@@ -72,11 +72,15 @@ namespace WeeklyPlaner.Models
         public string BlankDay { get; }
         public string GroceryListShare { get; }
         public string WeekShare { get; }
+        public string FoodListShare { get; }
         public string WeekInsert { get; }
+        public string FoodListInsert { get; }
         public string WeekInsertPlaceHolder { get; }
-        public string WeekInsertLabel { get; }
+        public string FoodListInsertPlaceHolder { get; }
+        public string InsertLabel { get; }
         public string WeeksClear { get; }
         public string FoodsClear { get; }
+        public string StartDayChangeGuid { get; }
 
 
         public string EnterNew(string entity)
@@ -91,9 +95,11 @@ namespace WeeklyPlaner.Models
             return text;
         }
 
-        public string SureDeleteMeal(string foodName, string meal)
+        public string SureDeleteMeal(List<Food> foods, string meal)
         {
-            string text = SelectedLang == PersianPhrases.Persian ? PersianPhrases.SureDeleteMeal(foodName, meal) : EnglishPhrases.SureDeleteMeal(foodName, meal);
+
+
+            string text = SelectedLang == PersianPhrases.Persian ? PersianPhrases.SureDeleteMeal(foods, meal) : EnglishPhrases.SureDeleteMeal(foods, meal);
             return text;
 
         }
@@ -172,11 +178,15 @@ namespace WeeklyPlaner.Models
             BlankDay = selectedLang == PersianPhrases.Persian ? PersianPhrases.BlankDay : EnglishPhrases.BlankDay;
             GroceryListShare = selectedLang == PersianPhrases.Persian ? PersianPhrases.GroceryListShare : EnglishPhrases.GroceryListShare;
             WeekShare = selectedLang == PersianPhrases.Persian ? PersianPhrases.WeekShare : EnglishPhrases.WeekShare;
+            FoodListShare = selectedLang == PersianPhrases.Persian ? PersianPhrases.FoodListShare : EnglishPhrases.FoodListShare;
             WeekInsert = selectedLang == PersianPhrases.Persian ? PersianPhrases.WeekInsert : EnglishPhrases.WeekInsert;
+            FoodListInsert = selectedLang == PersianPhrases.Persian ? PersianPhrases.FoodListInsert : EnglishPhrases.FoodListInsert;
             WeekInsertPlaceHolder = selectedLang == PersianPhrases.Persian ? PersianPhrases.WeekInsertPlaceHolder : EnglishPhrases.WeekInsertPlaceHolder;
-            WeekInsertLabel = selectedLang == PersianPhrases.Persian ? PersianPhrases.WeekInsertLabel : EnglishPhrases.WeekInsertLabel;
+            FoodListInsertPlaceHolder = selectedLang == PersianPhrases.Persian ? PersianPhrases.FoodListInsertPlaceHolder : EnglishPhrases.FoodListInsertPlaceHolder;
+            InsertLabel = selectedLang == PersianPhrases.Persian ? PersianPhrases.InsertLabel : EnglishPhrases.InsertLabel;
             WeeksClear = selectedLang == PersianPhrases.Persian ? PersianPhrases.WeeksClear : EnglishPhrases.WeeksClear;
             FoodsClear = selectedLang == PersianPhrases.Persian ? PersianPhrases.FoodsClear : EnglishPhrases.FoodsClear;
+            StartDayChangeGuid = selectedLang == PersianPhrases.Persian ? PersianPhrases.StartDayChangeGuid : EnglishPhrases.StartDayChangeGuid;
         }
     }
 }

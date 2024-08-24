@@ -218,7 +218,7 @@
 
 .grocery-btn {
     padding: 11px;
-    height: 100%;
+    height: 91%;
 }
 
 .grocery-add-btn {
@@ -323,6 +323,10 @@
     color: #2e7396;
 }
 
+.my-border-blue{
+    border-color: #2e7396;
+}
+
 .just-bg-blue {
     background-color: #2e7396;
     color: white;
@@ -350,101 +354,13 @@
         color: white !important;
     }
 
-.my-txt-red {
-    color: #c2413d;
-}
-
-.just-bg-red {
-    background-color: #c2413d;
-    color: white;
-}
-
-.my-bg-red {
-    background-color: #c2413d;
-    color: white;
-}
-
-    .my-bg-red:hover {
-        border-color: #c2413d;
-        background-color: none;
-        color: #c2413d;
-    }
-
-.my-bg-red-outline {
-    border-color: #c2413d;
-    background-color: none;
-    color: #c2413d !important;
-}
-
-    .my-bg-red-outline:hover {
-        background-color: #c2413d;
-        color: white !important;
-    }
-
-.my-txt-green {
-    color: #2E965D;
-}
-
-.just-bg-green {
-    background-color: #2E965D;
-    color: white;
-}
-
-.my-bg-green {
-    background-color: #2E965D;
-    color: white;
-}
-
-    .my-bg-green:hover {
-        border-color: #2E965D;
-        background-color: none;
-        color: #2E965D;
-    }
-
-.my-bg-green-outline {
-    border-color: #2E965D;
-    background-color: none;
-    color: #2E965D !important;
-}
-
-    .my-bg-green-outline:hover {
-        background-color: #2E965D;
-        color: white !important;
-    }
-
-.my-txt-brown {
-    color: #A27E5D;
-}
-
-.just-bg-brown {
-    background-color: #A27E5D;
-    color: white;
-}
-
-.my-bg-brown {
-    background-color: #A27E5D;
-    color: white;
-}
-
-    .my-bg-brown:hover {
-        border-color: #A27E5D;
-        background-color: none;
-        color: #A27E5D;
-    }
-
-.my-bg-brown-outline {
-    border-color: #A27E5D;
-    background-color: none;
-    color: #A27E5D !important;
-}
-
-    .my-bg-brown-outline:hover {
-        background-color: #A27E5D;
-        color: white !important;
-    }
 
 .my-txt-orange {
     color: #d95226;
+}
+
+.my-border-orange {
+    border-color: #d95226;
 }
 
 .just-bg-orange {
@@ -479,39 +395,12 @@
         color: white !important;
     }
 
-.my-txt-purple {
-    color: #9c44bb;
-}
-
-.just-bg-purple {
-    background-color: #9c44bb;
-    color: white;
-}
-
-.my-bg-purple {
-    background-color: #9c44bb;
-    color: white;
-}
-
-    .my-bg-purple:hover {
-        border-color: #9c44bb;
-        background-color: none;
-        color: #9c44bb;
-    }
-
-.my-bg-purple-outline {
-    border-color: #9c44bb;
-    background-color: none;
-    color: #9c44bb !important;
-}
-
-    .my-bg-purple-outline:hover {
-        background-color: #9c44bb;
-        color: white !important;
-    }
-
 .my-txt-mustard {
     color: #96912e;
+}
+
+.my-border-mustard {
+    border-color: #96912e;
 }
 
 .just-bg-mustard {
@@ -550,6 +439,10 @@
     color: #2e9691;
 }
 
+.my-border-skyblue {
+    border-color: #2e9691;
+}
+
 .just-bg-skyblue {
     background-color: #2e9691;
     color: white;
@@ -582,39 +475,12 @@
         color: white !important;
     }
 
-.my-txt-darkblue {
-    color: #5D81A2;
-}
-
-.just-bg-darkblue {
-    background-color: #5D81A2;
-    color: white;
-}
-
-.my-bg-darkblue {
-    background-color: #5D81A2;
-    color: white;
-}
-
-    .my-bg-darkblue:hover {
-        border-color: #5D81A2;
-        background-color: none;
-        color: #5D81A2;
-    }
-
-.my-bg-darkblue-outline {
-    border-color: #5D81A2;
-    background-color: none;
-    color: #5D81A2 !important;
-}
-
-    .my-bg-darkblue-outline:hover {
-        background-color: #5D81A2;
-        color: white !important;
-    }
-
 .my-txt-darkpurple {
     color: #5D5FA2;
+}
+
+.my-border-darkpurple {
+    border-color: #5D5FA2;
 }
 
 .just-bg-darkpurple {
@@ -651,6 +517,10 @@
 
 .my-txt-darkpink {
     color: #A25D82;
+}
+
+.my-border-darkpink {
+    border-color: #A25D82;
 }
 
 .just-bg-darkpink {
@@ -749,3 +619,167 @@
 }
 
 
+
+
+/*------------------------------- @Extra Colors --------------------------------------*/
+
+/*
+.my-txt-red {
+    color: #c2413d;
+}
+
+.just-bg-red {
+    background-color: #c2413d;
+    color: white;
+}
+
+.my-bg-red {
+    background-color: #c2413d;
+    color: white;
+}
+
+    .my-bg-red:hover {
+        border-color: #c2413d;
+        background-color: none;
+        color: #c2413d;
+    }
+
+.my-bg-red-outline {
+    border-color: #c2413d;
+    background-color: none;
+    color: #c2413d !important;
+}
+
+    .my-bg-red-outline:hover {
+        background-color: #c2413d;
+        color: white !important;
+    }
+
+.my-txt-green {
+    color: #2E965D;
+}
+
+.just-bg-green {
+    background-color: #2E965D;
+    color: white;
+}
+
+.my-bg-green {
+    background-color: #2E965D;
+    color: white;
+}
+
+    .my-bg-green:hover {
+        border-color: #2E965D;
+        background-color: none;
+        color: #2E965D;
+    }
+
+.my-bg-green-outline {
+    border-color: #2E965D;
+    background-color: none;
+    color: #2E965D !important;
+}
+
+    .my-bg-green-outline:hover {
+        background-color: #2E965D;
+        color: white !important;
+    }
+
+.my-txt-brown {
+    color: #A27E5D;
+}
+
+.just-bg-brown {
+    background-color: #A27E5D;
+    color: white;
+}
+
+.my-bg-brown {
+    background-color: #A27E5D;
+    color: white;
+}
+
+    .my-bg-brown:hover {
+        border-color: #A27E5D;
+        background-color: none;
+        color: #A27E5D;
+    }
+
+.my-bg-brown-outline {
+    border-color: #A27E5D;
+    background-color: none;
+    color: #A27E5D !important;
+}
+
+    .my-bg-brown-outline:hover {
+        background-color: #A27E5D;
+        color: white !important;
+    }
+
+
+.my-txt-purple {
+    color: #9c44bb;
+}
+
+.just-bg-purple {
+    background-color: #9c44bb;
+    color: white;
+}
+
+.my-bg-purple {
+    background-color: #9c44bb;
+    color: white;
+}
+
+    .my-bg-purple:hover {
+        border-color: #9c44bb;
+        background-color: none;
+        color: #9c44bb;
+    }
+
+.my-bg-purple-outline {
+    border-color: #9c44bb;
+    background-color: none;
+    color: #9c44bb !important;
+}
+
+    .my-bg-purple-outline:hover {
+        background-color: #9c44bb;
+        color: white !important;
+    }
+
+
+.my-txt-darkblue {
+    color: #5D81A2;
+}
+
+.just-bg-darkblue {
+    background-color: #5D81A2;
+    color: white;
+}
+
+.my-bg-darkblue {
+    background-color: #5D81A2;
+    color: white;
+}
+
+    .my-bg-darkblue:hover {
+        border-color: #5D81A2;
+        background-color: none;
+        color: #5D81A2;
+    }
+
+.my-bg-darkblue-outline {
+    border-color: #5D81A2;
+    background-color: none;
+    color: #5D81A2 !important;
+}
+
+    .my-bg-darkblue-outline:hover {
+        background-color: #5D81A2;
+        color: white !important;
+    }
+
+
+*/

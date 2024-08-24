@@ -3,18 +3,17 @@
     public class Models
     {
         public PersianPhrases PersianPhrases { get; set; }
+        public EnglishPhrases EnglishPhrases { get; set; }
         public string WeekId { get; set; }
         public string InsertedWeek { get; set; }
+        public string InsertedFoodList { get; set; }
         public Day DayModel { get; set; } 
         public Meal MealModel { get; set; } = new Meal();
         public Grocery GroceryModel { get; set; } = new Grocery();  
         public FoodCategory CategoryModel { get; set; } = new FoodCategory();
+        public List<Food> FoodsModel { get; set; } = new List<Food>();
         public Food FoodModel { get; set; } = new Food();
-        public StartDay StartDay { get; set; } = new StartDay()
-        {
-            TitleFa = "پنجشنبه",
-            TitleEn = "Thursday",
-        };
+        public StartDay StartDay { get; set; } 
         public bool IsForAddMeal { get; set; } = false;
         public bool IsForAddCat { get; set; } = false;
         public bool IsForAddFood { get; set; } = false;

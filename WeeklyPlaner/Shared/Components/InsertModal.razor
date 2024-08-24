@@ -4,17 +4,17 @@
 <div class="modal fade" id="@(Id)" tabindex="-1" aria-labelledby="@(Id)Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header just-bg-blue">
+            <div class="modal-header just-bg-darkpurple">
                 <h1 class="modal-title fs-5" id="@(Id)Label">@(Language.Insert)</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
-            <EditForm Model="Models" OnSubmit="OnWeekInsertSubmitet" >
+            <EditForm Model="Models" OnSubmit="OnInsertSubmitet" >
                 <div class="modal-body">
-                    <label for="weekinsert" class="form-label">@(Language.WeekInsertLabel)</label>
-                    <InputTextArea id="weekinsert" class="form-control" @bind-Value="Models.InsertedWeek" rows="10" placeholder="@(Language.WeekInsertPlaceHolder)" />
+                    <label for="insert" class="form-label">@(Language.InsertLabel)</label>
+                    <InputTextArea id="insert" class="form-control" @bind-Value="Value" rows="10" placeholder="@(PlaceHolder)" />
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn my-bg-blue bootstrap-buttons" data-bs-dismiss="modal">@(Language.Insert)</button>
+                    <button type="submit" class="btn my-bg-darkpurple bootstrap-buttons" data-bs-dismiss="modal">@(Language.Insert)</button>
                 </div>
             </EditForm>
         </div>
@@ -33,7 +33,13 @@
     public Models Models { get; set; }
 
     [Parameter]
-    public EventCallback<string> OnWeekInserted { get; set; }
+    public string Value { get; set; }
+
+    [Parameter]
+    public string PlaceHolder { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnInsertMethod { get; set; }
 
 
 
@@ -43,9 +49,9 @@
 
     }
 
-    protected async Task OnWeekInsertSubmitet()
+    protected async Task OnInsertSubmitet()
     {
-        await OnWeekInserted.InvokeAsync(Models.InsertedWeek);
+        await OnInsertMethod.InvokeAsync(Value);
     }
 
 

@@ -60,16 +60,21 @@ namespace WeeklyPlaner.Models
         public string DidYouEatIt = "Had you eaten this meal?";
         public string FoodWillEarase = "This food will be earase temprarly";
         public string WhyRemoveFood = "This temporary removal of food is done in order to observe diversity and prevent repetition of the food plan";
-        public string HowToRefreshFoodsList = "If you wish, you can refresh the food list by clicking on the icon similar to the one below, and all the foods will be displayed again in the food section.";
+        public string HowToRefreshFoodsList = "If you wish, you can refresh the list of foods by clicking on the icon below and all the foods will be displayed again in the food section, or remove the check mark in front of any food that you want to remain in the list of foods";
         public string WeeksStartDay = "Weeks start day";
         public string BlankDay = "No meal has been saved on this day!";
         public string GroceryListShare = "Sharing the shopping list of the week";
         public string WeekShare = "Sharing a week plan";
+        public string FoodListShare = "Sharing list of foods";
         public string WeekInsert = "Insert a week plan";
+        public string FoodListInsert = "Insert list of foods";
         public string WeekInsertPlaceHolder = "Past here the copied week plan";
-        public string WeekInsertLabel = "Shared json text";
+        public string FoodListInsertPlaceHolder = "Past here the copied list of foods";
+        public string InsertLabel = "Shared json text";
         public string WeeksClear = "Reset weeks plan";
         public string FoodsClear = "Reset foods list";
+        public string StartDayChangeGuid = "Currently, due to existing restrictions, it is only possible to change the start day of the week to the day you are on or the day after that day, so if the desired day is not on the list, please wait until that day arrives or in The day before that day, change the start day of the week.";
+
 
 
         public string EnterNew(string entity)
@@ -82,8 +87,17 @@ namespace WeeklyPlaner.Models
             return $"Change the {entity}";
         }
 
-        public string SureDeleteMeal(string foodName, string meal)
+        public string SureDeleteMeal(List<Food> foods, string meal)
         {
+            var foodName = "";
+            if (foods.Count > 1)
+            {
+                foodName = $"these {foods.Count} foods";
+            }
+            else if(foods.Count == 1)
+            {
+                foodName = foods[0].Name;
+            }
             return $"Are you sure you want to delete {foodName} as {meal}";
 
         }

@@ -47,7 +47,6 @@
     {
         await base.OnInitializedAsync();
 
-
         WeeksList = new List<Week>();
 
         FoodList = new List<FoodCategory>();
@@ -68,6 +67,13 @@
 
         Models = new Models(Language.SelectedLang);
 
+        Models.StartDay = new StartDay()
+        {
+            Title = WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.Title: Language.Thursday,
+            TitleEn = WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.TitleEn: EnglishPhrases.Thursday,
+            TitleFa = WeeksList.Count > 0 ? WeeksList[0].WeeksStartDay.TitleFa: PersianPhrases.Thursday,
+        };
+
         await ManageWeeksList();
 
         await FoodListRefresh();
@@ -83,10 +89,8 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
-        {
-            await OnGridloaded();
-        }
+        await OnGridloaded();
+
     }
 
 
@@ -167,7 +171,8 @@
 
     private async Task ManageWeeksList()
     {
-        //CurrentTime = CurrentTime.AddDays(11);
+        //CurrentTime = CurrentTime.AddDays(3);
+        //Console.WriteLine(CurrentTime);
 
         if (WeeksList.Count == 0 || (CurrentTime.Date - WeeksList[0].WeeksStartDay.Date.Date).TotalDays > 27)
         {
@@ -246,6 +251,7 @@
 
     private async Task InsertNewWeek(string insertedWeek)
     {
+
         Week week = Newtonsoft.Json.JsonConvert.DeserializeObject<Week>(insertedWeek);
 
         week.Title = Models.IsForNextWeek ? Language.NextWeek : Language.CurrentWeek;
@@ -267,6 +273,16 @@
 
     }
 
+    private async Task InsertNewFoodList(string insertedFoodlist)
+    {
+        List<FoodCategory> foodlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<FoodCategory>>(insertedFoodlist);
+
+        if (foodlist.Count > 0)
+        {
+            FoodList.AddRange(foodlist);
+        }
+    }
+
     private async Task IsMealPassed()
     {
         foreach (var week in WeeksList)
@@ -281,7 +297,7 @@
                 {
                     meal.GroceryEditable = false;
                     meal.IsMealCollapsed = false;
-                    if(meal.Food.IsEatenRecently && NeedToCollapse)
+                    if(meal.IsFoodsEatenRecently && NeedToCollapse)
                     {
                         meal.IsMealCollapsed = true;
                     }
@@ -335,7 +351,7 @@
 
                 day.IsDayCollapsed = false;
 
-                var list = day.GetMeals().Where(m => m.Food.Name == null).ToList();
+                var list = day.GetMeals().Where(m => m.Foods.Count == 0).ToList();
 
                 if (list.Count == 3 && day.IsDayPassed)
                 {
@@ -375,13 +391,16 @@
 
     public async Task OnFoodIsEaten()
     {
-        var food = FoodList.FirstOrDefault(c => c.Id == Models.FoodModel.CategoryId).foods.FirstOrDefault(f => f.Id == Models.FoodModel.Id);
-        if(food != null)
+        foreach (var food in Models.FoodsModel)
         {
-            food.IsEatenRecently = Models.FoodModel.IsEatenRecently;
+            var finalFood = FoodList.FirstOrDefault(c => c.Id == food.CategoryId).foods.FirstOrDefault(f => f.Id == food.Id);
+            if (finalFood != null)
+            {
+                finalFood.IsEatenRecently = food.IsEatenRecently;
+            }            
         }
 
-        Models.FoodModel = new Food();
+        Models.FoodsModel = new List<Food>();
 
         await OnFoodListChange();
     }
@@ -438,7 +457,7 @@
 
 
 
-                WeeksList[week].GetDays()[dayIndex] = WeeksList[week - 1] != null ? WeeksList[week - 1].GetDays()[dayIndex] : null;
+                //WeeksList[week].GetDays()[dayIndex] = WeeksList[week - 1] != null ? WeeksList[week - 1].GetDays()[dayIndex] : null;
             }
         }
 
@@ -451,11 +470,18 @@
         await JSRuntime.InvokeVoidAsync("resizeAllGridItems");
     }
 
-    public async Task onClearWeeksLsit()
+    public async Task onClearWeeksList()
     {
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "WeeksList");
 
         WeeksList = new List<Week>();
+
+        Models.StartDay = new StartDay()
+        {
+            TitleFa = PersianPhrases.Thursday,
+            TitleEn = EnglishPhrases.Thursday,
+            Title = Language.Thursday,
+        };
 
         await ManageWeeksList();
 
@@ -463,7 +489,7 @@
 
     }
 
-    public async Task onClearFoodsLsit()
+    public async Task onClearFoodsList()
     {
         await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "FoodList");
 
@@ -512,16 +538,23 @@
                 Models.InsertedWeek = string.Empty;
             };
 
+            if (Models.InsertedFoodList != null && Models.InsertedFoodList != string.Empty)
+            {
+                await InsertNewFoodList(Models.InsertedFoodList);
+
+                Models.InsertedFoodList = string.Empty;
+            };
+
             if(Models.IsForWeeksClear)
             {
-                await onClearWeeksLsit();
+                await onClearWeeksList();
 
                 Models.IsForWeeksClear = false;
             };
 
             if(Models.IsForFoodsClear)
             {
-                await onClearFoodsLsit();
+                await onClearFoodsList();
 
                 Models.IsForFoodsClear = false;
             };
@@ -535,7 +568,6 @@
 
             Models.IsActionNeeded = false;
         }
-
     }
 
     public async Task OnSelectedLangChange(string lang = null)
@@ -550,6 +582,7 @@
 
     public async Task OnWeeksListChange(List<Week> list = null)
     {
+        await OnGridloaded();
         if(list != null)
             WeeksList = list;
 

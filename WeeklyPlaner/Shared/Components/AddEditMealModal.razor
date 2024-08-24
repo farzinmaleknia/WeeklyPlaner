@@ -33,7 +33,7 @@
 
                     <hr style="margin-top: 0;" />
 
-                    @if (Models.MealModel.Food.Name == null)
+                    @if (!(Models.MealModel.Foods.Count > 0 && !Models.MealModel.IsMoreFoodNeeded))
                     {
                         <div class="modal-food-scrollable @(Models.MealModel.Title == null ? "my-disabled" : "")">
                             @foreach (var categorty in FoodList)
@@ -59,12 +59,16 @@
                     }
                     else
                     {
-
-                        <button class="btn my-bg-@(Models.DayModel.color) m-1 f-size24" @onclick="() => OnFoodDiselected()">
-                            @(Models.MealModel.Food.Name)
-                            <i class="fa fa-times f-size16 food-name-icon" aria-hidden="true"></i>
+                        foreach (var food in Models.MealModel.Foods)
+                        {
+                            <button class="btn my-bg-@(Models.DayModel.color) m-1 f-size24" @onclick="() => OnFoodDiselected(food)">
+                                @(food.Name)
+                                <i class="fa fa-times f-size16 food-name-icon" aria-hidden="true"></i>
+                            </button>                            
+                        }
+                        <button class="btn my-bg-@(Models.DayModel.color)-outline padding-t-10" @onclick="() => Models.MealModel.IsMoreFoodNeeded = !Models.MealModel.IsMoreFoodNeeded">
+                            <i class="fa fa-plus" aria-hidden="true"></i>
                         </button>
-
                         <hr />
 
                         <AddGrocery GroceryModel="Models.GroceryModel" Language="Language" IsSubmitNeeded="false" CurrentColor="@(Models.DayModel.color)" ValueChangedEventHandler="OnNewGroceryAdded" />
@@ -75,7 +79,7 @@
                         }
                     }
                 </div>
-                @if (Models.MealModel.Food.Name != null)
+                @if (Models.MealModel.Foods.Count > 0)
                 {
                     <div class="modal-footer">
                         <button type="button" class="btn my-bg-@(Models.DayModel.color)-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
@@ -122,7 +126,7 @@
         if (Models.DayModel.Title != null)
         {
             var daylist = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays();//.FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
-            list = daylist.FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Food.Name == null && !m.IsMealPassed).ToList();
+            list = daylist.FirstOrDefault(d => d.Title == Models.DayModel.Title).GetMeals().Where(m => m.Foods.Count == 0 && !m.IsMealPassed).ToList();
         }
 
         return list;
@@ -141,20 +145,32 @@
 
     public async Task OnFoodSelected(Food food)
     {
-        Models.MealModel.Food = new Food()
+        if (Models.MealModel.Foods.Count == 0)
+        {
+            Models.MealModel.Foods = Models.MealModel.Foods.Where(f => f.Name != null).ToList();
+        }
+
+        Models.MealModel.Foods.Add(new Food()
         {
             Name = food.Name,
             Id = food.Id,
             CategoryId = food.CategoryId,
-        };
+        });
+
+        Models.MealModel.IsMoreFoodNeeded = false;
 
         await OnModelsChangeAddEditMealModal();
     }
 
-    public async Task OnFoodDiselected()
+    public async Task OnFoodDiselected(Food food)
     {
-        Models.MealModel.Food = new Food();
-        Models.MealModel.Groceries = new List<Grocery>();
+        Models.MealModel.Foods.Remove(food);
+        if (Models.MealModel.Foods.Count == 0)
+        {
+            Models.MealModel.Foods = new List<Food>();
+            Models.MealModel.Groceries = new List<Grocery>();
+
+        }
         await OnModelsChangeAddEditMealModal();
     }
 
@@ -188,7 +204,14 @@
         var day = WeeksList.FirstOrDefault(w => w.Id == Models.WeekId).GetDays().FirstOrDefault(d => d.Title == Models.DayModel.Title);
         var meal = day.GetMeals().FirstOrDefault(m => m.Id == Models.MealModel.Id);
 
-        meal.Food = Models.MealModel.Food;
+        meal.Foods = new List<Food>();
+        meal.Foods.AddRange(Models.MealModel.Foods);
+        if (meal.Foods.Count == 0)
+        {
+            meal.Foods = meal.Foods.Where(f => f.Name != null).ToList();
+            
+        }
+
         if (Models.MealModel.Groceries != null)
         {
             meal.Groceries = Models.MealModel.Groceries;

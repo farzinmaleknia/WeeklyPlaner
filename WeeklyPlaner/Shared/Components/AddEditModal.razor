@@ -4,7 +4,7 @@
 <div class="modal fade" id="@(Id)" tabindex="-1" aria-labelledby="@(Id)Label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header just-bg-blue">
+            <div class="modal-header just-bg-darkpurple">
                 <h1 class="modal-title fs-5" id="@(Id)Label">@(IsForAdd ? Language.EnterNew(Entity) : Language.ChangeThe(Entity))</h1>
                 <button type="button" class="btn text-white m-right-auto" data-bs-dismiss="modal" aria-label="Close"><i class="fa fa-times" aria-hidden="true"></i></button>
             </div>
@@ -14,8 +14,8 @@
                     @(Body)
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn my-bg-blue-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
-                    <button type="submit" class="btn my-bg-blue bootstrap-buttons">@(Language.Save)</button>
+                    <button type="button" class="btn my-bg-darkpurple-outline bootstrap-buttons" data-bs-dismiss="modal">@(Language.Cancle)</button>
+                    <button type="submit" class="btn my-bg-darkpurple bootstrap-buttons">@(Language.Save)</button>
                 </div>
             </EditForm>
         </div>
