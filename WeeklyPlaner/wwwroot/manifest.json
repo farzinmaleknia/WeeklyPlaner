@@ -1,6 +1,6 @@
 {
-  "name": "WeeklyPlaner",
-  "short_name": "WeeklyPlaner",
+  "name": "Weekly Food Planer",
+  "short_name": "Food Planer",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -8,12 +8,12 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icon-512.png",
+      "src": "images/512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
     {
-      "src": "icon-192.png",
+      "src": "images/192.png",
       "type": "image/png",
       "sizes": "192x192"
     }
